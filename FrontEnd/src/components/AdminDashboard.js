@@ -64,7 +64,7 @@ const AdminDashboard = () => {
           <tr>
             <th>Username</th>
             <th>Role</th>
-            <th>Email</th>
+            <th>EmailID</th>
             <th>Phone</th>
             <th>Actions</th>
           </tr>
