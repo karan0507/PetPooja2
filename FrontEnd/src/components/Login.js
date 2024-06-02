@@ -15,7 +15,7 @@ const LOGIN_MUTATION = gql`
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION);
+  const [login, { error }] = useMutation(LOGIN_MUTATION);
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
