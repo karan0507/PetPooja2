@@ -56,11 +56,7 @@ const Signup = () => {
 
   const handleSubmitStep1 = (e) => {
     e.preventDefault();
-    if (role === 'Admin') {
-      handleSubmitStep2(e);
-    } else {
-      setStep(2);
-    }
+    setStep(2);
   };
 
   const handleSubmitStep2 = async (e) => {
@@ -125,7 +121,7 @@ const Signup = () => {
           <Button variant="primary" type="submit" className="btn-block">Next</Button>
         </Form>
       )}
-      {step === 2 && role === 'Customer' && (
+      {step === 2 && (
         <Form onSubmit={handleSubmitStep2} className="form-signup">
           <Form.Group controlId="formEmail">
             <Form.Label>Email</Form.Label>
@@ -145,110 +141,104 @@ const Signup = () => {
               required
             />
           </Form.Group>
-          <Form.Group controlId="formStreet">
-            <Form.Label>Street</Form.Label>
-            <Form.Control
-              type="text"
-              value={street}
-              onChange={(e) => setStreet(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formCity">
-            <Form.Label>City</Form.Label>
-            <Form.Control
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formProvince">
-            <Form.Label>Province</Form.Label>
-            <Form.Control
-              type="text"
-              value={province}
-              onChange={(e) => setProvince(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formZipcode">
-            <Form.Label>Zipcode</Form.Label>
-            <Form.Control
-              type="text"
-              value={zipcode}
-              onChange={(e) => setZipcode(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit" className="btn-block">Sign Up</Button>
-        </Form>
-      )}
-      {step === 2 && role === 'Merchant' && (
-        <Form onSubmit={handleSubmitStep2} className="form-signup">
-          <Form.Group controlId="formRestaurantName">
-            <Form.Label>Restaurant Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={restaurantName}
-              onChange={(e) => setRestaurantName(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formPhone">
-            <Form.Label>Phone Number</Form.Label>
-            <Form.Control
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formRegistrationNumber">
-            <Form.Label>Restaurant Registration Number</Form.Label>
-            <Form.Control
-              type="text"
-              value={registrationNumber}
-              onChange={(e) => setRegistrationNumber(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formStreet">
-            <Form.Label>Street</Form.Label>
-            <Form.Control
-              type="text"
-              value={street}
-              onChange={(e) => setStreet(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formCity">
-            <Form.Label>City</Form.Label>
-            <Form.Control
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formProvince">
-            <Form.Label>Province</Form.Label>
-            <Form.Control
-              type="text"
-              value={province}
-              onChange={(e) => setProvince(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formZipcode">
-            <Form.Label>Zipcode</Form.Label>
-            <Form.Control
-              type="text"
-              value={zipcode}
-              onChange={(e) => setZipcode(e.target.value)}
-              required
-            />
-          </Form.Group>
+          {role === 'Customer' && (
+            <>
+              <Form.Group controlId="formStreet">
+                <Form.Label>Street</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formCity">
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formProvince">
+                <Form.Label>Province</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formZipcode">
+                <Form.Label>Zipcode</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={zipcode}
+                  onChange={(e) => setZipcode(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            </>
+          )}
+          {role === 'Merchant' && (
+            <>
+              <Form.Group controlId="formRestaurantName">
+                <Form.Label>Restaurant Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={restaurantName}
+                  onChange={(e) => setRestaurantName(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formRegistrationNumber">
+                <Form.Label>Restaurant Registration Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={registrationNumber}
+                  onChange={(e) => setRegistrationNumber(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formStreet">
+                <Form.Label>Street</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formCity">
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formProvince">
+                <Form.Label>Province</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formZipcode">
+                <Form.Label>Zipcode</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={zipcode}
+                  onChange={(e) => setZipcode(e.target.value)}
+                  required
+                />
+              </Form.Group>
+            </>
+          )}
           <Button variant="primary" type="submit" className="btn-block">Sign Up</Button>
         </Form>
       )}
