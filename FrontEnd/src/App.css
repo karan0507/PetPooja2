@@ -1,0 +1,103 @@
+
+
+body {
+  background-color: #f8f9fa;
+  font-family: 'Arial', sans-serif;
+}
+
+
+
+.form-signup, .form-login {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  margin-top: 20px;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.text-success {
+  color: #28a745;
+}
+
+.text-info {
+  color: #17a2b8;
+}
+
+.navbar-dark .navbar-nav .nav-link.text-success {
+  color: #28a745;
+}
+
+.navbar-dark .navbar-nav .nav-link.text-warning {
+  color: #ffc107;
+}
+
+.navbar-dark .navbar-nav .nav-link.text-info {
+  color: #17a2b8;
+}
+
+.navbar-dark .navbar-nav .nav-link.text-success:hover,
+.navbar-dark .navbar-nav .nav-link.text-warning:hover,
+.navbar-dark .navbar-nav .nav-link.text-info:hover {
+  color: #ffffff;
+}
+.footer {
+  background-color: #343a40;
+  color: white;
+  padding: 20px 0;
+}
+
+.footer h5 {
+  color: white;
+}
+
+.footer ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer ul li {
+  margin-bottom: 10px;
+}
+
+.footer ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer ul li a:hover {
+  text-decoration: underline;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer .bi {
+  margin-right: 5px;
+}
+.log{
+  margin-right: 8px;
+  font-size: 16px;
+
+  
+  color: #ff8d33;
+  
+}
