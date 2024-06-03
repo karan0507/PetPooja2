@@ -9,8 +9,13 @@ const resolvers = {
   Query: {
     hello: () => 'Hello world!',
     users: async () => {
-      return await User.find({});
-    }
+      try {
+        return await User.find({});
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        throw new Error('Error fetching users');
+      }
+    },
   },
   Mutation: {
     signup: async (
@@ -86,15 +91,15 @@ const resolvers = {
 
         return newUser;
       } catch (error) {
-        console.error('Error in signup mutation:', error);
-        throw new Error('Error creating user');
+        console.error('Error in signup mutation:', error.message);
+        throw new Error(error.message);
       }
     },
     login: async (_, { username, password }) => {
       try {
         const user = await User.findOne({ username });
         if (!user) {
-          throw new Error('User not found');
+          throw new Error('Username not found');
         }
 
         const valid = await bcrypt.compare(password, user.password);
@@ -104,8 +109,8 @@ const resolvers = {
 
         return user;
       } catch (error) {
-        console.error('Error in login mutation:', error);
-        throw new Error('Error logging in');
+        console.error('Error in login mutation:', error.message);
+        throw new Error(error.message);
       }
     },
     deleteUser: async (_, { id }) => {
@@ -116,7 +121,7 @@ const resolvers = {
         }
         return user;
       } catch (error) {
-        console.error('Error in deleteUser mutation:', error);
+        console.error('Error in deleteUser mutation:', error.message);
         throw new Error('Error deleting user');
       }
     },
@@ -133,7 +138,7 @@ const resolvers = {
         }
         return user;
       } catch (error) {
-        console.error('Error in updatePassword mutation:', error);
+        console.error('Error in updatePassword mutation:', error.message);
         throw new Error('Error updating password');
       }
     },
