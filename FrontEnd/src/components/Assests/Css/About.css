@@ -60,35 +60,37 @@ body {
   color: #fff;
 }
  
-  .team-card {
-    margin-bottom: 20px;
-    text-align: center;
-    transition: transform .3s ease-in-out, box-shadow 0.3s ease-in-out;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  .team-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card-img-top {
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-  
-  .card-title {
-    font-size: 1.25em;
-    font-weight: bold;
-    
-  }
-  
-  .card-text {
-    font-size: 1.1em;
-   
-  }
+.card {
+  margin-bottom: 20px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.card-title {
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.card-text {
+  font-size: 1.1em;
+  color: #6c757d;
+}
    
   
   .value-card {

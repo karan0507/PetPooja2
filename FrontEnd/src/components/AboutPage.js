@@ -1,7 +1,11 @@
 import React from 'react';
 import './Assests/Css/About.css';
 import mission from './Assests/Images/mission.png';
-import vission from './Assests/Images/vission.png'
+import vission from './Assests/Images/vission.png';
+import Karan from './Assests/Images/karan1.jpg';
+import satvir from './Assests/Images/satvir.jpg';
+
+
 
 const AboutPage = () => {
   return (
@@ -83,28 +87,28 @@ const AboutPage = () => {
       
       <section className="team mb-5">
         <h2 className="text-center mb-3">Meet Our Team</h2>
-        <div className="row">
-          <div className="col-md-4">
-            <div className="card team-card">
-              <img src="/path/to/team1.jpg" className="card-img-top rounded-circle" alt="Team Member 1"/>
+        <div className="row justify-content-center">
+          <div className="col-md-3 col-sm-4 mb-4">
+            <div className="card team-card p-4">
+              <img src="" className="card-img-top rounded-circle" alt="Team Member 1"/>
               <div className="card-body">
                 <h5 className="card-title">Harkishan Patel</h5>
                 <p className="card-text">Developer</p>
               </div>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="card team-card">
-              <img src="/path/to/team2.jpg" className="card-img-top rounded-circle" alt="Team Member 2"/>
+          <div className="col-md-3 col-sm-4 mb-4">
+            <div className="card team-card p-4">
+              <img src={Karan} className="card-img-top rounded-circle" alt="Team Member 2"/>
               <div className="card-body">
                 <h5 className="card-title">Karan Gandhi</h5>
                 <p className="card-text">Developer</p>
               </div>
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="card team-card">
-              <img src="" className="card-img-top rounded-circle" alt="Team Member 3"/>
+          <div className="col-md-3 col-sm-4 mb-4">
+            <div className="card team-card p-4">
+              <img src={satvir} className="card-img-top rounded-circle" alt="Team Member 3"/>
               <div className="card-body">
                 <h5 className="card-title">Satvir Singh</h5>
                 <p className="card-text">Developer</p>
