@@ -4,6 +4,8 @@ import mission from './Assests/Images/mission.png';
 import vission from './Assests/Images/vission.png';
 import Karan from './Assests/Images/karan1.jpg';
 import satvir from './Assests/Images/satvir.jpg';
+import harkishan from './Assests/Images/harkishan.jpg';
+
 
 
 
@@ -90,7 +92,7 @@ const AboutPage = () => {
         <div className="row justify-content-center">
           <div className="col-md-3 col-sm-4 mb-4">
             <div className="card team-card p-4">
-              <img src="" className="card-img-top rounded-circle" alt="Team Member 1"/>
+              <img src={harkishan} className="card-img-top rounded-circle" alt="Team Member 1"/>
               <div className="card-body">
                 <h5 className="card-title">Harkishan Patel</h5>
                 <p className="card-text">Developer</p>

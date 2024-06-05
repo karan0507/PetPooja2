@@ -60,7 +60,7 @@ body {
   color: #fff;
 }
  
-.card {
+.team-card {
   margin-bottom: 20px;
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -68,7 +68,7 @@ body {
   overflow: hidden;
 }
 
-.card:hover {
+.team-card:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
