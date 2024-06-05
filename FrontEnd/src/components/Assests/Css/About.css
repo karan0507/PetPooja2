@@ -1,0 +1,124 @@
+body {
+    background-color: #f8f9fa;
+    color: #343a40;
+  }
+  
+  .head,
+  .services h2,
+  .company-mission h2,
+  .values h2,
+  .team h2,
+  .card h5 {
+    font-weight: bold;
+    color: #ff5733;
+  }
+  
+  .side{
+    /* aspect-ratio: 1; */
+    height: auto;
+    width: 80%;
+  }
+  
+  .company-mission p,
+  .values p,
+  .team p,
+  .card p {
+    font-size: 1.1em;
+    color: #6c757d;
+
+    line-height: 1.6;
+  }
+  
+  .services ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .services li {
+   border: 0;
+    color: #6c757d;
+
+    transition: background-color .5s, color 0.3s;
+  }
+  
+  .services li:hover {
+    background-color: #ff8d33;
+    color: #fff;
+  }
+  .value-card{
+    transition: background-color 1.5s ease-in-out;
+
+  }
+  .value-card:hover {
+    background-color: #ff8d33;
+}
+
+.value-card:hover p {
+    color: #fff;
+}
+.value-card:hover i{
+  color: #fff;
+}
+ 
+  .team-card {
+    margin-bottom: 20px;
+    text-align: center;
+    transition: transform .3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .team-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  
+  .card-title {
+    font-size: 1.25em;
+    font-weight: bold;
+    
+  }
+  
+  .card-text {
+    font-size: 1.1em;
+   
+  }
+   
+  
+  .value-card {
+    border: none;
+    padding: 20px 0;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .value-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .value-icon {
+    font-size: 3em;
+    color: #ff8d33;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .row > [class*='col-'] {
+      margin-bottom: 20px;
+    }
+  
+    .card-deck {
+      flex-direction: column;
+    }
+  }
+  

@@ -1,6 +1,6 @@
 // frontend/src/components/ContactPage.js
 import React, { useState } from 'react';
-import './ContactPage.css';  // Import a CSS file for styling
+import './Assests/Css/ContactPage.css';  // Import a CSS file for styling
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
