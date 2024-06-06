@@ -15,12 +15,12 @@ const NavigationBar = () => {
   };
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container>
+    <Navbar bg="dark" variant="dark" className="p-0" expand="lg">
+      <Container className='mt-0 p-2'>
         <Navbar.Brand as={Link} to="/" className="me-auto">PetPooja</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
-          <Nav className="mx-auto">
+        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+          <Nav className="text-white">
             <Nav.Link as={Link} to="/">Home</Nav.Link>
             <Nav.Link as={Link} to="/about">About</Nav.Link>
             <Nav.Link as={Link} to="/contact">Contact</Nav.Link>
