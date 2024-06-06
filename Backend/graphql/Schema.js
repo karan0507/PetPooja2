@@ -16,6 +16,15 @@ const typeDefs = gql`
     phone: String!
     registrationNumber: String!
   }
+    
+type Order {
+    id: ID!
+    user: User!
+    items: [String!]!
+    total: Float!
+    status: String!
+    createdAt: String!
+  }
 
   type User {
     id: ID!
@@ -28,6 +37,7 @@ const typeDefs = gql`
   type Query {
     hello: String
     users: [User!]!
+    
   }
 
   type Mutation {
