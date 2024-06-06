@@ -1,5 +1,12 @@
 import React from 'react';
-
+import DashboardImg from './Assests/Images/dashboard_Img1.jpg';
+import Category1 from './Assests/Images/dashboardCategory1.jpg';
+import Category2 from './Assests/Images/dashboardCategory2.jpg';
+import Category3 from './Assests/Images/dashboardCategory3.jpg';
+import Pizza from './Assests/Images/Pizza.jpg';
+import burger from './Assests/Images/burger.jpg';
+import tiffin from './Assests/Images/tiffin.jpg';
+import dessert from './Assests/Images/dessert.jpg';
 
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import './Assests/Css/HomePage.css';
@@ -16,7 +23,7 @@ const HomePage = () => {
             <Button variant="primary" href="#top-restaurants">Order Now</Button>
           </Col>
           <Col md={6}>
-            <img src="path/to/your/image.jpg" alt="Delicious Food" className="img-fluid" />
+            <img src={DashboardImg} className="img-fluid" />
           </Col>
         </Row>
       </Container>
@@ -27,7 +34,7 @@ const HomePage = () => {
         <Row>
           <Col md={4}>
             <Card className="promo-card">
-              <Card.Img variant="top" src="path/to/your/promo1.jpg" />
+              <Card.Img variant="top" src={Category1} />
               <Card.Body>
                 <Card.Title>Get 20% Off</Card.Title>
                 <Card.Text>Order now and get 20% off on your first purchase!</Card.Text>
@@ -37,7 +44,7 @@ const HomePage = () => {
           </Col>
           <Col md={4}>
             <Card className="promo-card">
-              <Card.Img variant="top" src="path/to/your/promo2.jpg" />
+              <Card.Img variant="top" src={Category2} />
               <Card.Body>
                 <Card.Title>Free Delivery</Card.Title>
                 <Card.Text>Enjoy free delivery on orders above $50!</Card.Text>
@@ -47,7 +54,7 @@ const HomePage = () => {
           </Col>
           <Col md={4}>
             <Card className="promo-card">
-              <Card.Img variant="top" src="path/to/your/promo3.jpg" />
+              <Card.Img variant="top" src={Category3} />
               <Card.Body>
                 <Card.Title>Refer a Friend</Card.Title>
                 <Card.Text>Refer a friend and both of you get $10 off your next order!</Card.Text>
@@ -63,7 +70,7 @@ const HomePage = () => {
         <Row>
           <Col md={3}>
             <Card className="category-card">
-              <Card.Img variant="top" src="path/to/your/category1.jpg" />
+              <Card.Img variant="top" src={Pizza} />
               <Card.Body>
                 <Card.Title>Pizza</Card.Title>
               </Card.Body>
@@ -71,7 +78,7 @@ const HomePage = () => {
           </Col>
           <Col md={3}>
             <Card className="category-card">
-              <Card.Img variant="top" src="path/to/your/category2.jpg" />
+              <Card.Img variant="top" src={burger} />
               <Card.Body>
                 <Card.Title>Burgers</Card.Title>
               </Card.Body>
@@ -79,15 +86,15 @@ const HomePage = () => {
           </Col>
           <Col md={3}>
             <Card className="category-card">
-              <Card.Img variant="top" src="path/to/your/category3.jpg" />
+              <Card.Img variant="top" src={tiffin} />
               <Card.Body>
-                <Card.Title>Sushi</Card.Title>
+                <Card.Title>Tiffin</Card.Title>
               </Card.Body>
             </Card>
           </Col>
           <Col md={3}>
             <Card className="category-card">
-              <Card.Img variant="top" src="path/to/your/category4.jpg" />
+              <Card.Img variant="top" src={dessert} />
               <Card.Body>
                 <Card.Title>Desserts</Card.Title>
               </Card.Body>
