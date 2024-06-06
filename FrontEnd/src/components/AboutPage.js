@@ -92,7 +92,7 @@ const AboutPage = () => {
         <div className="row justify-content-center">
           <div className="col-md-3 col-sm-4 mb-4">
             <div className="team-card p-4">
-              <img src={harkishan} className="card-img-top rounded-circle" alt="Team Member 1"/>
+              <img src={harkishan} className=" rounded-circle" alt="Team Member 1"/>
               <div className="mt-3">
                 <h5>Harkishan Patel</h5>
                 <p className="card-text">Developer</p>
@@ -101,7 +101,7 @@ const AboutPage = () => {
           </div>
           <div className="col-md-3 col-sm-4 mb-4">
             <div className="team-card p-4">
-              <img src={Karan} className="card-img-top rounded-circle" alt="Team Member 2"/>
+              <img src={Karan} className=" rounded-circle" alt="Team Member 2"/>
               <div className="mt-3">
                 <h5 >Karan Gandhi</h5>
                 <p className="card-text">Developer</p>
@@ -110,7 +110,7 @@ const AboutPage = () => {
           </div>
           <div className="col-md-3 col-sm-4 mb-4">
             <div className=" team-card p-4">
-              <img src={satvir} className="card-img-top rounded-circle" alt="Team Member 3"/>
+              <img src={satvir} className=" rounded-circle" alt="Team Member 3"/>
               <div className="mt-3">
                 <h5 >Satvir Singh</h5>
                 <p className="card-text">Developer</p>

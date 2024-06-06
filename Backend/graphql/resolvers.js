@@ -4,10 +4,11 @@ const Address = require('../models/Address');
 const Customer = require('../models/Customer');
 const Merchant = require('../models/Merchant');
 const Restaurant = require('../models/Restaurant');
+const Order = require('../models/Order');
 
 const resolvers = {
   Query: {
-    hello: () => 'Hello world!',
+    
     users: async () => {
       try {
         return await User.find({});
