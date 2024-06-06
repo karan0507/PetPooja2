@@ -1,0 +1,127 @@
+body {
+    background-color: #f8f9fa;
+    
+  }
+  
+  .head{
+    font-weight: bolder;
+    color: #ff5733;
+    font-size: 2.5em;
+  }
+  .services h2,
+  .company-mission h2,
+  .values h2,
+  .team h2 {
+    font-weight: bold;
+    color: #ff5733;
+    font-size: 2em;
+  
+  }
+  .team-card h5 {
+    font-weight: bold;
+    color: #ff5733;
+    font-size: 1.5em;
+  
+  }
+  .side{
+    
+    height: auto;
+    width: 80%;
+  }
+  
+  .company-mission p,
+  .values p,
+  .team p,
+  .team-card p {
+    font-size: 1.1em;
+    color: #6c757d;
+    line-height: 1.6;
+  }
+  
+  .services ul {
+    list-style-type: none;
+   
+    
+  }
+  
+  .services li {
+   border: 0;
+   padding:10px 0;
+
+    color: #6c757d;
+    transition: background-color .5s ease-in-out, color 0.3s ease-in-out,padding .5s ease-in-out;
+  }
+  
+  .services li:hover {
+    background-color: #ff8d33;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+ 
+  .value-card{
+    
+    border: none;
+    padding: 20px 0;
+    transition: transform 0.8s ease-in-out, box-shadow 0.9s ease-in-out;
+
+  }
+  .value-card:hover {
+    background-color: #ff8d33;
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.value-card:hover p {
+    color: #fff;
+}
+.value-card:hover i{
+  color: #fff;
+}
+ 
+.team-card {
+  margin-bottom: 20px;
+  text-align: center;
+  transition: transform 0.7s ease-in-out, box-shadow 0.9s ease-in-out;
+  border-radius: 10px;
+
+  
+}
+
+.team-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.card-img-top {
+  height: auto;
+  width: 200px;
+  aspect-ratio: 1;
+  object-fit:cover;
+  border-radius: 50%;
+  margin: auto;
+}
+  
+  .value-icon {
+    font-size: 3em;
+    color: #ff8d33;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .row > [class*='col-'] {
+      margin-bottom: 20px;
+    }
+  
+    .card-deck {
+      flex-direction: column;
+    }
+  }
+  
