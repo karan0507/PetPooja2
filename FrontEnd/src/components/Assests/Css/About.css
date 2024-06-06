@@ -1,20 +1,30 @@
 body {
     background-color: #f8f9fa;
-    color: #343a40;
+    
   }
   
-  .head,
+  .head{
+    font-weight: bolder;
+    color: #ff5733;
+    font-size: 2.5em;
+  }
   .services h2,
   .company-mission h2,
   .values h2,
-  .team h2,
-  .card h5 {
+  .team h2 {
     font-weight: bold;
     color: #ff5733;
-  }
+    font-size: 2em;
   
+  }
+  .team-card h5 {
+    font-weight: bold;
+    color: #ff5733;
+    font-size: 1.5em;
+  
+  }
   .side{
-    /* aspect-ratio: 1; */
+    
     height: auto;
     width: 80%;
   }
@@ -22,35 +32,46 @@ body {
   .company-mission p,
   .values p,
   .team p,
-  .card p {
+  .team-card p {
     font-size: 1.1em;
     color: #6c757d;
-
     line-height: 1.6;
   }
   
   .services ul {
     list-style-type: none;
-    padding: 0;
+   
+    
   }
   
   .services li {
    border: 0;
-    color: #6c757d;
+   padding:10px 0;
 
-    transition: background-color .5s, color 0.3s;
+    color: #6c757d;
+    transition: background-color .5s ease-in-out, color 0.3s ease-in-out,padding .5s ease-in-out;
   }
   
   .services li:hover {
     background-color: #ff8d33;
     color: #fff;
+    padding: 10px;
+    cursor: pointer;
   }
+
+ 
   .value-card{
-    transition: background-color 1.5s ease-in-out;
+    
+    border: none;
+    padding: 20px 0;
+    transition: transform 0.8s ease-in-out, box-shadow 0.9s ease-in-out;
 
   }
   .value-card:hover {
     background-color: #ff8d33;
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .value-card:hover p {
@@ -63,46 +84,26 @@ body {
 .team-card {
   margin-bottom: 20px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.7s ease-in-out, box-shadow 0.9s ease-in-out;
   border-radius: 10px;
-  overflow: hidden;
+
+  
 }
 
 .team-card:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .card-img-top {
-  height: 200px;
+  height: auto;
   width: 200px;
-  object-fit: cover;
+  aspect-ratio: 1;
+  object-fit:cover;
   border-radius: 50%;
   margin: auto;
 }
-
-.card-title {
-  font-size: 1.25em;
-  font-weight: bold;
-  color: #007bff;
-}
-
-.card-text {
-  font-size: 1.1em;
-  color: #6c757d;
-}
-   
-  
-  .value-card {
-    border: none;
-    padding: 20px 0;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .value-card:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
   
   .value-icon {
     font-size: 3em;

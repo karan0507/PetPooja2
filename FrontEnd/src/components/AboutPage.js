@@ -11,7 +11,7 @@ import harkishan from './Assests/Images/harkishan.jpg';
 
 const AboutPage = () => {
   return (
-    <div className="container mt-5">
+    <div className="container ">
       <h1 className="text-center mb-5 head">About Us</h1>
       
       <section className="company-mission mb-5">
@@ -87,32 +87,32 @@ const AboutPage = () => {
         </div>
       </section>
       
-      <section className="team mb-5">
-        <h2 className="text-center mb-3">Meet Our Team</h2>
+      <section className="team mb-2">
+        <h2 className="text-center mb-4">Meet Our Team</h2>
         <div className="row justify-content-center">
           <div className="col-md-3 col-sm-4 mb-4">
-            <div className="card team-card p-4">
+            <div className="team-card p-4">
               <img src={harkishan} className="card-img-top rounded-circle" alt="Team Member 1"/>
-              <div className="card-body">
-                <h5 className="card-title">Harkishan Patel</h5>
+              <div className="mt-3">
+                <h5>Harkishan Patel</h5>
                 <p className="card-text">Developer</p>
               </div>
             </div>
           </div>
           <div className="col-md-3 col-sm-4 mb-4">
-            <div className="card team-card p-4">
+            <div className="team-card p-4">
               <img src={Karan} className="card-img-top rounded-circle" alt="Team Member 2"/>
-              <div className="card-body">
-                <h5 className="card-title">Karan Gandhi</h5>
+              <div className="mt-3">
+                <h5 >Karan Gandhi</h5>
                 <p className="card-text">Developer</p>
               </div>
             </div>
           </div>
           <div className="col-md-3 col-sm-4 mb-4">
-            <div className="card team-card p-4">
+            <div className=" team-card p-4">
               <img src={satvir} className="card-img-top rounded-circle" alt="Team Member 3"/>
-              <div className="card-body">
-                <h5 className="card-title">Satvir Singh</h5>
+              <div className="mt-3">
+                <h5 >Satvir Singh</h5>
                 <p className="card-text">Developer</p>
               </div>
             </div>
