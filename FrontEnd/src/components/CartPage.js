@@ -1,4 +1,4 @@
-// frontend/src/components/CartPage.js
+
 import React from 'react';
 
 const CartPage = () => {

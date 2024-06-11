@@ -1,6 +1,6 @@
-// frontend/src/components/ContactPage.js
+
 import React, { useState } from 'react';
-import './Assests/Css/ContactPage.css';  // Import a CSS file for styling
+import './Assests/Css/ContactPage.css';  
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -36,9 +36,9 @@ const ContactPage = () => {
     e.preventDefault();
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
-      // Handle form submission (e.g., send data to the server or display a success message)
+      
       console.log('Form submitted:', formData);
-      // Clear form fields
+      
       setFormData({
         name: '',
         email: '',
@@ -52,20 +52,10 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h1>Contact Us</h1>
-      <section className="contact-info">
-        <p>
-          We'd love to hear from you! Whether you have questions, feedback, or need assistance, feel free to reach out to us.
-        </p>
-        <ul>
-          <li>Email: support@petpooja.com</li>
-          <li>Phone: (123) 456-7890</li>
-          <li>Address: 123 Foodie St, Foodland, FL 12345</li>
-        </ul>
-      </section>
+    <div className="contact-container">
+      <h1 className='head'>Contact Us</h1>
       <section className="contact-form">
-        <h2>Contact Form</h2>
+        <h2 >Contact Form</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name:</label>
@@ -75,7 +65,7 @@ const ContactPage = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              required
+              
             />
             {errors.name && <span className="error">{errors.name}</span>}
           </div>
@@ -87,7 +77,7 @@ const ContactPage = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
+              
             />
             {errors.email && <span className="error">{errors.email}</span>}
           </div>
@@ -99,7 +89,7 @@ const ContactPage = () => {
               name="subject"
               value={formData.subject}
               onChange={handleChange}
-              required
+              
             />
             {errors.subject && <span className="error">{errors.subject}</span>}
           </div>
@@ -110,12 +100,37 @@ const ContactPage = () => {
               name="message"
               value={formData.message}
               onChange={handleChange}
-              required
+              
             ></textarea>
             {errors.message && <span className="error">{errors.message}</span>}
           </div>
-          <button type="submit" className="btn btn-primary">Submit</button>
+          <div className="button-container">
+            <button type="submit" className="btn subm">Submit</button>
+          </div>
         </form>
+      </section>
+      <section className="contact-info">
+      
+        <div className="info">
+          <h3 className='text-center bolder infoh3' style={{color:'#ff8d33'}}>Contact Info</h3>
+          <p>
+            We'd love to hear from you! Whether you have questions, feedback, or need assistance, feel free to reach out to us.
+          </p>
+          <ul>
+            <li>Email: support@petpooja.com</li>
+            <li>Phone: (123) 456-7890</li>
+            <li>Address: 108 University Ave, Waterloo, ON N2J 2W2</li>
+          </ul>
+        </div>
+        <div className="map">
+          <iframe
+          title='address'
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d11580.395921845182!2d-80.5180089!3d43.4794047!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882bf31d0cec9491%3A0x8bf5f60c306d2207!2sConestoga%20College%20Waterloo%20Campus!5e0!3m2!1sen!2sca!4v1718124419728!5m2!1sen!2sca"
+            allowFullScreen=""
+            aria-hidden="false"
+            tabIndex="0"
+          ></iframe>
+        </div>
       </section>
     </div>
   );
