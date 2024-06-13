@@ -1,7 +1,4 @@
 
-
-
-// frontend/src/components/FoodPage.js
 import React from 'react';
 
 const FoodPage = () => {
