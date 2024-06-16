@@ -5,6 +5,8 @@ const Customer = require('../models/Customer');
 const Merchant = require('../models/Merchant');
 const Restaurant = require('../models/Restaurant');
 const Order = require('../models/Order');
+const ContactUsAdmin = require('../models/ContactUsAdmin');
+
 
 const resolvers = {
   Query: {
@@ -141,6 +143,21 @@ const resolvers = {
       } catch (error) {
         console.error('Error in updatePassword mutation:', error.message);
         throw new Error('Error updating password');
+      }
+    },
+    submitContactForm: async (_, { name, email, subject, message }) => {
+      try {
+        const newContact = new ContactUsAdmin({
+          name,
+          email,
+          subject,
+          message
+        });
+        const result = await newContact.save();
+        return result;
+      } catch (error) {
+        console.error('Error submitting contact form:', error);
+        throw new Error('Failed to submit contact form');
       }
     },
   },
