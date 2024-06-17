@@ -16,8 +16,8 @@ const typeDefs = gql`
     phone: String!
     registrationNumber: String!
   }
-    
-type Order {
+
+  type Order {
     id: ID!
     user: User!
     items: [String!]!
@@ -34,10 +34,18 @@ type Order {
     phone: String
   }
 
+  type ContactUsAdmin {
+    _id: ID!
+    name: String!
+    email: String!
+    subject: String!
+    message: String!
+    createdAt: String!
+  }
+
   type Query {
     hello: String
     users: [User!]!
-    
   }
 
   type Mutation {
@@ -57,6 +65,8 @@ type Order {
     login(username: String!, password: String!): User
     deleteUser(id: ID!): User
     updatePassword(id: ID!, newPassword: String!): User
+
+    submitContactForm(name: String!, email: String!, subject: String!, message: String!): ContactUsAdmin!
   }
 `;
 
