@@ -12,6 +12,10 @@ import Signup from './components/Signup';
 import AdminDashboard from './components/AdminDashboard';
 import NavigationBar from './components/Navbar';
 import Footer from './components/Footer';
+import UsersPage from './components/UsersPage';
+import ContactMessages from './components/ContactMessages';
+import OrdersPage from './components/OrdersPage';
+import AddMerchant from './components/AddMerchant';
 
 import './App.css';
 
@@ -30,6 +34,10 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={UsersPage} />
+          <Route path="/admin/contact-messages" element={ContactMessages} />
+          <Route path="/admin/orders" element={OrdersPage} />
+          <Route path="/admin/add-merchant" elemrnt={AddMerchant} />
           </Routes>
         </div>
         <Footer />

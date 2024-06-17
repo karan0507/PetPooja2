@@ -10,13 +10,36 @@ const ContactUsAdmin = require('../models/ContactUsAdmin');
 
 const resolvers = {
   Query: {
-    
     users: async () => {
       try {
         return await User.find({});
       } catch (error) {
         console.error('Error fetching users:', error);
         throw new Error('Error fetching users');
+      }
+    },
+    contactMessages: async () => {
+      try {
+        return await ContactUsAdmin.find({});
+      } catch (error) {
+        console.error('Error fetching contact messages:', error);
+        throw new Error('Error fetching contact messages');
+      }
+    },
+    orders: async () => {
+      try {
+        return await Order.find({}).populate('user');
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw new Error('Error fetching orders');
+      }
+    },
+    merchants: async () => {
+      try {
+        return await Merchant.find({}).populate('user');
+      } catch (error) {
+        console.error('Error fetching merchants:', error);
+        throw new Error('Error fetching merchants');
       }
     },
   },
@@ -159,6 +182,7 @@ const resolvers = {
         console.error('Error submitting contact form:', error);
         throw new Error('Failed to submit contact form');
       }
+      
     },
   },
 };
