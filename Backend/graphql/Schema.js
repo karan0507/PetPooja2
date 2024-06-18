@@ -17,7 +17,7 @@ const typeDefs = gql`
     registrationNumber: String!
   }
 
-     type Merchant {
+  type Merchant {
     id: ID!
     user: User!
     restaurantName: String!
@@ -58,7 +58,7 @@ const typeDefs = gql`
     users: [User!]!
     contactMessages: [ContactUsAdmin!]!
     orders: [Order!]!
-    merchants: [Merchant!]
+    merchants: [Merchant!]!
   }
 
   type Mutation {
@@ -78,12 +78,11 @@ const typeDefs = gql`
     login(username: String!, password: String!): User
     deleteUser(id: ID!): User
     updatePassword(id: ID!, newPassword: String!): User
-
-    
     submitContactForm(name: String!, email: String!, subject: String!, message: String!): ContactUsAdmin!
     addOrder(userId: ID!, items: [String!]!, total: Float!, status: String!): Order!
     addMerchant(userId: ID!, restaurantName: String!, menu: [String!]!, address: String!, phone: String!, registrationNumber: String!): Merchant!
-    }
+    updateOrderStatus(id: ID!, status: String!): Order!
+  }
 `;
 
 module.exports = typeDefs;

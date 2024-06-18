@@ -16,7 +16,6 @@ import UsersPage from './components/UsersPage';
 import ContactMessages from './components/ContactMessages';
 import OrdersPage from './components/OrdersPage';
 import AddMerchant from './components/AddMerchant';
-
 import './App.css';
 
 function App() {
@@ -33,11 +32,12 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={UsersPage} />
-          <Route path="/admin/contact-messages" element={ContactMessages} />
-          <Route path="/admin/orders" element={OrdersPage} />
-          <Route path="/admin/add-merchant" elemrnt={AddMerchant} />
+            <Route path="/admin" element={<AdminDashboard />}>
+              <Route path="users" element={<UsersPage />} />
+              <Route path="contact-messages" element={<ContactMessages />} />
+              <Route path="orders" element={<OrdersPage />} />
+              <Route path="add-merchant" element={<AddMerchant />} />
+            </Route>
           </Routes>
         </div>
         <Footer />

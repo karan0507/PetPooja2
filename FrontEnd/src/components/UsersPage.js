@@ -39,22 +39,29 @@ const UsersPage = () => {
   const [newPassword, setNewPassword] = useState('');
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this user?');
-    if (confirmDelete) {
-      await deleteUser({ variables: { id } });
-      refetch();
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      try {
+        await deleteUser({ variables: { id } });
+        refetch();
+      } catch (error) {
+        alert('Failed to delete the user. Please try again.');
+      }
     }
   };
 
   const handleUpdatePassword = async (id) => {
-    await updatePassword({ variables: { id, newPassword } });
-    setSelectedUser(null);
-    setNewPassword('');
-    refetch();
+    try {
+      await updatePassword({ variables: { id, newPassword } });
+      setSelectedUser(null);
+      setNewPassword('');
+      refetch();
+    } catch (error) {
+      alert('Failed to update password. Please try again.');
+    }
   };
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading users</p>;
+  if (error) return <p>Error loading users: {error.message}</p>;
 
   return (
     <div className="container mt-5">
@@ -85,7 +92,10 @@ const UsersPage = () => {
                 </button>
                 <button
                   className="btn btn-warning ml-2"
-                  onClick={() => setSelectedUser(user.id)}
+                  onClick={() => {
+                    setSelectedUser(user.id);
+                    setNewPassword('');
+                  }}
                 >
                   Update Password
                 </button>

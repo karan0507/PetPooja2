@@ -7,7 +7,6 @@ const Restaurant = require('../models/Restaurant');
 const Order = require('../models/Order');
 const ContactUsAdmin = require('../models/ContactUsAdmin');
 
-
 const resolvers = {
   Query: {
     users: async () => {
@@ -182,7 +181,20 @@ const resolvers = {
         console.error('Error submitting contact form:', error);
         throw new Error('Failed to submit contact form');
       }
-      
+    },
+    updateOrderStatus: async (_, { id, status }) => {
+      try {
+        const order = await Order.findById(id);
+        if (!order) {
+          throw new Error('Order not found');
+        }
+        order.status = status;
+        await order.save();
+        return order;
+      } catch (error) {
+        console.error('Error updating order status:', error);
+        throw new Error('Failed to update order status');
+      }
     },
   },
 };
