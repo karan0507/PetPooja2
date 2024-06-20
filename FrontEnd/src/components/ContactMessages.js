@@ -4,7 +4,7 @@ import { useQuery, gql } from '@apollo/client';
 const GET_CONTACT_MESSAGES_QUERY = gql`
   query GetContactMessages {
     contactMessages {
-      id
+      _id
       name
       email
       subject
@@ -18,7 +18,7 @@ const ContactMessages = () => {
   const { loading, error, data } = useQuery(GET_CONTACT_MESSAGES_QUERY);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error loading contact messages</p>;
+  if (error) return <p>Error loading contact messages: {error.message}</p>;
 
   return (
     <div className="container mt-5">
@@ -35,7 +35,7 @@ const ContactMessages = () => {
         </thead>
         <tbody>
           {data.contactMessages.map((message) => (
-            <tr key={message.id}>
+            <tr key={message._id}>
               <td>{message.name}</td>
               <td>{message.email}</td>
               <td>{message.subject}</td>
