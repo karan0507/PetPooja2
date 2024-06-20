@@ -43,7 +43,7 @@ const Login = () => {
       const user = result.data.login;
       localStorage.setItem('user', JSON.stringify(user));
       if (user.role === 'Merchant') navigate('/about');
-      else if (user.role === 'Admin') navigate('/admin');
+      else if (user.role === 'Admin') navigate('/admin/users');
       else navigate('/food');
     } catch (e) {
       setErrorMessage(e.message);
