@@ -1,14 +1,14 @@
-const bcrypt = require('bcryptjs');
-const path = require('path');
-const fs = require('fs');
-const User = require('../models/User');
-const Address = require('../models/Address');
-const Customer = require('../models/Customer');
-const Merchant = require('../models/Merchant');
-const Restaurant = require('../models/Restaurant');
-const Order = require('../models/Order');
-const ContactUsAdmin = require('../models/ContactUsAdmin');
-const { GraphQLUpload } = require('graphql-upload');
+const bcrypt = require("bcryptjs");
+const path = require("path");
+const fs = require("fs");
+const User = require("../models/User");
+const Address = require("../models/Address");
+const Customer = require("../models/Customer");
+const Merchant = require("../models/Merchant");
+const Restaurant = require("../models/Restaurant");
+const Order = require("../models/Order");
+const ContactUsAdmin = require("../models/ContactUsAdmin");
+const { GraphQLUpload } = require("graphql-upload");
 
 const resolvers = {
   Upload: GraphQLUpload,
@@ -16,33 +16,22 @@ const resolvers = {
     users: async () => await User.find({}),
     user: async (_, { id }) => await User.findById(id),
     contactMessages: async () => await ContactUsAdmin.find({}),
-    orders: async () => await Order.find({}).populate('user'),
-    merchants: async () => await Merchant.find({}).populate('user').populate('address'),
+    orders: async () => await Order.find({}).populate("user"),
+    merchants: async () =>
+      await Merchant.find({}).populate("user").populate("address"),
     merchant: async (_, { userId }) => {
-      try {
-        const merchant = await Merchant.findOne({ user: userId }).populate('user').populate('address');
-        if (!merchant) {
-          console.error(`Merchant not found for userId: ${userId}`);
-          throw new Error('Merchant not found');
-        }
-        return merchant;
-      } catch (error) {
-        console.error(`Error fetching merchant for userId ${userId}:`, error.message);
-        throw new Error('Error fetching merchant details');
-      }
+      const merchant = await Merchant.findOne({ user: userId })
+        .populate("user")
+        .populate("address");
+
+      return merchant;
     },
     customer: async (_, { userId }) => {
-      try {
-        const customer = await Customer.findOne({ user: userId }).populate('user').populate('address');
-        if (!customer) {
-          console.error(`Customer not found for userId: ${userId}`);
-          throw new Error('Customer not found');
-        }
-        return customer;
-      } catch (error) {
-        console.error(`Error fetching customer for userId ${userId}:`, error.message);
-        throw new Error('Error fetching customer details');
-      }
+      const customer = await Customer.findOne({ user: userId })
+        .populate("user")
+        .populate("address");
+
+      return customer;
     },
   },
   Mutation: {
@@ -50,11 +39,11 @@ const resolvers = {
       const { createReadStream, filename, mimetype } = await file;
       const user = await User.findById(userId);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
 
-      if (mimetype !== 'image/jpeg' && mimetype !== 'image/png') {
-        throw new Error('Only JPG and PNG files are allowed');
+      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+        throw new Error("Only JPG and PNG files are allowed");
       }
 
       const stream = createReadStream();
@@ -63,8 +52,8 @@ const resolvers = {
       const out = fs.createWriteStream(filePath);
       stream.pipe(out);
       await new Promise((resolve, reject) => {
-        out.on('finish', resolve);
-        out.on('error', reject);
+        out.on("finish", resolve);
+        out.on("error", reject);
       });
 
       user.profilePic = `/uploads/${uniqueFilename}`;
@@ -75,14 +64,14 @@ const resolvers = {
     removeProfilePic: async (_, { userId }) => {
       const user = await User.findById(userId);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
 
       if (user.profilePic) {
         const filePath = path.join(__dirname, `../${user.profilePic}`);
         fs.unlink(filePath, (err) => {
           if (err) {
-            console.error('Error deleting file:', err);
+            console.error("Error deleting file:", err);
           }
         });
         user.profilePic = null;
@@ -109,7 +98,7 @@ const resolvers = {
     ) => {
       const existingUser = await User.findOne({ username });
       if (existingUser) {
-        throw new Error('Username already exists');
+        throw new Error("Username already exists");
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -131,13 +120,13 @@ const resolvers = {
       });
       await newAddress.save();
 
-      if (role === 'Customer') {
+      if (role === "Customer") {
         const newCustomer = new Customer({
           user: newUser._id,
           address: newAddress._id,
         });
         await newCustomer.save();
-      } else if (role === 'Merchant') {
+      } else if (role === "Merchant") {
         const newRestaurant = new Restaurant({
           restaurantName,
           address: newAddress._id,
@@ -152,7 +141,7 @@ const resolvers = {
           address: newAddress._id,
           phone,
           registrationNumber,
-          menu: [], 
+          menu: [],
         });
         await newMerchant.save();
       }
@@ -162,12 +151,12 @@ const resolvers = {
     login: async (_, { username, password }) => {
       const user = await User.findOne({ username });
       if (!user) {
-        throw new Error('Username not found');
+        throw new Error("Username not found");
       }
 
       const valid = await bcrypt.compare(password, user.password);
       if (!valid) {
-        throw new Error('Incorrect password');
+        throw new Error("Incorrect password");
       }
 
       return user;
@@ -175,7 +164,7 @@ const resolvers = {
     deleteUser: async (_, { id }) => {
       const user = await User.findByIdAndDelete(id);
       if (!user) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
       return user;
     },
@@ -187,7 +176,7 @@ const resolvers = {
         { new: true }
       );
       if (!user) {
-        throw new Error('User not found');
+        throw new Error("User not found");
       }
       return user;
     },
@@ -196,7 +185,7 @@ const resolvers = {
         name,
         email,
         subject,
-        message
+        message,
       });
       const result = await newContact.save();
       return result;
@@ -204,7 +193,7 @@ const resolvers = {
     updateOrderStatus: async (_, { id, status }) => {
       const order = await Order.findById(id);
       if (!order) {
-        throw new Error('Order not found');
+        throw new Error("Order not found");
       }
       order.status = status;
       await order.save();

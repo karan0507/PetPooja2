@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   scalar Upload
@@ -92,9 +92,26 @@ const typeDefs = gql`
     login(username: String!, password: String!): User!
     deleteUser(id: ID!): User!
     updatePassword(id: ID!, newPassword: String!): User!
-    submitContactForm(name: String!, email: String!, subject: String!, message: String!): ContactUsAdmin!
-    addOrder(userId: ID!, items: [String!]!, total: Float!, status: String!): Order!
-    addMerchant(userId: ID!, restaurantName: String!, menu: [String!]!, address: String!, phone: String!, registrationNumber: String!): Merchant!
+    submitContactForm(
+      name: String!
+      email: String!
+      subject: String!
+      message: String!
+    ): ContactUsAdmin!
+    addOrder(
+      userId: ID!
+      items: [String!]!
+      total: Float!
+      status: String!
+    ): Order!
+    addMerchant(
+      userId: ID!
+      restaurantName: String!
+      menu: [String!]!
+      address: String!
+      phone: String!
+      registrationNumber: String!
+    ): Merchant!
     updateOrderStatus(id: ID!, status: String!): Order!
   }
 `;
