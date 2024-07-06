@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import { Container, Row, Col, Button, Form, Image, Card, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Image, Card } from 'react-bootstrap';
 import profile from './Assests/Images/default.png';
 import './Assests/Css/MerchantDetailPage.css';
 
@@ -89,18 +89,13 @@ const ProfileDetailPage = () => {
   const [showFileInput, setShowFileInput] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(null);
 
-  const { loading: userLoading, error: userError, data: userData } = useQuery(GET_PROFILE_DETAILS, { variables: { userId } });
-  const { loading: merchantLoading, error: merchantError, data: merchantData } = useQuery(GET_MERCHANT_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Merchant' });
-  const { loading: customerLoading, error: customerError, data: customerData } = useQuery(GET_CUSTOMER_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Customer' });
+  const { loading: userLoading, data: userData } = useQuery(GET_PROFILE_DETAILS, { variables: { userId } });
+  const { loading: merchantLoading, data: merchantData } = useQuery(GET_MERCHANT_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Merchant' });
+  const { loading: customerLoading, data: customerData } = useQuery(GET_CUSTOMER_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Customer' });
   const [uploadProfilePic, { loading: uploadLoading, error: uploadError }] = useMutation(UPLOAD_PROFILE_PIC);
   const [removeProfilePic, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_PROFILE_PIC);
 
-  useEffect(() => {
-    if (userError) console.error('Error fetching user details:', userError);
-    if (merchantError) console.error(`Error fetching merchant details for userId ${userId}:`, merchantError.message);
-    if (customerError) console.error('Error fetching customer details:', customerError);
-  }, [userError, merchantError, customerError]);
-
+ 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
@@ -153,13 +148,7 @@ const ProfileDetailPage = () => {
     return <p>Loading...</p>;
   }
 
-  if (userError || (userData && userData.user.role === 'Merchant' && merchantError) || (userData && userData.user.role === 'Customer' && customerError)) {
-    return (
-      <Alert variant="danger">
-        {userError?.message || merchantError?.message || customerError?.message}
-      </Alert>
-    );
-  }
+  
 
   const user = userData.user;
   const merchant = user.role === 'Merchant' ? merchantData?.merchant : null;
