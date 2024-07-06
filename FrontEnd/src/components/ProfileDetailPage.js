@@ -1,0 +1,228 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useQuery, useMutation, gql } from '@apollo/client';
+import { Container, Row, Col, Button, Form, Image, Card, Alert } from 'react-bootstrap';
+import profile from './Assests/Images/default.png';
+import './Assests/Css/MerchantDetailPage.css';
+
+const GET_PROFILE_DETAILS = gql`
+  query GetProfileDetails($userId: ID!) {
+    user(id: $userId) {
+      id
+      username
+      role
+      email
+      phone
+      profilePic
+    }
+  }
+`;
+
+const GET_MERCHANT_DETAILS = gql`
+  query GetMerchantDetails($userId: ID!) {
+    merchant(userId: $userId) {
+      id
+      restaurantName
+      address {
+        street
+        city
+        province
+        zipcode
+      }
+      phone
+      registrationNumber
+      user {
+        id
+        username
+        email
+        phone
+        profilePic
+      }
+    }
+  }
+`;
+
+const GET_CUSTOMER_DETAILS = gql`
+  query GetCustomerDetails($userId: ID!) {
+    customer(userId: $userId) {
+      id
+      address {
+        street
+        city
+        province
+        zipcode
+      }
+      user {
+        id
+        username
+        email
+        phone
+        profilePic
+      }
+    }
+  }
+`;
+
+const UPLOAD_PROFILE_PIC = gql`
+  mutation UploadProfilePic($userId: ID!, $file: Upload!) {
+    uploadProfilePic(userId: $userId, file: $file) {
+      id
+      username
+      profilePic
+    }
+  }
+`;
+
+const REMOVE_PROFILE_PIC = gql`
+  mutation RemoveProfilePic($userId: ID!) {
+    removeProfilePic(userId: $userId) {
+      id
+      username
+      profilePic
+    }
+  }
+`;
+
+const ProfileDetailPage = () => {
+  const { userId } = useParams();
+  const [file, setFile] = useState(null);
+  const [showFileInput, setShowFileInput] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(null);
+
+  const { loading: userLoading, error: userError, data: userData } = useQuery(GET_PROFILE_DETAILS, { variables: { userId } });
+  const { loading: merchantLoading, error: merchantError, data: merchantData } = useQuery(GET_MERCHANT_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Merchant' });
+  const { loading: customerLoading, error: customerError, data: customerData } = useQuery(GET_CUSTOMER_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Customer' });
+  const [uploadProfilePic, { loading: uploadLoading, error: uploadError }] = useMutation(UPLOAD_PROFILE_PIC);
+  const [removeProfilePic, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_PROFILE_PIC);
+
+  useEffect(() => {
+    if (userError) console.error('Error fetching user details:', userError);
+    if (merchantError) console.error(`Error fetching merchant details for userId ${userId}:`, merchantError.message);
+    if (customerError) console.error('Error fetching customer details:', customerError);
+  }, [userError, merchantError, customerError]);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) return;
+
+    try {
+      const { data } = await uploadProfilePic({
+        variables: {
+          userId,
+          file,
+        },
+      });
+      setUploadSuccess('Profile picture uploaded successfully!');
+      setShowFileInput(false);
+      setFile(null);
+
+      const updatedUser = { ...userData.user, profilePic: data.uploadProfilePic.profilePic };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      window.location.reload();
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
+    }
+  };
+
+  const handleRemove = async () => {
+    try {
+      await removeProfilePic({
+        variables: {
+          userId,
+        },
+      });
+      setUploadSuccess('Profile picture removed successfully!');
+      setShowFileInput(false);
+
+      const updatedUser = { ...userData.user, profilePic: null };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      window.location.reload();
+    } catch (error) {
+      console.error('Error removing profile picture:', error);
+    }
+  };
+
+  const handleChangeImageClick = () => {
+    setShowFileInput(true);
+  };
+
+  if (userLoading || (userData && userData.user.role === 'Merchant' && merchantLoading) || (userData && userData.user.role === 'Customer' && customerLoading)) {
+    return <p>Loading...</p>;
+  }
+
+  if (userError || (userData && userData.user.role === 'Merchant' && merchantError) || (userData && userData.user.role === 'Customer' && customerError)) {
+    return (
+      <Alert variant="danger">
+        {userError?.message || merchantError?.message || customerError?.message}
+      </Alert>
+    );
+  }
+
+  const user = userData.user;
+  const merchant = user.role === 'Merchant' ? merchantData?.merchant : null;
+  const customer = user.role === 'Customer' ? customerData?.customer : null;
+  const profilePicUrl = user.profilePic ? `http://localhost:5000${user.profilePic}` : profile;
+
+  return (
+    <Container>
+      <Row className="my-4">
+        <Col md={4} className="text-center">
+          <Card className="profile-card">
+            <Card.Body>
+              <Image src={profilePicUrl} roundedCircle width="150" className="profile-image" />
+              {showFileInput ? (
+                <>
+                  <Form.Group className="mt-3">
+                    <Form.Control type="file" accept=".jpg,.jpeg" onChange={handleFileChange} />
+                  </Form.Group>
+                  <Button className="mt-2" onClick={handleUpload} disabled={uploadLoading}>
+                    {uploadLoading ? 'Uploading...' : 'Upload'}
+                  </Button>
+                </>
+              ) : (
+                <div className="d-flex justify-content-center mt-2">
+                  <Button className="me-2" onClick={handleChangeImageClick}>
+                    Change Image
+                  </Button>
+                  <Button className='mt-3' variant="danger" onClick={handleRemove} disabled={removeLoading}>
+                    {removeLoading ? 'Removing...' : 'Remove Image'}
+                  </Button>
+                </div>
+              )}
+              {uploadError && <p className="text-danger">Error uploading file: {uploadError.message}</p>}
+              {removeError && <p className="text-danger">Error removing file: {removeError.message}</p>}
+              {uploadSuccess && <p className="text-success">{uploadSuccess}</p>}
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={8}>
+          <Card>
+            <Card.Body>
+              <h1>{user.username}</h1>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Phone:</strong> {user.phone}</p>
+              {merchant && (
+                <>
+                  <p><strong>Restaurant Name:</strong> {merchant.restaurantName}</p>
+                  <p><strong>Address:</strong> {merchant.address.street}, {merchant.address.city}, {merchant.address.province}, {merchant.address.zipcode}</p>
+                  <p><strong>Registration Number:</strong> {merchant.registrationNumber}</p>
+                 
+                </>
+              )}
+              {customer && (
+                <>
+                  <p><strong>Address:</strong> {customer.address.street}, {customer.address.city}, {customer.address.province}, {customer.address.zipcode}</p>
+                </>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default ProfileDetailPage;

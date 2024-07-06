@@ -42,7 +42,7 @@ const Login = () => {
       const result = await login({ variables: { username, password } });
       const user = result.data.login;
       localStorage.setItem('user', JSON.stringify(user));
-      if (user.role === 'Merchant') navigate('/about');
+      if (user.role === 'Merchant') navigate(`/profile/${user.id}`);
       else if (user.role === 'Admin') navigate('/admin/users');
       else navigate('/food');
     } catch (e) {

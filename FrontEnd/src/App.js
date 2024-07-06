@@ -16,6 +16,7 @@ import UsersPage from './components/UsersPage';
 import ContactMessages from './components/ContactMessages';
 import OrdersPage from './components/OrdersPage';
 import AddMerchant from './components/AddMerchant';
+import ProfileDetailPage from './components/ProfileDetailPage';
 import './App.css';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/profile/:userId" element={<ProfileDetailPage />} />
             <Route path="/admin" element={<AdminDashboard />}>
               <Route path="users" element={<UsersPage />} />
               <Route path="contact-messages" element={<ContactMessages />} />
