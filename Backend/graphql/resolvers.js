@@ -7,16 +7,38 @@ const Restaurant = require('../models/Restaurant');
 const Order = require('../models/Order');
 const ContactUsAdmin = require('../models/ContactUsAdmin');
 
-
 const resolvers = {
   Query: {
-    
     users: async () => {
       try {
         return await User.find({});
       } catch (error) {
         console.error('Error fetching users:', error);
         throw new Error('Error fetching users');
+      }
+    },
+    contactMessages: async () => {
+      try {
+        return await ContactUsAdmin.find({});
+      } catch (error) {
+        console.error('Error fetching contact messages:', error);
+        throw new Error('Error fetching contact messages');
+      }
+    },
+    orders: async () => {
+      try {
+        return await Order.find({}).populate('user');
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw new Error('Error fetching orders');
+      }
+    },
+    merchants: async () => {
+      try {
+        return await Merchant.find({}).populate('user');
+      } catch (error) {
+        console.error('Error fetching merchants:', error);
+        throw new Error('Error fetching merchants');
       }
     },
   },
@@ -158,6 +180,20 @@ const resolvers = {
       } catch (error) {
         console.error('Error submitting contact form:', error);
         throw new Error('Failed to submit contact form');
+      }
+    },
+    updateOrderStatus: async (_, { id, status }) => {
+      try {
+        const order = await Order.findById(id);
+        if (!order) {
+          throw new Error('Order not found');
+        }
+        order.status = status;
+        await order.save();
+        return order;
+      } catch (error) {
+        console.error('Error updating order status:', error);
+        throw new Error('Failed to update order status');
       }
     },
   },

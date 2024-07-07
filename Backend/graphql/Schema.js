@@ -17,6 +17,16 @@ const typeDefs = gql`
     registrationNumber: String!
   }
 
+  type Merchant {
+    id: ID!
+    user: User!
+    restaurantName: String!
+    menu: [String!]!
+    address: String!
+    phone: String!
+    registrationNumber: String!
+  }
+
   type Order {
     id: ID!
     user: User!
@@ -46,6 +56,9 @@ const typeDefs = gql`
   type Query {
     hello: String
     users: [User!]!
+    contactMessages: [ContactUsAdmin!]!
+    orders: [Order!]!
+    merchants: [Merchant!]!
   }
 
   type Mutation {
@@ -65,8 +78,10 @@ const typeDefs = gql`
     login(username: String!, password: String!): User
     deleteUser(id: ID!): User
     updatePassword(id: ID!, newPassword: String!): User
-
     submitContactForm(name: String!, email: String!, subject: String!, message: String!): ContactUsAdmin!
+    addOrder(userId: ID!, items: [String!]!, total: Float!, status: String!): Order!
+    addMerchant(userId: ID!, restaurantName: String!, menu: [String!]!, address: String!, phone: String!, registrationNumber: String!): Merchant!
+    updateOrderStatus(id: ID!, status: String!): Order!
   }
 `;
 
