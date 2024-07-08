@@ -11,6 +11,7 @@ const Sidebar = () => {
         <li><Link to="contact-messages">Contact Messages</Link></li>
         <li><Link to="orders">Manage Orders</Link></li>
         <li><Link to="add-merchant">Add Merchant</Link></li>
+        <li><Link to="products">Manage Products</Link></li>
       </ul>
     </div>
   );
