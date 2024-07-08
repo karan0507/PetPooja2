@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
-import { useMutation, gql } from '@apollo/client';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Container, Form, Button, Row, Col, Card, Alert } from 'react-bootstrap';
-
-
+import React, { useState } from "react";
+import { useMutation, gql } from "@apollo/client";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import {
+  Container,
+  Form,
+  Button,
+  Row,
+  Col,
+  Card,
+  Alert,
+} from "react-bootstrap";
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -16,38 +22,37 @@ const LOGIN_MUTATION = gql`
 `;
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [login] = useMutation(LOGIN_MUTATION);
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const signupSuccess = queryParams.get('signup') === 'success';
+  const signupSuccess = queryParams.get("signup") === "success";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     if (!username) {
-      setErrorMessage('Username is required');
+      setErrorMessage("Username is required");
       return;
     }
     if (!password) {
-      setErrorMessage('Password is required');
+      setErrorMessage("Password is required");
       return;
     }
 
     try {
       const result = await login({ variables: { username, password } });
       const user = result.data.login;
-      localStorage.setItem('user', JSON.stringify(user));
-      if (user.role === 'Merchant') navigate('/about');
-      else if (user.role === 'Admin') navigate('/admin');
-      else navigate('/food');
+      localStorage.setItem("user", JSON.stringify(user));
+      if (user.role === "Merchant") navigate(`/profile/${user.id}`);
+      else if (user.role === "Admin") navigate("/admin/users");
+      else navigate("/food");
     } catch (e) {
       setErrorMessage(e.message);
-      console.error('Error during login:', e.message);
+      console.error("Error during login:", e.message);
     }
   };
 
@@ -58,9 +63,17 @@ const Login = () => {
           <Card className="shadow-lg">
             <Card.Body className="p-4">
               <h2 className="text-center mb-4">Login</h2>
-              
-              {signupSuccess && <Alert variant="success" className="text-center">Signup successful! Please log in.</Alert>}
-              {errorMessage && <Alert variant="danger" className="text-center">{errorMessage}</Alert>}
+
+              {signupSuccess && (
+                <Alert variant="success" className="text-center">
+                  Signup successful! Please log in.
+                </Alert>
+              )}
+              {errorMessage && (
+                <Alert variant="danger" className="text-center">
+                  {errorMessage}
+                </Alert>
+              )}
               <Form onSubmit={handleSubmit} className="form-login">
                 <Form.Group controlId="formUsername">
                   <Form.Label>Username</Form.Label>
@@ -68,7 +81,6 @@ const Login = () => {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    
                   />
                 </Form.Group>
                 <Form.Group controlId="formPassword">
@@ -77,13 +89,16 @@ const Login = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="btn-block">Login</Button>
-                 </Form>
+                <Button variant="primary" type="submit" className="btn-block">
+                  Login
+                </Button>
+              </Form>
               <div className="text-center mt-3">
-                <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
+                <p>
+                  Don't have an account? <Link to="/signup">Sign Up</Link>
+                </p>
               </div>
             </Card.Body>
           </Card>

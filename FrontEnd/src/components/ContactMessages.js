@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect} from 'react';
 import { useQuery, gql } from '@apollo/client';
 
 const GET_CONTACT_MESSAGES_QUERY = gql`
@@ -14,9 +14,18 @@ const GET_CONTACT_MESSAGES_QUERY = gql`
   }
 `;
 
+const formatDate = (timestamp) => {
+  const date = new Date(parseInt(timestamp, 10));
+  return !isNaN(date.getTime()) ? date.toLocaleString() : 'Invalid Date';
+};
+
 const ContactMessages = () => {
   const { loading, error, data } = useQuery(GET_CONTACT_MESSAGES_QUERY);
-
+  useEffect(() => {
+    if (data) {
+      console.log('Contact Messages Data:', data.contactMessages);
+    }
+  }, [data]);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error loading contact messages: {error.message}</p>;
 
@@ -40,7 +49,7 @@ const ContactMessages = () => {
               <td>{message.email}</td>
               <td>{message.subject}</td>
               <td>{message.message}</td>
-              <td>{new Date(message.createdAt).toLocaleString()}</td>
+              <td>{formatDate(message.createdAt)}</td>
             </tr>
           ))}
         </tbody>
