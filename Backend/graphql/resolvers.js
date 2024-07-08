@@ -6,6 +6,7 @@ const Merchant = require('../models/Merchant');
 const Restaurant = require('../models/Restaurant');
 const Order = require('../models/Order');
 const ContactUsAdmin = require('../models/ContactUsAdmin');
+const Product = require('../models/Product'); // Import the Product model
 
 const resolvers = {
   Query: {
@@ -39,6 +40,24 @@ const resolvers = {
       } catch (error) {
         console.error('Error fetching merchants:', error);
         throw new Error('Error fetching merchants');
+      }
+    },
+    products: async (_, { page, limit }) => {
+      try {
+        console.log(`Fetching products for page ${page} with limit ${limit}`);
+        const products = await Product.find({})
+          .skip((page - 1) * limit)
+          .limit(limit);
+        
+        if (products.length === 0) {
+          console.warn('No products found');
+        }
+
+        console.log('Fetched products:', products);
+        return products;
+      } catch (error) {
+        console.error('Error fetching products:', error.message);
+        throw new Error(`Error fetching products: ${error.message}`);
       }
     },
   },

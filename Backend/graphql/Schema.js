@@ -53,12 +53,28 @@ const typeDefs = gql`
     createdAt: String!
   }
 
+  type Review {
+    user: String!
+    comment: String!
+    rating: Int!
+  }
+
+  type Product {
+    id: ID!
+    name: String!
+    price: Float!
+    category: String!
+    reviews: [Review!]!
+    isActive: Boolean!
+  }
+
   type Query {
     hello: String
     users: [User!]!
     contactMessages: [ContactUsAdmin!]!
     orders: [Order!]!
     merchants: [Merchant!]!
+    products(page: Int!, limit: Int!): [Product!]!
   }
 
   type Mutation {
