@@ -1,15 +1,15 @@
 import React from 'react';
-import DashboardImg from './Assests/Images/dashboard_Img1.jpg';
-import Category1 from './Assests/Images/dashboardCategory1.jpg';
-import Category2 from './Assests/Images/dashboardCategory2.jpg';
-import Category3 from './Assests/Images/dashboardCategory3.jpg';
-import Pizza from './Assests/Images/Pizza.jpg';
-import burger from './Assests/Images/burger.jpg';
-import tiffin from './Assests/Images/tiffin.jpg';
-import dessert from './Assests/Images/dessert.jpg';
+import DashboardImg from '../Assests/Images/dashboard_Img1.jpg';
+import Category1 from '../Assests/Images/dashboardCategory1.jpg';
+import Category2 from '../Assests/Images/dashboardCategory2.jpg';
+import Category3 from '../Assests/Images/dashboardCategory3.jpg';
+import Pizza from '../Assests/Images/Pizza.jpg';
+import burger from '../Assests/Images/burger.jpg';
+import tiffin from '../Assests/Images/tiffin.jpg';
+import dessert from '../Assests/Images/dessert.jpg';
 
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import './Assests/Css/HomePage.css';
+import '../Assests/Css/HomePage.css';
 
 const HomePage = () => {
 

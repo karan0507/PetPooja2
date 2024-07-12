@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
-import './Assests/Css/ContactPage.css';  
+import '../Assests/Css/ContactPage.css';  
 
 const SUBMIT_CONTACT_FORM = gql`
   mutation SubmitContactForm($name: String!, $email: String!, $subject: String!, $message: String!) {

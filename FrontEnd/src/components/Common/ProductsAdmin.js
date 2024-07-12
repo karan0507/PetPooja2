@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import './ProductsAdmin.css';
+import '../Assests/Css/ProductsAdmin.css';
 
 const GET_PRODUCTS = gql`
   query GetProducts($page: Int!, $limit: Int!) {

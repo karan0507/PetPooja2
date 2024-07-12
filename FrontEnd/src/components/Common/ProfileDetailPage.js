@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { Container, Row, Col, Button, Form, Image, Card } from 'react-bootstrap';
-import profile from './Assests/Images/default.png';
-import './Assests/Css/MerchantDetailPage.css';
+import profile from '../Assests/Images/default.png';
+import '../Assests/Css/MerchantDetailPage.css';
 
 const GET_PROFILE_DETAILS = gql`
   query GetProfileDetails($userId: ID!) {

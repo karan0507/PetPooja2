@@ -2,21 +2,22 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import client from './apolloClient';
-import HomePage from './components/HomePage';
-import AboutPage from './components/AboutPage';
-import ContactPage from './components/ContactPage';
-import FoodPage from './components/FoodPage';
-import CartPage from './components/CartPage';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import AdminDashboard from './components/AdminDashboard';
-import NavigationBar from './components/Navbar';
-import Footer from './components/Footer';
-import UsersPage from './components/UsersPage';
-import ContactMessages from './components/ContactMessages';
-import OrdersPage from './components/OrdersPage';
-import AddMerchant from './components/AddMerchant';
-import ProfileDetailPage from './components/ProfileDetailPage';
+import HomePage from '../src/components/Common/HomePage';
+import AboutPage from './components/Common/AboutPage';
+import ContactPage from './components/Common/ContactPage';
+import FoodPage from './components/Admin/FoodPage';
+import CartPage from './components/Customer/CartPage';
+import Login from './components/Common/Login';
+import Signup from './components/Common/Signup';
+import AdminDashboard from '../src/components/Admin/AdminDashboard';
+import NavigationBar from './components/Common/Navbar';
+import Footer from './components/Common/Footer';
+import UsersPage from './components/Admin/UsersPage';
+import ContactMessages from './components/Admin/ContactMessages';
+import OrdersPage from './components/Admin/OrdersPage';
+import AddMerchant from './components/Admin/AddMerchant';
+import ProfileDetailPage from './components/Common/ProfileDetailPage';
+import ProductsAdmin from './components/Common/ProductsAdmin'; // Import the ProductsAdmin component
 import './App.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
               <Route path="contact-messages" element={<ContactMessages />} />
               <Route path="orders" element={<OrdersPage />} />
               <Route path="add-merchant" element={<AddMerchant />} />
+              <Route path="products" element={<ProductsAdmin />} /> {/* Add this line */}
             </Route>
           </Routes>
         </div>

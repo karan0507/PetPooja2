@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, Container, Image } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import defaultProfilePic from "./Assests/Images/default.png"; // Import the default profile picture
+import defaultProfilePic from "../Assests/Images/default.png"; // Import the default profile picture
 
 const NavigationBar = () => {
   const navigate = useNavigate();

@@ -1,10 +1,10 @@
 import React from "react";
-import "./Assests/Css/About.css";
-import mission from "./Assests/Images/mission.png";
-import vission from "./Assests/Images/vission.png";
-import Karan from "./Assests/Images/karan1.jpg";
-import satvir from "./Assests/Images/satvir.jpg";
-import harkishan from "./Assests/Images/harkishan.jpg";
+import "../Assests/Css/About.css";
+import mission from "../Assests/Images/mission.png";
+import vission from "../Assests/Images/vission.png";
+import Karan from "../Assests/Images/karan1.jpg";
+import satvir from "../Assests/Images/satvir.jpg";
+import harkishan from "../Assests/Images/harkishan.jpg";
 
 const AboutPage = () => {
   return (
