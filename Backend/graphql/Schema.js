@@ -71,6 +71,10 @@ const typeDefs = gql`
     merchants: [Merchant!]!
     merchant(userId: ID!): Merchant
     customer(userId: ID!): Customer
+    userCount: Int!
+    adminCount: Int!
+    merchantCount: Int!
+    customerCount: Int!
   }
 
   type Mutation {
