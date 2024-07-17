@@ -1,0 +1,16 @@
+.admin-dashboard .card {
+    transition: transform 0.3s;
+  }
+  
+  .admin-dashboard .card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .hover-effect {
+    cursor: pointer;
+  }
+  
+  .bg-primary {
+    background-color: #007bff !important;
+  }
+  

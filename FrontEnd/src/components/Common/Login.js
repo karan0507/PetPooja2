@@ -48,7 +48,7 @@ const Login = () => {
       const user = result.data.login;
       localStorage.setItem("user", JSON.stringify(user));
       if (user.role === "Merchant") navigate(`/profile/${user.id}`);
-      else if (user.role === "Admin") navigate("/admin/users");
+      else if (user.role === "Admin") navigate("/admin/");
       else navigate("/food");
     } catch (e) {
       setErrorMessage(e.message);

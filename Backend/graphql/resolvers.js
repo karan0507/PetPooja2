@@ -33,6 +33,19 @@ const resolvers = {
 
       return customer;
     },
+    userCount: async (parent, args, { User }) => {
+      return await User.countDocuments();
+    },
+    adminCount: async (parent, args, { User }) => {
+      return await User.countDocuments({ role: 'Admin' });
+    },
+    merchantCount: async (parent, args, { User }) => {
+      return await User.countDocuments({ role: 'Merchant' });
+    },
+    customerCount: async (parent, args, { User }) => {
+      return await User.countDocuments({ role: 'Customer' });
+    },
+  
   },
   Mutation: {
     uploadProfilePic: async (_, { userId, file }) => {
