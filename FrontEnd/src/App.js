@@ -17,10 +17,17 @@ import ContactMessages from './components/Admin/ContactMessages';
 import OrdersPage from './components/Admin/OrdersPage';
 import AddMerchant from './components/Admin/AddMerchant';
 import ProfileDetailPage from './components/Common/ProfileDetailPage';
-import ProductsAdmin from './components/Common/ProductsAdmin'; // Import the ProductsAdmin component
+import ProductsAdmin from './components/Common/ProductsAdmin'; 
+import AddMenu from './components/Merchant/AddMenu';
+import MenuList from './components/Merchant/MenuList';
+import AddCategory from './components/Merchant/AddCategory';
+import ListCategories from './components/Merchant/CategorList';
+import { useUser } from './components/Common/UserContext';
 import './App.css';
 
 function App() {
+  const { user } = useUser();
+  const merchantId = user?.role === 'Merchant' ? user.id : null;
   return (
     <ApolloProvider client={client}>
       <Router>
@@ -34,13 +41,17 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/addmenu" element={<AddMenu merchantId={merchantId} />} />
+            <Route path="/addcategory" element={<AddCategory />} />
+              <Route path="/listcategories" element={<ListCategories />} />
+            <Route path="/menulist" element={<MenuList />} />
             <Route path="/profile/:userId" element={<ProfileDetailPage />} />
             <Route path="/admin" element={<AdminDashboard />}>
               <Route path="users" element={<UsersPage />} />
               <Route path="contact-messages" element={<ContactMessages />} />
               <Route path="orders" element={<OrdersPage />} />
               <Route path="add-merchant" element={<AddMerchant />} />
-              <Route path="products" element={<ProductsAdmin />} /> {/* Add this line */}
+              <Route path="products" element={<ProductsAdmin />} /> 
             </Route>
           </Routes>
         </div>

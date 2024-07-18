@@ -1,59 +1,150 @@
 const bcrypt = require("bcryptjs");
 const path = require("path");
 const fs = require("fs");
+const { ObjectId } = require("mongodb");
 const User = require("../models/User");
 const Address = require("../models/Address");
 const Customer = require("../models/Customer");
 const Merchant = require("../models/Merchant");
 const Restaurant = require("../models/Restaurant");
 const Order = require("../models/Order");
+const Product = require("../models/Product");
+const Category = require("../models/Category");
 const ContactUsAdmin = require("../models/ContactUsAdmin");
 const { GraphQLUpload } = require("graphql-upload");
 
 const resolvers = {
   Upload: GraphQLUpload,
   Query: {
-    users: async () => await User.find({}),
-    user: async (_, { id }) => await User.findById(id),
-    contactMessages: async () => await ContactUsAdmin.find({}),
-    orders: async () => await Order.find({}).populate("user"),
-    merchants: async () =>
-      await Merchant.find({}).populate("user").populate("address"),
+    users: async () => {
+      const users = await User.find({});
+      return users.map(user => ({
+        ...user.toObject(),
+        id: user._id.toString(),
+      }));
+    },
+    user: async (_, { id }) => {
+      const user = await User.findById(new ObjectId(id));
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
+      };
+    },
+    contactMessages: async () => {
+      const messages = await ContactUsAdmin.find({});
+      return messages.map(message => ({
+        ...message.toObject(),
+        id: message._id.toString(),
+      }));
+    },
+    orders: async () => {
+      const orders = await Order.find({}).populate("user");
+      return orders.map(order => ({
+        ...order.toObject(),
+        id: order._id.toString(),
+        user: {
+          ...order.user.toObject(),
+          id: order.user._id.toString(),
+        },
+      }));
+    },
+    merchants: async () => {
+      const merchants = await Merchant.find({}).populate("user").populate("address").populate("menu");
+      return merchants.map(merchant => ({
+        ...merchant.toObject(),
+        id: merchant._id.toString(),
+        user: {
+          ...merchant.user.toObject(),
+          id: merchant.user._id.toString(),
+        },
+        address: {
+          ...merchant.address.toObject(),
+          id: merchant.address._id.toString(),
+        },
+        menu: merchant.menu.map(product => ({
+          ...product.toObject(),
+          id: product._id.toString(),
+        })),
+      }));
+    },
     merchant: async (_, { userId }) => {
-      const merchant = await Merchant.findOne({ user: userId })
+      const merchant = await Merchant.findOne({ user: new ObjectId(userId) })
         .populate("user")
-        .populate("address");
+        .populate("address")
+        .populate("menu");
+      
+      if (!merchant) {
+        throw new Error("Merchant not found");
+      }
 
-      return merchant;
+      return {
+        ...merchant.toObject(),
+        id: merchant._id.toString(),
+        user: {
+          ...merchant.user.toObject(),
+          id: merchant.user._id.toString(),
+        },
+        address: {
+          ...merchant.address.toObject(),
+          id: merchant.address._id.toString(),
+        },
+        menu: merchant.menu.map(product => ({
+          ...product.toObject(),
+          id: product._id.toString(),
+          category: product.category.toString(),
+        })),
+      };
     },
     customer: async (_, { userId }) => {
-      const customer = await Customer.findOne({ user: userId })
+      const customer = await Customer.findOne({ user: new ObjectId(userId) })
         .populate("user")
         .populate("address");
 
-      return customer;
+      if (!customer) {
+        throw new Error("Customer not found");
+      }
+
+      return {
+        ...customer.toObject(),
+        id: customer._id.toString(),
+        user: {
+          ...customer.user.toObject(),
+          id: customer.user._id.toString(),
+        },
+        address: {
+          ...customer.address.toObject(),
+          id: customer.address._id.toString(),
+        },
+      };
     },
-    userCount: async (parent, args, { User }) => {
-      return await User.countDocuments();
+    userCount: async () => await User.countDocuments(),
+    adminCount: async () => await User.countDocuments({ role: 'Admin' }),
+    merchantCount: async () => await User.countDocuments({ role: 'Merchant' }),
+    customerCount: async () => await User.countDocuments({ role: 'Customer' }),
+    merchantMenu: async (_, { merchantId }) => {
+      const merchant = await Merchant.findOne({ user: new ObjectId(merchantId) }).populate("menu");
+      if (!merchant) {
+        throw new Error("Merchant not found");
+      }
+      return merchant.menu.map(product => ({
+        ...product.toObject(),
+        id: product._id.toString(),
+        category: product.category.toString(),
+      }));
     },
-    adminCount: async (parent, args, { User }) => {
-      return await User.countDocuments({ role: 'Admin' });
+    categories: async () => {
+      const categories = await Category.find({});
+      return categories.map(category => ({
+        ...category.toObject(),
+        id: category._id.toString(),
+      }));
     },
-    merchantCount: async (parent, args, { User }) => {
-      return await User.countDocuments({ role: 'Merchant' });
-    },
-    customerCount: async (parent, args, { User }) => {
-      return await User.countDocuments({ role: 'Customer' });
-    },
-  
   },
   Mutation: {
     uploadProfilePic: async (_, { userId, file }) => {
       const { createReadStream, filename, mimetype } = await file;
-      const user = await User.findById(userId);
-      if (!user) {
-        throw new Error("User not found");
-      }
+      const user = await User.findById(new ObjectId(userId));
+      if (!user) throw new Error("User not found");
 
       if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
         throw new Error("Only JPG and PNG files are allowed");
@@ -72,47 +163,32 @@ const resolvers = {
       user.profilePic = `/uploads/${uniqueFilename}`;
       await user.save();
 
-      return user;
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
+      };
     },
     removeProfilePic: async (_, { userId }) => {
-      const user = await User.findById(userId);
-      if (!user) {
-        throw new Error("User not found");
-      }
+      const user = await User.findById(new ObjectId(userId));
+      if (!user) throw new Error("User not found");
 
       if (user.profilePic) {
         const filePath = path.join(__dirname, `../${user.profilePic}`);
         fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
+          if (err) console.error("Error deleting file:", err);
         });
         user.profilePic = null;
         await user.save();
       }
 
-      return user;
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
+      };
     },
-    signup: async (
-      _,
-      {
-        username,
-        password,
-        role,
-        email,
-        phone,
-        street,
-        city,
-        province,
-        zipcode,
-        restaurantName,
-        registrationNumber,
-      }
-    ) => {
+    signup: async (_, { username, password, role, email, phone, street, city, province, zipcode, restaurantName, registrationNumber }) => {
       const existingUser = await User.findOne({ username });
-      if (existingUser) {
-        throw new Error("Username already exists");
-      }
+      if (existingUser) throw new Error("Username already exists");
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -136,7 +212,7 @@ const resolvers = {
       if (role === "Customer") {
         const newCustomer = new Customer({
           user: newUser._id,
-          address: newAddress._id,
+          address: newAddress.__id,
         });
         await newCustomer.save();
       } else if (role === "Merchant") {
@@ -159,58 +235,151 @@ const resolvers = {
         await newMerchant.save();
       }
 
-      return newUser;
+      return {
+        ...newUser.toObject(),
+        id: newUser._id.toString(),
+      };
     },
     login: async (_, { username, password }) => {
       const user = await User.findOne({ username });
-      if (!user) {
-        throw new Error("Username not found");
-      }
+      if (!user) throw new Error("Username not found");
 
       const valid = await bcrypt.compare(password, user.password);
-      if (!valid) {
-        throw new Error("Incorrect password");
-      }
+      if (!valid) throw new Error("Incorrect password");
 
-      return user;
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
+      };
     },
     deleteUser: async (_, { id }) => {
-      const user = await User.findByIdAndDelete(id);
-      if (!user) {
-        throw new Error("User not found");
-      }
-      return user;
+      const user = await User.findByIdAndDelete(new ObjectId(id));
+      if (!user) throw new Error("User not found");
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
+      };
     },
     updatePassword: async (_, { id, newPassword }) => {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
-      const user = await User.findByIdAndUpdate(
-        id,
-        { password: hashedPassword },
-        { new: true }
-      );
-      if (!user) {
-        throw new Error("User not found");
-      }
-      return user;
+      const user = await User.findByIdAndUpdate(new ObjectId(id), { password: hashedPassword }, { new: true });
+      if (!user) throw new Error("User not found");
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
+      };
     },
     submitContactForm: async (_, { name, email, subject, message }) => {
-      const newContact = new ContactUsAdmin({
-        name,
-        email,
-        subject,
-        message,
-      });
+      const newContact = new ContactUsAdmin({ name, email, subject, message });
       const result = await newContact.save();
-      return result;
+      return {
+        ...result.toObject(),
+        id: result._id.toString(),
+      };
     },
     updateOrderStatus: async (_, { id, status }) => {
-      const order = await Order.findById(id);
-      if (!order) {
-        throw new Error("Order not found");
-      }
+      const order = await Order.findById(new ObjectId(id));
+      if (!order) throw new Error("Order not found");
       order.status = status;
       await order.save();
-      return order;
+      return {
+        ...order.toObject(),
+        id: order._id.toString(),
+      };
+    },
+    addProduct: async (_, { merchantId, name, price, categoryId }) => {
+      const merchant = await Merchant.findOne({ user: new ObjectId(merchantId) });
+      if (!merchant) {
+        throw new Error("Merchant not found");
+      }
+
+      const category = await Category.findById(new ObjectId(categoryId));
+      if (!category) {
+        throw new Error("Category not found");
+      }
+
+      const product = new Product({
+        name,
+        price,
+        category: new ObjectId(categoryId),
+        reviews: [],
+        isActive: true,
+      });
+      await product.save();
+
+      merchant.menu.push(product._id);
+      await merchant.save();
+
+      return {
+        ...product.toObject(),
+        id: product._id.toString(),
+        category: {
+          ...category.toObject(),
+          id: category._id.toString(),
+        },
+      };
+    },
+    updateProduct: async (_, { productId, name, price, categoryId, isActive }) => {
+      const product = await Product.findById(new ObjectId(productId));
+      if (!product) {
+        throw new Error("Product not found");
+      }
+
+      if (name) product.name = name;
+      if (price) product.price = price;
+      if (categoryId) product.category = new ObjectId(categoryId);
+      if (typeof isActive === 'boolean') product.isActive = isActive;
+
+      await product.save();
+      return {
+        ...product.toObject(),
+        id: product._id.toString(),
+        category: product.category.toString(),
+      };
+    },
+    deleteProduct: async (_, { productId }) => {
+      const product = await Product.findByIdAndDelete(new ObjectId(productId));
+      if (!product) {
+        throw new Error("Product not found");
+      }
+      return true;
+    },
+    addCategory: async (_, { name }) => {
+      const category = new Category({ name });
+      await category.save();
+      return {
+        ...category.toObject(),
+        id: category._id.toString(),
+      };
+    },
+    updateCategory: async (_, { categoryId, name }) => {
+      const category = await Category.findById(new ObjectId(categoryId));
+      if (!category) {
+        throw new Error("Category not found");
+      }
+
+      category.name = name;
+      await category.save();
+      return {
+        ...category.toObject(),
+        id: category._id.toString(),
+      };
+    },
+    deleteCategory: async (_, { categoryId }) => {
+      const category = await Category.findByIdAndDelete(new ObjectId(categoryId));
+      if (!category) {
+        throw new Error("Category not found");
+      }
+      return true;
+    },
+  },
+  Product: {
+    category: async (product) => {
+      const category = await Category.findById(product.category);
+      return {
+        ...category.toObject(),
+        id: category._id.toString(),
+      };
     },
   },
 };
