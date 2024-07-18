@@ -3,6 +3,7 @@ import { Navbar, Nav, Container, Image } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import defaultProfilePic from "../Assests/Images/default.png";
 import { useUser } from "./UserContext";  
+
 const NavigationBar = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
@@ -16,7 +17,7 @@ const NavigationBar = () => {
     }
   };
 
-  const profilePicUrl = user && user.profilePic ? `http://localhost:5000${user.profilePic}` : defaultProfilePic;
+  const profilePicUrl = user && user.profilePic ? user.profilePic : defaultProfilePic;
 
   return (
     <Navbar bg="dark" variant="dark" className="p-0" expand="lg">
@@ -55,18 +56,10 @@ const NavigationBar = () => {
              {user && user.role === "Merchant" && (
               <>
               
-                <Nav.Link as={Link} to="/addmenu">
-                  Add Menu
+                <Nav.Link as={Link} to="/merchantdashboard">
+                  Dashboard
                 </Nav.Link>
-                <Nav.Link as={Link} to="/menulist">
-                  Menu List
-                </Nav.Link>
-                <Nav.Link as={Link} to="/addcategory">
-                  Add Category
-                </Nav.Link>
-                <Nav.Link as={Link} to="/listcategories">
-                  List Categories
-                </Nav.Link>
+                
               </>
             )}
           </Nav>

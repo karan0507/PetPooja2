@@ -12,6 +12,7 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const ContactUsAdmin = require("../models/ContactUsAdmin");
 const { GraphQLUpload } = require("graphql-upload");
+const cloudinary = require('../config/cloudinary');
 
 const resolvers = {
   Upload: GraphQLUpload,
@@ -143,24 +144,19 @@ const resolvers = {
   Mutation: {
     uploadProfilePic: async (_, { userId, file }) => {
       const { createReadStream, filename, mimetype } = await file;
-      const user = await User.findById(new ObjectId(userId));
+      const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
 
-      if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-        throw new Error("Only JPG and PNG files are allowed");
-      }
-
       const stream = createReadStream();
-      const uniqueFilename = `${Date.now()}-${filename}`;
-      const filePath = path.join(__dirname, `../uploads/${uniqueFilename}`);
-      const out = fs.createWriteStream(filePath);
-      stream.pipe(out);
-      await new Promise((resolve, reject) => {
-        out.on("finish", resolve);
-        out.on("error", reject);
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+          if (error) reject(error);
+          resolve(result);
+        });
+        stream.pipe(uploadStream);
       });
 
-      user.profilePic = `/uploads/${uniqueFilename}`;
+      user.profilePic = uploadResult.secure_url;
       await user.save();
 
       return {
@@ -169,14 +165,12 @@ const resolvers = {
       };
     },
     removeProfilePic: async (_, { userId }) => {
-      const user = await User.findById(new ObjectId(userId));
+      const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
 
       if (user.profilePic) {
-        const filePath = path.join(__dirname, `../${user.profilePic}`);
-        fs.unlink(filePath, (err) => {
-          if (err) console.error("Error deleting file:", err);
-        });
+        const publicId = user.profilePic.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(publicId);
         user.profilePic = null;
         await user.save();
       }
@@ -186,6 +180,7 @@ const resolvers = {
         id: user._id.toString(),
       };
     },
+  
     signup: async (_, { username, password, role, email, phone, street, city, province, zipcode, restaurantName, registrationNumber }) => {
       const existingUser = await User.findOne({ username });
       if (existingUser) throw new Error("Username already exists");
@@ -212,7 +207,7 @@ const resolvers = {
       if (role === "Customer") {
         const newCustomer = new Customer({
           user: newUser._id,
-          address: newAddress.__id,
+          address: newAddress._id,
         });
         await newCustomer.save();
       } else if (role === "Merchant") {
@@ -287,7 +282,7 @@ const resolvers = {
         id: order._id.toString(),
       };
     },
-    addProduct: async (_, { merchantId, name, price, categoryId }) => {
+    addProduct: async (_, { merchantId, name, price, categoryId, image }) => {
       const merchant = await Merchant.findOne({ user: new ObjectId(merchantId) });
       if (!merchant) {
         throw new Error("Merchant not found");
@@ -298,12 +293,31 @@ const resolvers = {
         throw new Error("Category not found");
       }
 
+      let imageUrl = null;
+      if (image) {
+        const { createReadStream, filename, mimetype, encoding } = await image;
+
+        const stream = createReadStream();
+        const uploadResult = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+            if (error) {
+              reject(error);
+            }
+            resolve(result);
+          });
+          stream.pipe(uploadStream);
+        });
+
+        imageUrl = uploadResult.secure_url;
+      }
+
       const product = new Product({
         name,
         price,
         category: new ObjectId(categoryId),
         reviews: [],
         isActive: true,
+        image: imageUrl,
       });
       await product.save();
 
@@ -319,7 +333,7 @@ const resolvers = {
         },
       };
     },
-    updateProduct: async (_, { productId, name, price, categoryId, isActive }) => {
+    updateProduct: async (_, { productId, name, price, categoryId, isActive, image }) => {
       const product = await Product.findById(new ObjectId(productId));
       if (!product) {
         throw new Error("Product not found");
@@ -330,6 +344,23 @@ const resolvers = {
       if (categoryId) product.category = new ObjectId(categoryId);
       if (typeof isActive === 'boolean') product.isActive = isActive;
 
+      if (image) {
+        const { createReadStream, filename, mimetype, encoding } = await image;
+
+        const stream = createReadStream();
+        const uploadResult = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+            if (error) {
+              reject(error);
+            }
+            resolve(result);
+          });
+          stream.pipe(uploadStream);
+        });
+
+        product.image = uploadResult.secure_url;
+      }
+
       await product.save();
       return {
         ...product.toObject(),
@@ -339,26 +370,62 @@ const resolvers = {
     },
     deleteProduct: async (_, { productId }) => {
       const product = await Product.findByIdAndDelete(new ObjectId(productId));
-      if (!product) {
-        throw new Error("Product not found");
+      if (!product) throw new Error("Product not found");
+
+      if (product.image) {
+        const publicId = product.image.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(publicId);
       }
+
       return true;
     },
-    addCategory: async (_, { name }) => {
-      const category = new Category({ name });
+    addCategory: async (_, { name, image }) => {
+      let imageUrl = null;
+      if (image) {
+        const { createReadStream } = await image;
+        const stream = createReadStream();
+        const uploadResult = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+            if (error) reject(error);
+            resolve(result);
+          });
+          stream.pipe(uploadStream);
+        });
+        imageUrl = uploadResult.secure_url;
+      }
+
+      const category = new Category({
+        name,
+        image: imageUrl,
+      });
       await category.save();
+
       return {
         ...category.toObject(),
         id: category._id.toString(),
       };
     },
-    updateCategory: async (_, { categoryId, name }) => {
+    updateCategory: async (_, { categoryId, name, image }) => {
       const category = await Category.findById(new ObjectId(categoryId));
       if (!category) {
         throw new Error("Category not found");
       }
 
-      category.name = name;
+      if (name) category.name = name;
+
+      if (image) {
+        const { createReadStream } = await image;
+        const stream = createReadStream();
+        const uploadResult = await new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+            if (error) reject(error);
+            resolve(result);
+          });
+          stream.pipe(uploadStream);
+        });
+        category.image = uploadResult.secure_url;
+      }
+
       await category.save();
       return {
         ...category.toObject(),

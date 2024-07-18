@@ -10,6 +10,7 @@ const LOGIN_MUTATION = gql`
       id
       username
       role
+      profilePic
     }
   }
 `;
@@ -42,7 +43,7 @@ const Login = () => {
       const user = result.data.login;
       setUser(user);
       localStorage.setItem("user", JSON.stringify(user));
-      if (user.role === "Merchant") navigate(`/profile/${user.id}`);
+      if (user.role === "Merchant") navigate(`/merchantdashboard`);
       else if (user.role === "Admin") navigate("/admin/");
       else navigate("/food");
     } catch (e) {

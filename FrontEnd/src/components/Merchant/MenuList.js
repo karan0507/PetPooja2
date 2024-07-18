@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import { Container, Row, Col, Card, Spinner, Alert, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Table, Spinner, Alert, Button, Form, Modal } from 'react-bootstrap';
 import { useUser } from '../Common/UserContext';
 
 const GET_MERCHANT_MENU = gql`
@@ -14,6 +14,7 @@ const GET_MERCHANT_MENU = gql`
         name
       }
       isActive
+      image
     }
   }
 `;
@@ -28,8 +29,8 @@ const GET_CATEGORIES = gql`
 `;
 
 const UPDATE_PRODUCT = gql`
-  mutation UpdateProduct($productId: ID!, $name: String, $price: Float, $categoryId: ID, $isActive: Boolean) {
-    updateProduct(productId: $productId, name: $name, price: $price, categoryId: $categoryId, isActive: $isActive) {
+  mutation UpdateProduct($productId: ID!, $name: String, $price: Float, $categoryId: ID, $isActive: Boolean, $image: Upload) {
+    updateProduct(productId: $productId, name: $name, price: $price, categoryId: $categoryId, isActive: $isActive, image: $image) {
       id
       name
       price
@@ -38,7 +39,14 @@ const UPDATE_PRODUCT = gql`
         name
       }
       isActive
+      image
     }
+  }
+`;
+
+const DELETE_PRODUCT = gql`
+  mutation DeleteProduct($productId: ID!) {
+    deleteProduct(productId: $productId)
   }
 `;
 
@@ -55,14 +63,17 @@ const MenuList = () => {
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [productDetails, setProductDetails] = useState({
     name: '',
     price: 0,
     categoryId: '',
     isActive: false,
+    image: null,
   });
 
   const [updateProduct] = useMutation(UPDATE_PRODUCT);
+  const [deleteProduct] = useMutation(DELETE_PRODUCT);
 
   useEffect(() => {
     console.log("Merchant ID in MenuList component:", merchantId);
@@ -75,8 +86,26 @@ const MenuList = () => {
       price: product.price,
       categoryId: product.category.id,
       isActive: product.isActive,
+      image: null,
     });
     setShowEditModal(true);
+  };
+
+  const handleDeleteClick = (product) => {
+    setSelectedProduct(product);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await deleteProduct({
+        variables: { productId: selectedProduct.id },
+      });
+      setShowDeleteModal(false);
+      refetch();
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -96,27 +125,50 @@ const MenuList = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setProductDetails({ ...productDetails, image: file });
+  };
+
   if (loading || categoriesLoading) return <Spinner animation="border" />;
   if (error || categoriesError) return <Alert variant="danger">{error ? error.message : categoriesError.message}</Alert>;
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 p-5">
       <h2>Menu List</h2>
-      <Row>
-        {data.merchantMenu.map((product) => (
-          <Col key={product.id} md={4}>
-            <Card className="mb-4">
-              <Card.Body>
-                <Card.Title>{product.name}</Card.Title>
-                <Card.Text>Category: {product.category.name}</Card.Text>
-                <Card.Text>Price: ${product.price.toFixed(2)}</Card.Text>
-                <Card.Text>Active: {product.isActive ? "Yes" : "No"}</Card.Text>
-                <Button onClick={() => handleEditClick(product)}>Edit</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Active</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.merchantMenu.map((product, index) => (
+            <tr key={product.id}>
+              <td>{index + 1}</td>
+              <td>
+                {product.image && (
+                  <img src={product.image} alt={product.name} width="50" />
+                )}
+              </td>
+              <td>{product.name}</td>
+              <td>{product.category.name}</td>
+              <td>${product.price.toFixed(2)}</td>
+              <td>{product.isActive ? "Yes" : "No"}</td>
+              <td>
+                <Button variant="primary" onClick={() => handleEditClick(product)}>Edit</Button>
+                <Button variant="danger" className="ms-2 mt-3" onClick={() => handleDeleteClick(product)}>Delete</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
 
       {selectedProduct && (
         <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
@@ -164,11 +216,35 @@ const MenuList = () => {
                   onChange={(e) => setProductDetails({ ...productDetails, isActive: e.target.checked })}
                 />
               </Form.Group>
+              <Form.Group controlId="image">
+                <Form.Label>Product Image</Form.Label>
+                <Form.Control
+                  type="file"
+                  onChange={handleFileChange}
+                />
+              </Form.Group>
               <Button type="submit">Update Product</Button>
             </Form>
           </Modal.Body>
         </Modal>
       )}
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete the product "{selectedProduct?.name}"?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={confirmDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
