@@ -62,6 +62,21 @@ const typeDefs = gql`
     createdAt: String!
   }
 
+  type Product {
+    id: ID!
+    name: String!
+    price: Float!
+    category: String!
+    reviews: [Review!]!
+    isActive: Boolean!
+  }
+
+  type Review {
+    user: String!
+    comment: String!
+    rating: Int!
+  }
+
   type Query {
     hello: String
     users: [User!]!
@@ -71,6 +86,7 @@ const typeDefs = gql`
     merchants: [Merchant!]!
     merchant(userId: ID!): Merchant
     customer(userId: ID!): Customer
+    products: [Product!]!
   }
 
   type Mutation {
@@ -113,6 +129,8 @@ const typeDefs = gql`
       registrationNumber: String!
     ): Merchant!
     updateOrderStatus(id: ID!, status: String!): Order!
+    toggleProductStatus(productId: ID!): Product!
+    addProduct(name: String!, price: Float!, category: String!): Product!
   }
 `;
 

@@ -8,6 +8,7 @@ const Merchant = require("../models/Merchant");
 const Restaurant = require("../models/Restaurant");
 const Order = require("../models/Order");
 const ContactUsAdmin = require("../models/ContactUsAdmin");
+const Product = require("../models/Product");
 const { GraphQLUpload } = require("graphql-upload");
 
 const resolvers = {
@@ -33,6 +34,7 @@ const resolvers = {
 
       return customer;
     },
+    products: async () => await Product.find({}),
   },
   Mutation: {
     uploadProfilePic: async (_, { userId, file }) => {
@@ -198,6 +200,20 @@ const resolvers = {
       order.status = status;
       await order.save();
       return order;
+    },
+    toggleProductStatus: async (_, { productId }) => {
+      const product = await Product.findById(productId);
+      if (!product) {
+        throw new Error("Product not found");
+      }
+      product.isActive = !product.isActive;
+      await product.save();
+      return product;
+    },
+    addProduct: async (_, { name, price, category }) => {
+      const newProduct = new Product({ name, price, category, isActive: true });
+      await newProduct.save();
+      return newProduct;
     },
   },
 };
