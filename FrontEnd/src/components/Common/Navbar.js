@@ -1,16 +1,17 @@
 import React from "react";
 import { Navbar, Nav, Container, Image } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import defaultProfilePic from "../Assests/Images/default.png"; // Import the default profile picture
-
+import defaultProfilePic from "../Assests/Images/default.png";
+import { useUser } from "./UserContext";  
 const NavigationBar = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, setUser } = useUser();
 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
       localStorage.removeItem("user");
+      setUser(null);
       navigate("/");
     }
   };
@@ -49,6 +50,24 @@ const NavigationBar = () => {
               <Nav.Link as={Link} to={`/profile/${user.id}`}>
                 Profile
               </Nav.Link>
+              
+            )}
+             {user && user.role === "Merchant" && (
+              <>
+              
+                <Nav.Link as={Link} to="/addmenu">
+                  Add Menu
+                </Nav.Link>
+                <Nav.Link as={Link} to="/menulist">
+                  Menu List
+                </Nav.Link>
+                <Nav.Link as={Link} to="/addcategory">
+                  Add Category
+                </Nav.Link>
+                <Nav.Link as={Link} to="/listcategories">
+                  List Categories
+                </Nav.Link>
+              </>
             )}
           </Nav>
           <Nav className="ml-auto d-flex align-items-center">

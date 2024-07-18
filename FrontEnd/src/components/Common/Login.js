@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import {
-  Container,
-  Form,
-  Button,
-  Row,
-  Col,
-  Card,
-  Alert,
-} from "react-bootstrap";
+import { Container, Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
+import { useUser } from "./UserContext";
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -30,6 +23,7 @@ const Login = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const signupSuccess = queryParams.get("signup") === "success";
+  const { setUser } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,6 +40,7 @@ const Login = () => {
     try {
       const result = await login({ variables: { username, password } });
       const user = result.data.login;
+      setUser(user);
       localStorage.setItem("user", JSON.stringify(user));
       if (user.role === "Merchant") navigate(`/profile/${user.id}`);
       else if (user.role === "Admin") navigate("/admin/");
@@ -81,6 +76,7 @@ const Login = () => {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    required
                   />
                 </Form.Group>
                 <Form.Group controlId="formPassword">
@@ -89,6 +85,7 @@ const Login = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                   />
                 </Form.Group>
                 <Button variant="primary" type="submit" className="btn-block">

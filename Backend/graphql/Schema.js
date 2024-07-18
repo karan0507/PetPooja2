@@ -23,10 +23,30 @@ const typeDefs = gql`
     id: ID!
     user: User!
     restaurantName: String!
-    menu: [String!]!
+    menu: [Product!]!
     address: Address!
     phone: String!
     registrationNumber: String!
+  }
+
+  type Product {
+    id: ID!
+    name: String!
+    price: Float!
+    category: Category!
+    reviews: [Review!]
+    isActive: Boolean!
+  }
+
+  type Category {
+    id: ID!
+    name: String!
+  }
+
+  type Review {
+    user: String!
+    comment: String!
+    rating: Int!
   }
 
   type Customer {
@@ -75,6 +95,8 @@ const typeDefs = gql`
     adminCount: Int!
     merchantCount: Int!
     customerCount: Int!
+    merchantMenu(merchantId: ID!): [Product!]!
+    categories: [Category!]!
   }
 
   type Mutation {
@@ -117,6 +139,23 @@ const typeDefs = gql`
       registrationNumber: String!
     ): Merchant!
     updateOrderStatus(id: ID!, status: String!): Order!
+    addProduct(
+      merchantId: ID!
+      name: String!
+      price: Float!
+      categoryId: ID!
+    ): Product!
+    addCategory(name: String!): Category!
+    updateProduct(
+      productId: ID!
+      name: String
+      price: Float
+      categoryId: ID
+      isActive: Boolean
+    ): Product!
+    deleteProduct(productId: ID!): Boolean!
+    updateCategory(categoryId: ID!, name: String!): Category!
+    deleteCategory(categoryId: ID!): Boolean!
   }
 `;
 
