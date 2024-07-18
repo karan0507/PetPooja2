@@ -22,6 +22,9 @@ import AddMenu from './components/Merchant/AddMenu';
 import MenuList from './components/Merchant/MenuList';
 import AddCategory from './components/Merchant/AddCategory';
 import ListCategories from './components/Merchant/CategorList';
+import DashboardHome from './components/Merchant/DashboardHome';
+import MerchantDashboard from './components/Merchant/MerchantDashboard';
+
 import { useUser } from './components/Common/UserContext';
 import './App.css';
 
@@ -41,10 +44,13 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/addmenu" element={<AddMenu merchantId={merchantId} />} />
-            <Route path="/addcategory" element={<AddCategory />} />
-              <Route path="/listcategories" element={<ListCategories />} />
-            <Route path="/menulist" element={<MenuList />} />
+            <Route path="/merchantdashboard" element={<MerchantDashboard />}>
+                <Route index element={<DashboardHome />} />
+                <Route path="add-category" element={<AddCategory />} />
+                <Route path="add-menu" element={<AddMenu />} />
+                <Route path="menu-list" element={<MenuList />} />
+                <Route path="category-list" element={<ListCategories />} />
+            </Route>
             <Route path="/profile/:userId" element={<ProfileDetailPage />} />
             <Route path="/admin" element={<AdminDashboard />}>
               <Route path="users" element={<UsersPage />} />

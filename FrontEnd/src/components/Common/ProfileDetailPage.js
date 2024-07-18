@@ -95,7 +95,6 @@ const ProfileDetailPage = () => {
   const [uploadProfilePic, { loading: uploadLoading, error: uploadError }] = useMutation(UPLOAD_PROFILE_PIC);
   const [removeProfilePic, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_PROFILE_PIC);
 
- 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
@@ -148,12 +147,9 @@ const ProfileDetailPage = () => {
     return <p>Loading...</p>;
   }
 
-  
-
   const user = userData.user;
   const merchant = user.role === 'Merchant' ? merchantData?.merchant : null;
   const customer = user.role === 'Customer' ? customerData?.customer : null;
-  const profilePicUrl = user.profilePic ? `http://localhost:5000${user.profilePic}` : profile;
 
   return (
     <Container>
@@ -161,11 +157,11 @@ const ProfileDetailPage = () => {
         <Col md={4} className="text-center">
           <Card className="profile-card">
             <Card.Body>
-              <Image src={profilePicUrl} roundedCircle width="150" className="profile-image" />
+              <Image src={user.profilePic || profile} roundedCircle width="150" className="profile-image" />
               {showFileInput ? (
                 <>
                   <Form.Group className="mt-3">
-                    <Form.Control type="file" accept=".jpg,.jpeg" onChange={handleFileChange} />
+                    <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
                   </Form.Group>
                   <Button className="mt-2" onClick={handleUpload} disabled={uploadLoading}>
                     {uploadLoading ? 'Uploading...' : 'Upload'}
@@ -176,7 +172,7 @@ const ProfileDetailPage = () => {
                   <Button className="me-2" onClick={handleChangeImageClick}>
                     Change Image
                   </Button>
-                  <Button className='mt-3' variant="danger" onClick={handleRemove} disabled={removeLoading}>
+                  <Button variant="danger" className='mt-3' onClick={handleRemove} disabled={removeLoading}>
                     {removeLoading ? 'Removing...' : 'Remove Image'}
                   </Button>
                 </div>
@@ -198,7 +194,6 @@ const ProfileDetailPage = () => {
                   <p><strong>Restaurant Name:</strong> {merchant.restaurantName}</p>
                   <p><strong>Address:</strong> {merchant.address.street}, {merchant.address.city}, {merchant.address.province}, {merchant.address.zipcode}</p>
                   <p><strong>Registration Number:</strong> {merchant.registrationNumber}</p>
-                 
                 </>
               )}
               {customer && (

@@ -30,17 +30,19 @@ const typeDefs = gql`
   }
 
   type Product {
-    id: ID!
-    name: String!
-    price: Float!
-    category: Category!
-    reviews: [Review!]
-    isActive: Boolean!
-  }
+  id: ID!
+  name: String!
+  price: Float!
+  category: Category!
+  reviews: [Review!]
+  isActive: Boolean!
+  image: String
+}
 
   type Category {
     id: ID!
     name: String!
+    image: String
   }
 
   type Review {
@@ -140,21 +142,23 @@ const typeDefs = gql`
     ): Merchant!
     updateOrderStatus(id: ID!, status: String!): Order!
     addProduct(
-      merchantId: ID!
-      name: String!
-      price: Float!
-      categoryId: ID!
-    ): Product!
-    addCategory(name: String!): Category!
+    merchantId: ID!
+    name: String!
+    price: Float!
+    categoryId: ID!
+    image: Upload
+  ): Product!
+    addCategory(name: String!,image: Upload): Category!
     updateProduct(
       productId: ID!
       name: String
       price: Float
       categoryId: ID
       isActive: Boolean
+      image: Upload
     ): Product!
     deleteProduct(productId: ID!): Boolean!
-    updateCategory(categoryId: ID!, name: String!): Category!
+    updateCategory(categoryId: ID!, name: String!,image: Upload): Category!
     deleteCategory(categoryId: ID!): Boolean!
   }
 `;
