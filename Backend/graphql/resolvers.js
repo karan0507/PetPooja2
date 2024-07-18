@@ -73,7 +73,7 @@ const resolvers = {
         .populate("user")
         .populate("address")
         .populate("menu");
-      
+
       if (!merchant) {
         throw new Error("Merchant not found");
       }
@@ -140,6 +140,22 @@ const resolvers = {
         id: category._id.toString(),
       }));
     },
+    products: async (_, { filter }) => {
+      const query = {};
+      if (filter) {
+        if (filter.category) {
+          query.category = new ObjectId(filter.category);
+        }
+        if (filter.searchTerm) {
+          query.name = { $regex: filter.searchTerm, $options: "i" };
+        }
+      }
+      const products = await Product.find(query).populate('category');
+      return products.map(product => ({
+        ...product.toObject(),
+        id: product._id.toString(),
+      }));
+    }
   },
   Mutation: {
     uploadProfilePic: async (_, { userId, file }) => {
@@ -180,7 +196,7 @@ const resolvers = {
         id: user._id.toString(),
       };
     },
-  
+
     signup: async (_, { username, password, role, email, phone, street, city, province, zipcode, restaurantName, registrationNumber }) => {
       const existingUser = await User.findOne({ username });
       if (existingUser) throw new Error("Username already exists");
