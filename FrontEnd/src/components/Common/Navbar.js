@@ -45,6 +45,11 @@ const NavigationBar = () => {
                 Admin
               </Nav.Link>
             )}
+            {user && user.role === "Merchant" && (
+              <Nav.Link as={Link} to="/merchant">
+                Merchant
+              </Nav.Link>
+            )}
             {user && (user.role === "Customer" || user.role === "Merchant") && (
               <Nav.Link as={Link} to={`/profile/${user.id}`}>
                 Profile

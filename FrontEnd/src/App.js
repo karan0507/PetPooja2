@@ -10,6 +10,7 @@ import CartPage from './components/Customer/CartPage';
 import Login from './components/Common/Login';
 import Signup from './components/Common/Signup';
 import AdminDashboard from '../src/components/Admin/AdminDashboard';
+import MerchantDashboard from './components/Merchant/MerchantDashboard';
 import NavigationBar from './components/Common/Navbar';
 import Footer from './components/Common/Footer';
 import UsersPage from './components/Admin/UsersPage';
@@ -17,7 +18,11 @@ import ContactMessages from './components/Admin/ContactMessages';
 import OrdersPage from './components/Admin/OrdersPage';
 import AddMerchant from './components/Admin/AddMerchant';
 import ProfileDetailPage from './components/Common/ProfileDetailPage';
-import ProductsAdmin from './components/Common/ProductsAdmin'; // Import the ProductsAdmin component
+import ProductsAdmin from './components/Common/ProductsAdmin';
+import ManageProducts from './components/Merchant/ManageProducts';
+import ManageOrders from './components/Merchant/ManageOrders';
+import ManageDeliveries from './components/Merchant/ManageDeliveries';
+
 import './App.css';
 
 function App() {
@@ -40,7 +45,13 @@ function App() {
               <Route path="contact-messages" element={<ContactMessages />} />
               <Route path="orders" element={<OrdersPage />} />
               <Route path="add-merchant" element={<AddMerchant />} />
-              <Route path="products" element={<ProductsAdmin />} /> {/* Add this line */}
+              <Route path="products" element={<ProductsAdmin />} />
+            </Route>
+            <Route path="/merchant" element={<MerchantDashboard />}>
+              <Route path="manage-products" element={<ManageProducts />} />
+             
+              <Route path="manage-orders" element={<ManageOrders />} />
+              <Route path="manage-deliveries" element={<ManageDeliveries />} />
             </Route>
           </Routes>
         </div>
