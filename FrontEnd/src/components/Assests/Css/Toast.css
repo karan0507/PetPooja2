@@ -1,0 +1,56 @@
+/* toastStyles.css */
+@keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOutRight {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  
+  .Toastify__toast--animate-enter {
+    animation: slideInRight 0.5s forwards;
+  }
+  
+  .Toastify__toast--animate-exit {
+    animation: slideOutRight 0.5s forwards;
+  }
+  
+  .toast-info {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
+  .toast-success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .toast-warning {
+    background-color: #ffc107;
+    color: black;
+  }
+  
+  .toast-error {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .toast-default {
+    background-color: #343a40;
+    color: white;
+  }
+  
