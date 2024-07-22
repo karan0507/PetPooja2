@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
-import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ADD_CATEGORY = gql`
   mutation AddCategory($name: String!, $image: Upload) {
@@ -25,8 +27,6 @@ const UPDATE_CATEGORY = gql`
 const AddCategory = () => {
   const [name, setName] = useState('');
   const [image, setImage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [categoryId, setCategoryId] = useState(''); // Only for update
 
   const [addCategory] = useMutation(ADD_CATEGORY);
@@ -42,15 +42,15 @@ const AddCategory = () => {
     try {
       if (categoryId) {
         await updateCategory({ variables: { categoryId, name, image } });
-        setSuccessMessage('Category updated successfully');
+        toast.success('Category updated successfully!');
       } else {
         await addCategory({ variables: { name, image } });
-        setSuccessMessage('Category added successfully');
+        toast.success('Category added successfully!');
       }
       setName('');
       setImage(null);
     } catch (error) {
-      setErrorMessage(error.message);
+      toast.error('An error occurred while adding/updating the category.');
     }
   };
 
@@ -61,8 +61,6 @@ const AddCategory = () => {
           <Card className="shadow-sm">
             <Card.Body>
               <h2 className="text-center mb-4">{categoryId ? 'Update' : 'Add'} Category</h2>
-              {successMessage && <Alert variant="success">{successMessage}</Alert>}
-              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="categoryName">
                   <Form.Label>Category Name</Form.Label>
