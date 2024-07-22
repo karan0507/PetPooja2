@@ -30,6 +30,7 @@ import { useUser } from './components/Common/UserContext';
 import { ProductProvider } from './components/Common/ProductContext';
 import { CartProvider } from './components/Common/CartContext';
 import { ToastContainer } from 'react-toastify';
+import './components/Assests/Css/Toast.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
