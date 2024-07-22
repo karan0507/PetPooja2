@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useMutation, gql, useQuery } from '@apollo/client';
-import { Container, Form, Button, Alert, Spinner, Row, Col, Card } from 'react-bootstrap';
+import { Container, Form, Button, Spinner, Row, Col, Card,Alert  } from 'react-bootstrap';
 import { useUser } from '../Common/UserContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ADD_PRODUCT = gql`
   mutation AddProduct($merchantId: ID!, $name: String!, $price: Float!, $categoryId: ID!, $image: Upload) {
@@ -33,8 +35,7 @@ const AddMenu = () => {
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [ setErrorMessage] = useState('');
   const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useQuery(GET_CATEGORIES);
   const [addProduct, { loading }] = useMutation(ADD_PRODUCT);
 
@@ -50,12 +51,13 @@ const AddMenu = () => {
           image
         }
       });
-      setSuccessMessage('Product added successfully!');
+      toast.success('Product added successfully!');
       setName('');
       setPrice('');
       setCategoryId('');
       setImage(null);
     } catch (error) {
+      toast.error('An error occurred while adding the product.');
       setErrorMessage(error.message);
     }
   };
@@ -75,8 +77,6 @@ const AddMenu = () => {
           <Card className="shadow-sm">
             <Card.Body>
               <h2 className="text-center mb-4">Add New Menu Item</h2>
-              {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
-              {successMessage && <Alert variant="success">{successMessage}</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formName">
                   <Form.Label>Name</Form.Label>

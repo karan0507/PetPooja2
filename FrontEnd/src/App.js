@@ -1,3 +1,4 @@
+// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
@@ -7,6 +8,7 @@ import AboutPage from './components/Common/AboutPage';
 import ContactPage from './components/Common/ContactPage';
 import FoodPage from './components/Customer/FoodPage';
 import CartPage from './components/Customer/CartPage';
+import CheckoutPage from './components/Customer/CheckoutPage';
 import Login from './components/Common/Login';
 import Signup from './components/Common/Signup';
 import AdminDashboard from '../src/components/Admin/AdminDashboard';
@@ -24,10 +26,11 @@ import AddCategory from './components/Merchant/AddCategory';
 import ListCategories from './components/Merchant/CategorList';
 import DashboardHome from './components/Merchant/DashboardHome';
 import MerchantDashboard from './components/Merchant/MerchantDashboard';
-
 import { useUser } from './components/Common/UserContext';
 import { ProductProvider } from './components/Common/ProductContext';
 import { CartProvider } from './components/Common/CartContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 function App() {
@@ -47,6 +50,7 @@ function App() {
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/food" element={<FoodPage />} />
                 <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/merchantdashboard" element={<MerchantDashboard />}>
@@ -68,6 +72,7 @@ function App() {
             </div>
             <Footer />
           </Router>
+          <ToastContainer />
         </CartProvider>
       </ProductProvider>
     </ApolloProvider>

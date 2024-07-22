@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { Container, Table, Spinner, Alert, Button, Form, Modal } from 'react-bootstrap';
 import { useUser } from '../Common/UserContext';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GET_MERCHANT_MENU = gql`
   query GetMerchantMenu($merchantId: ID!) {
@@ -103,8 +105,10 @@ const MenuList = () => {
       });
       setShowDeleteModal(false);
       refetch();
+      toast.success('Product deleted successfully!');
     } catch (error) {
       console.error("Error deleting product:", error);
+      toast.error('Error deleting product.');
     }
   };
 
@@ -120,8 +124,10 @@ const MenuList = () => {
       });
       setShowEditModal(false);
       refetch();
+      toast.success('Product updated successfully!');
     } catch (error) {
       console.error("Error updating product:", error);
+      toast.error('Error updating product.');
     }
   };
 
@@ -163,7 +169,7 @@ const MenuList = () => {
               <td>{product.isActive ? "Yes" : "No"}</td>
               <td>
                 <Button variant="primary" onClick={() => handleEditClick(product)}>Edit</Button>
-                <Button variant="danger" className="ms-2 mt-3" onClick={() => handleDeleteClick(product)}>Delete</Button>
+                <Button variant="danger" className="ms-2 " onClick={() => handleDeleteClick(product)}>Delete</Button>
               </td>
             </tr>
           ))}

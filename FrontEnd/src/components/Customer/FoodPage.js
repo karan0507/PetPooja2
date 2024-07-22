@@ -1,7 +1,9 @@
+// src/components/Customer/FoodPage.js
 import React, { useState, useEffect } from 'react';
 import { useProducts } from '../Common/ProductContext';
 import { useCart } from '../Common/CartContext';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 const FoodPage = () => {
   const { categories, products } = useProducts();
@@ -22,6 +24,19 @@ const FoodPage = () => {
         product.category.name.toLowerCase().includes(term)
       )
     );
+  };
+
+  const handleAddToCart = (product, quantity) => {
+    addToCart(product, quantity);
+    toast.success(`${product.name} added to cart!`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -52,7 +67,22 @@ const FoodPage = () => {
                         <Card.Text>
                           ${product.price.toFixed(2)}
                         </Card.Text>
-                        <Button variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
+                        <Form>
+                          <Form.Group controlId={`quantity-${product.id}`}>
+                            <Form.Label>Quantity</Form.Label>
+                            <Form.Control
+                              type="number"
+                              min="1"
+                              defaultValue="1"
+                            />
+                          </Form.Group>
+                          <Button variant="primary" className='mt-4' onClick={() => {
+                            const quantity = parseInt(document.getElementById(`quantity-${product.id}`).value);
+                            handleAddToCart(product, quantity);
+                          }}>
+                            Add to Cart
+                          </Button>
+                        </Form>
                       </Card.Body>
                     </Card>
                   </Col>

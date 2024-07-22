@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { Container, Table, Spinner, Alert, Button, Modal, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GET_CATEGORIES = gql`
   query GetCategories {
@@ -57,8 +59,10 @@ const ListCategories = () => {
       await updateCategory({ variables: { categoryId: categoryToEdit.id, name: categoryName, image: categoryImage } });
       refetch();
       setShowEditModal(false);
+      toast.success('Category updated successfully!');
     } catch (error) {
       console.error("Error updating category:", error);
+      toast.error('Error updating category.');
     }
   };
 
@@ -67,8 +71,10 @@ const ListCategories = () => {
       await deleteCategory({ variables: { categoryId: categoryToDelete.id } });
       refetch();
       setShowDeleteModal(false);
+      toast.success('Category deleted successfully!');
     } catch (error) {
       console.error("Error deleting category:", error);
+      toast.error('Error deleting category.');
     }
   };
 
@@ -102,7 +108,7 @@ const ListCategories = () => {
               <td>{category.name}</td>
               <td>
                 <Button variant="primary" onClick={() => handleEditClick(category)} className="ml-2">Edit</Button>
-                <Button variant="danger" className="ms-2 mt-3" onClick={() => handleDeleteClick(category)} >Delete</Button>
+                <Button variant="danger" className="ms-2 " onClick={() => handleDeleteClick(category)} >Delete</Button>
               </td>
             </tr>
           ))}

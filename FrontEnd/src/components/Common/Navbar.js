@@ -38,9 +38,14 @@ const NavigationBar = () => {
               Contact
             </Nav.Link>
             {user && user.role === "Customer" && (
+              <>
               <Nav.Link as={Link} to="/food">
                 Food
               </Nav.Link>
+              <Nav.Link as={Link} to="/cart">
+                Cart
+              </Nav.Link>
+              </>
             )}
             {user && user.role === "Admin" && (
               <Nav.Link as={Link} to="/admin">

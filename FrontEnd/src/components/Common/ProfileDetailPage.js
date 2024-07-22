@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { Container, Row, Col, Button, Form, Image, Card } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import profile from '../Assests/Images/default.png';
 import '../Assests/Css/MerchantDetailPage.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GET_PROFILE_DETAILS = gql`
   query GetProfileDetails($userId: ID!) {
@@ -87,11 +89,10 @@ const ProfileDetailPage = () => {
   const { userId } = useParams();
   const [file, setFile] = useState(null);
   const [showFileInput, setShowFileInput] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(null);
 
-  const { loading: userLoading, data: userData } = useQuery(GET_PROFILE_DETAILS, { variables: { userId } });
-  const { loading: merchantLoading, data: merchantData } = useQuery(GET_MERCHANT_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Merchant' });
-  const { loading: customerLoading, data: customerData } = useQuery(GET_CUSTOMER_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Customer' });
+  const { loading: userLoading, data: userData, refetch: refetchUserData } = useQuery(GET_PROFILE_DETAILS, { variables: { userId } });
+  const { loading: merchantLoading, data: merchantData, refetch: refetchMerchantData } = useQuery(GET_MERCHANT_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Merchant' });
+  const { loading: customerLoading, data: customerData, refetch: refetchCustomerData } = useQuery(GET_CUSTOMER_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Customer' });
   const [uploadProfilePic, { loading: uploadLoading, error: uploadError }] = useMutation(UPLOAD_PROFILE_PIC);
   const [removeProfilePic, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_PROFILE_PIC);
 
@@ -109,15 +110,21 @@ const ProfileDetailPage = () => {
           file,
         },
       });
-      setUploadSuccess('Profile picture uploaded successfully!');
+      toast.success('Profile picture uploaded successfully!');
       setShowFileInput(false);
       setFile(null);
 
       const updatedUser = { ...userData.user, profilePic: data.uploadProfilePic.profilePic };
       localStorage.setItem('user', JSON.stringify(updatedUser));
-      window.location.reload();
+      refetchUserData();
+      if (userData.user.role === 'Merchant') {
+        refetchMerchantData();
+      } else if (userData.user.role === 'Customer') {
+        refetchCustomerData();
+      }
     } catch (error) {
       console.error('Error uploading profile picture:', error);
+      toast.error('Error uploading profile picture.');
     }
   };
 
@@ -128,14 +135,20 @@ const ProfileDetailPage = () => {
           userId,
         },
       });
-      setUploadSuccess('Profile picture removed successfully!');
+      toast.success('Profile picture removed successfully!');
       setShowFileInput(false);
 
       const updatedUser = { ...userData.user, profilePic: null };
       localStorage.setItem('user', JSON.stringify(updatedUser));
-      window.location.reload();
+      refetchUserData();
+      if (userData.user.role === 'Merchant') {
+        refetchMerchantData();
+      } else if (userData.user.role === 'Customer') {
+        refetchCustomerData();
+      }
     } catch (error) {
       console.error('Error removing profile picture:', error);
+      toast.error('Error removing profile picture.');
     }
   };
 
@@ -172,14 +185,13 @@ const ProfileDetailPage = () => {
                   <Button className="me-2" onClick={handleChangeImageClick}>
                     Change Image
                   </Button>
-                  <Button variant="danger" className='mt-3' onClick={handleRemove} disabled={removeLoading}>
+                  <Button variant="danger"  onClick={handleRemove} disabled={removeLoading}>
                     {removeLoading ? 'Removing...' : 'Remove Image'}
                   </Button>
                 </div>
               )}
               {uploadError && <p className="text-danger">Error uploading file: {uploadError.message}</p>}
               {removeError && <p className="text-danger">Error removing file: {removeError.message}</p>}
-              {uploadSuccess && <p className="text-success">{uploadSuccess}</p>}
             </Card.Body>
           </Card>
         </Col>
