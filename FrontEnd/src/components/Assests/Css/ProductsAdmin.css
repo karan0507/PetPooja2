@@ -104,3 +104,61 @@ input:checked + .slider:before {
   gap: 10px;
   margin-top: 20px;
 }
+
+
+.product-admin {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.product-admin h4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.product-admin ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.product-admin li {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 10px 0;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-admin li h5 {
+  margin: 0 0 10px;
+}
+
+.product-admin li p {
+  margin: 5px 0;
+}
+
+.product-admin .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.product-admin .pagination button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.product-admin .pagination button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.product-admin .pagination span {
+  font-size: 18px;
+}
