@@ -59,8 +59,7 @@ function App() {
                   <Route path="category-list" element={<ListCategories />} />
                 </Route>
                 <Route path="/profile/:userId" element={<ProfileDetailPage />} />
-                <Route path="/admin/*" element={<AdminDashboard />}>
-                <Route index element={<DashboardHome />} />
+                <Route path="/admin" element={<AdminDashboard />}>
                   <Route path="users" element={<UsersPage />} />
                   <Route path="contact-messages" element={<ContactMessages />} />
                   <Route path="orders" element={<OrdersPage />} />
