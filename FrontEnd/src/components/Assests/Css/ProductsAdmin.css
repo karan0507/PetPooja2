@@ -105,7 +105,7 @@ input:checked + .slider:before {
   margin-top: 20px;
 }
 
-
+/* css */
 .product-admin {
   padding: 20px;
   font-family: Arial, sans-serif;
