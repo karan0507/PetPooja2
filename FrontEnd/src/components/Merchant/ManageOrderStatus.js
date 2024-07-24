@@ -37,7 +37,7 @@ const ManageOrderStatus = () => {
   return (
     <div>
       <h2>Manage Order Status</h2>
-      <p>Here you can manage the status of orders.</p>
+    
       <div>
         <label>
           Filter by status:
