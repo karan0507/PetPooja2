@@ -1,9 +1,9 @@
-// src/components/Customer/FoodPage.js
 import React, { useState, useEffect } from 'react';
 import { useProducts } from '../Common/ProductContext';
 import { useCart } from '../Common/CartContext';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Button, InputGroup, FormControl } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import '../Assests/Css/FoodPage.css';
 
 const FoodPage = () => {
   const { categories, products } = useProducts();
@@ -48,20 +48,21 @@ const FoodPage = () => {
             placeholder="Search for products or categories..."
             value={searchTerm}
             onChange={handleSearch}
+            className="search-bar"
           />
         </Col>
       </Row>
       {categories.map(category => (
         <Row key={category.id} className="mb-4">
           <Col>
-            <h4>{category.name}</h4>
+            <h4 className="category-title">{category.name}</h4>
             <Row>
               {filteredProducts
                 .filter(product => product.category.id === category.id)
                 .map(product => (
-                  <Col key={product.id} md={4} className="mb-4">
-                    <Card>
-                      <Card.Img variant="top" src={product.image} />
+                  <Col key={product.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                    <Card className="product-card">
+                      <Card.Img variant="top" src={product.image} className="product-image" />
                       <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
                         <Card.Text>
@@ -70,16 +71,23 @@ const FoodPage = () => {
                         <Form>
                           <Form.Group controlId={`quantity-${product.id}`}>
                             <Form.Label>Quantity</Form.Label>
-                            <Form.Control
-                              type="number"
-                              min="1"
-                              defaultValue="1"
-                            />
+                            <InputGroup>
+                              <FormControl
+                                type="number"
+                                min="1"
+                                defaultValue="1"
+                                className="quantity-input"
+                              />
+                            </InputGroup>
                           </Form.Group>
-                          <Button variant="primary" className='mt-4' onClick={() => {
-                            const quantity = parseInt(document.getElementById(`quantity-${product.id}`).value);
-                            handleAddToCart(product, quantity);
-                          }}>
+                          <Button
+                            variant="primary"
+                            className="mt-4 add-to-cart-button"
+                            onClick={() => {
+                              const quantity = parseInt(document.getElementById(`quantity-${product.id}`).value);
+                              handleAddToCart(product, quantity);
+                            }}
+                          >
                             Add to Cart
                           </Button>
                         </Form>
