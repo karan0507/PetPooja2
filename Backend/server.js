@@ -2,6 +2,7 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { graphqlUploadExpress } = require('graphql-upload');
 const mongoose = require('mongoose');
+const cors = require('cors'); // Import cors
 const typeDefs = require('./graphql/Schema');
 const resolvers = require('./graphql/resolvers');
 const dotenv = require('dotenv');
@@ -11,6 +12,13 @@ dotenv.config();
 
 const startServer = async () => {
   const app = express();
+
+  // Enable CORS
+  app.use(cors({
+    origin: 'http://localhost:3000', // Your frontend origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true
+  }));
 
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -28,6 +36,11 @@ const startServer = async () => {
 
   // Enable file uploads
   app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+
+  // Define a simple test route to ensure server is working
+  app.get('/food', (req, res) => {
+    res.send('Food endpoint is working!');
+  });
 
   const server = new ApolloServer({
     typeDefs,
