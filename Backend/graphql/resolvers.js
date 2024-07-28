@@ -455,6 +455,23 @@ const resolvers = {
       }
       return true;
     },
+    placeOrder: async (_, { userId, items, total, address, phone, email }) => {
+      const order = new Order({
+        user: userId,
+        items,
+        total,
+        address,
+        phone,
+        email,
+        status: 'Pending',
+      });
+
+      await order.save();
+      return {
+        ...order.toObject(),
+        id: order._id.toString(),
+      };
+    },
   },
   Product: {
     category: async (product) => {

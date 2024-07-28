@@ -60,10 +60,18 @@ const typeDefs = gql`
   type Order {
     id: ID!
     user: User!
-    items: [String!]!
+    items: [OrderItem!]!
     total: Float!
+    address: String!
+    phone: String!
+    email: String!
     status: String!
     createdAt: String!
+  }
+
+  type OrderItem {
+    productId: ID!
+    quantity: Int!
   }
 
   type User {
@@ -87,6 +95,11 @@ const typeDefs = gql`
   input ProductFilterInput {
     category: ID
     searchTerm: String
+  }
+
+  input OrderItemInput {
+    productId: ID!
+    quantity: Int!
   }
 
   type Query {
@@ -134,8 +147,11 @@ const typeDefs = gql`
     ): ContactUsAdmin!
     addOrder(
       userId: ID!
-      items: [String!]!
+      items: [OrderItemInput!]!
       total: Float!
+      address: String!
+      phone: String!
+      email: String!
       status: String!
     ): Order!
     addMerchant(
@@ -166,6 +182,14 @@ const typeDefs = gql`
     deleteProduct(productId: ID!): Boolean!
     updateCategory(categoryId: ID!, name: String!, image: Upload): Category!
     deleteCategory(categoryId: ID!): Boolean!
+    placeOrder(
+      userId: ID!
+      items: [OrderItemInput!]!
+      total: Float!
+      address: String!
+      phone: String!
+      email: String!
+    ): Order!
   }
 `;
 
