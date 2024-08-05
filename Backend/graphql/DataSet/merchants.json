@@ -1,0 +1,237 @@
+[
+  {
+    "_id": "665cdc52e3207957d034f908",
+    "user": "665cdc52e3207957d034f902",
+    "restaurant": "665cdc52e3207957d034f906",
+    "__v": 0
+  },
+  {
+    "_id": "6661de432715a9d7fb8e6d57",
+    "user": "6661de432715a9d7fb8e6d51",
+    "restaurant": "6661de432715a9d7fb8e6d55",
+    "__v": 0
+  },
+  {
+    "_id": "668423bfe255f095be73e677",
+    "user": "668423bfe255f095be73e671",
+    "restaurantName": "SSP",
+    "menu": [],
+    "address": "668423bfe255f095be73e673",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66842d7500755de4726494a6",
+    "user": "66842d7400755de4726494a0",
+    "restaurantName": "SSP",
+    "menu": [],
+    "address": "66842d7500755de4726494a2",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66842e8e99b01d68789d2ae1",
+    "user": "66842e8e99b01d68789d2adb",
+    "restaurantName": "SSP",
+    "menu": [],
+    "address": "66842e8e99b01d68789d2add",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66842f3ec0bb7ca1ab405e02",
+    "user": "66842f3dc0bb7ca1ab405dfc",
+    "restaurantName": "SSP",
+    "menu": [],
+    "address": "66842f3dc0bb7ca1ab405dfe",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "668464d4855cc3ba02628d8a",
+    "user": "668464d3855cc3ba02628d84",
+    "restaurantName": "SSP",
+    "menu": [],
+    "address": "668464d4855cc3ba02628d86",
+    "phone": "123-456-7898",
+    "registrationNumber": "S123123123",
+    "__v": 0,
+    "profilePic": "/uploads/1719963311127-polo-logo-png-9.jpg"
+  },
+  {
+    "_id": "6684661ef4adf63aa5c00bd9",
+    "user": "6684661df4adf63aa5c00bd3",
+    "restaurantName": "SSP",
+    "menu": [],
+    "address": "6684661df4adf63aa5c00bd5",
+    "phone": "123-456-7898",
+    "registrationNumber": "S123123123",
+    "__v": 0
+  },
+  {
+    "_id": "6684790d14a7b6ef90ad2a0a",
+    "user": "6684790c14a7b6ef90ad2a04",
+    "restaurantName": "SSP",
+    "menu": [],
+    "address": "6684790d14a7b6ef90ad2a06",
+    "phone": "123-456-7898",
+    "registrationNumber": "S123123123",
+    "__v": 0,
+    "profilePic": "/uploads/1719963046020-thumb-up-cartoon-png_246633.jpg"
+  },
+  {
+    "_id": "6688cfd0213ce30a99e729ab",
+    "user": "6688cfcf213ce30a99e729a5",
+    "restaurantName": "SSP",
+    "menu": [
+      "6698386326a727cecbb0727d",
+      "66984218b141c51492c6517c",
+      "66984245b141c51492c65184",
+      "66984353c184b44ff4780566",
+      "669844016fea6e987e6829c7",
+      "6698446d8fb9ad9e91328ea7",
+      "66984503c3ca7b69ef945357",
+      "6698463c28e7db458b4c3fac",
+      "669847a47494b6eae75a0513",
+      "669849a582212f437a4e6d38"
+    ],
+    "address": "6688cfcf213ce30a99e729a7",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 10
+  },
+  {
+    "_id": "669834a51dc80e13127e8a71",
+    "user": "669834a41dc80e13127e8a6b",
+    "restaurantName": "Menu",
+    "menu": [
+      "6698358ffe278f7a03440cde",
+      "669836bcce9e5cedfca6ac58",
+      "66984a68fc43ee80bc34eda6",
+      "66984b69619167699d64535e",
+      "66984c0490545625626c7694",
+      "66984c23dafcdc5e5fbb75a4",
+      "66984c69dafba3bf839babbe",
+      "66984cb3a4a469172bed39d9",
+      "66984d0ca4a469172bed39e6",
+      "66984dc2f2db6558e6bb02ce",
+      "669859c1c51538d7e07e1a9f",
+      "669859d7c51538d7e07e1aac",
+      "66985a43c51538d7e07e1ab2",
+      "66985a4dc51538d7e07e1ab8",
+      "66985b16c51538d7e07e1acc",
+      "66985b24c51538d7e07e1ad2",
+      "66985d0fd4d21f45dfa7622b",
+      "66985db03fdbb87b56f76d06",
+      "66985eea3fdbb87b56f76d14",
+      "66985f98d4303a2e6d05f3d2",
+      "66987fbc3a7753b47919abd2",
+      "669881477699f82b1307f642",
+      "66988347e88834e5e4541456",
+      "66988463518c4873df72769f",
+      "669887d151824b2746572aa3",
+      "669950145a69f8f1c741a18d",
+      "669e9ba03086d4b317ebfd0c"
+    ],
+    "address": "669834a51dc80e13127e8a6d",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 27
+  },
+  {
+    "_id": "669890c94c5e5526b5a70e3c",
+    "user": "669890c94c5e5526b5a70e36",
+    "restaurantName": "PetPooja",
+    "menu": [],
+    "address": "669890c94c5e5526b5a70e38",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66993bff7225166203481f82",
+    "user": "66993bff7225166203481f7c",
+    "restaurantName": "9890342093",
+    "menu": [
+      "66993c687225166203481f8a"
+    ],
+    "address": "66993bff7225166203481f7e",
+    "phone": "548-333-5695",
+    "registrationNumber": "X039403490",
+    "__v": 1
+  },
+  {
+    "_id": "66994bc3e1c0cafd37910b4a",
+    "user": "66994bc3e1c0cafd37910b44",
+    "restaurantName": "PetPooja",
+    "menu": [
+      "66994bdae1c0cafd37910b54"
+    ],
+    "address": "66994bc3e1c0cafd37910b46",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 1
+  },
+  {
+    "_id": "66a067229fcbc193ebcd77e8",
+    "user": "66a067219fcbc193ebcd77e2",
+    "restaurantName": "Pizza Khava",
+    "menu": [
+      "66a067559fcbc193ebcd77ed",
+      "66a067789fcbc193ebcd77f3",
+      "66a067949fcbc193ebcd7801",
+      "66a067be9fcbc193ebcd7807",
+      "66a067e19fcbc193ebcd7817",
+      "66a068df9fcbc193ebcd7854",
+      "66a068f69fcbc193ebcd785a",
+      "66a0690c9fcbc193ebcd7860",
+      "66a069279fcbc193ebcd7866",
+      "66a0693b9fcbc193ebcd786c"
+    ],
+    "address": "66a067229fcbc193ebcd77e4",
+    "phone": "548-255-0000",
+    "registrationNumber": "H123123123",
+    "__v": 10
+  },
+  {
+    "_id": "66a06b799fcbc193ebcd78c2",
+    "user": "66a06b799fcbc193ebcd78bc",
+    "restaurantName": "Loot Burger",
+    "menu": [
+      "66a06e4e9fcbc193ebcd78cb",
+      "66a06e629fcbc193ebcd78d1",
+      "66a06e779fcbc193ebcd78d7",
+      "66a06e909fcbc193ebcd78dd",
+      "66a06ea59fcbc193ebcd78e3",
+      "66a06f8b9fcbc193ebcd78e9",
+      "66a06f9f9fcbc193ebcd78ef",
+      "66a06fb29fcbc193ebcd78f5",
+      "66a06fc89fcbc193ebcd78fb",
+      "66a06fdc9fcbc193ebcd7901"
+    ],
+    "address": "66a06b799fcbc193ebcd78be",
+    "phone": "548-255-0000",
+    "registrationNumber": "H123456123",
+    "__v": 10
+  },
+  {
+    "_id": "66a11321b71ecc80967d7c22",
+    "user": "66a11320b71ecc80967d7c1c",
+    "restaurantName": "Ken Sushi",
+    "menu": [
+      "66a1134bb71ecc80967d7c28",
+      "66a11364b71ecc80967d7c2e",
+      "66a1137bb71ecc80967d7c34",
+      "66a11392b71ecc80967d7c3a",
+      "66a113b3b71ecc80967d7c40"
+    ],
+    "address": "66a11320b71ecc80967d7c1e",
+    "phone": "548-255-3000",
+    "registrationNumber": "H159753123",
+    "__v": 5
+  }
+]

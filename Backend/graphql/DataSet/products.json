@@ -1,0 +1,272 @@
+[
+  {
+    "_id": "669950145a69f8f1c741a18d",
+    "name": "Veg Burger",
+    "price": 10.99,
+    "category": "669886ca51824b2746572a97",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721323541/ihsonntzpxdfsiftkawk.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "669e9ba03086d4b317ebfd0c",
+    "name": "Chicken burger",
+    "price": 12.99,
+    "category": "669886ca51824b2746572a97",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721670561/acavs2ebauutr3nwavhd.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a0658f9fcbc193ebcd77d9",
+    "name": "Margherita Pizza",
+    "price": 5.99,
+    "category": "66a0624d9fcbc193ebcd77bd",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721787790/nw1uprmwqxhwfcd6mwng.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a067789fcbc193ebcd77f3",
+    "name": "Pepperoni Pizza",
+    "price": 6.99,
+    "category": "66a0624d9fcbc193ebcd77bd",
+    "reviews": [],
+    "isActive": false,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721788278/stxizlvvztuqft9s4z04.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a067949fcbc193ebcd7801",
+    "name": "Veggie Pizza",
+    "price": 4.99,
+    "category": "66a0624d9fcbc193ebcd77bd",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721791183/dlnvg9hmf7trycadc1bi.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a067be9fcbc193ebcd7807",
+    "name": "BBQ Chicken Pizza",
+    "price": 7.49,
+    "category": "66a0624d9fcbc193ebcd77bd",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721789038/mbypx9p1paneps9z4z7l.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a067e19fcbc193ebcd7817",
+    "name": "Hawaiian Pizza",
+    "price": 5.89,
+    "category": "66a0624d9fcbc193ebcd77bd",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721788385/micxqubsvexjyvkreytl.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a068df9fcbc193ebcd7854",
+    "name": "Chocolate Cake",
+    "price": 9.59,
+    "category": "66a062a99fcbc193ebcd77cc",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721788639/c08yisvmmyp0tsjp8mh2.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a068f69fcbc193ebcd785a",
+    "name": "Vanilla Ice Cream",
+    "price": 4.59,
+    "category": "66a062a99fcbc193ebcd77cc",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721788661/ig4k3nojpzodihaodrc4.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a0690c9fcbc193ebcd7860",
+    "name": "Cheesecake",
+    "price": 9.99,
+    "category": "66a062a99fcbc193ebcd77cc",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721788684/avxgvlpfghji4suphz0u.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a069279fcbc193ebcd7866",
+    "name": "Apple Pie",
+    "price": 5.99,
+    "category": "66a062a99fcbc193ebcd77cc",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721789064/rmptowkurtvttmzpgswg.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a0693b9fcbc193ebcd786c",
+    "name": "Tiramisu",
+    "price": 6.99,
+    "category": "66a062a99fcbc193ebcd77cc",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721788731/p87k62u29jwnwfovatwv.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06e4e9fcbc193ebcd78cb",
+    "name": "Classic Cheeseburger",
+    "price": 10.99,
+    "category": "669886ca51824b2746572a97",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721790857/mngu4qmzeflfq3jll8y9.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06e629fcbc193ebcd78d1",
+    "name": "Bacon Burger",
+    "price": 11.49,
+    "category": "669886ca51824b2746572a97",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721832632/u7m4lstv9vziwj3yndke.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06e779fcbc193ebcd78d7",
+    "name": "Veggie Burger",
+    "price": 7.99,
+    "category": "669886ca51824b2746572a97",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721791149/wv1lnxj4zlf0dozhkeie.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06e909fcbc193ebcd78dd",
+    "name": "Chicken Burger",
+    "price": 9.99,
+    "category": "669886ca51824b2746572a97",
+    "reviews": [],
+    "isActive": false,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721790096/vdgzvwpm8zkeodfz5rzw.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06ea59fcbc193ebcd78e3",
+    "name": "Double Cheeseburger",
+    "price": 12,
+    "category": "669886ca51824b2746572a97",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721790117/bqhupyljdsltpyungwlv.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06f8b9fcbc193ebcd78e9",
+    "name": "Spaghetti Bolognese",
+    "price": 10.44,
+    "category": "66a0626f9fcbc193ebcd77bf",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721790346/lz0wtwjyn6tiw4leho4k.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06f9f9fcbc193ebcd78ef",
+    "name": "Fettuccine Alfredo",
+    "price": 4.44,
+    "category": "66a0626f9fcbc193ebcd77bf",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721790884/shxyxppiwkuap4c9l71f.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06fb29fcbc193ebcd78f5",
+    "name": "Lasagna",
+    "price": 9.99,
+    "category": "66a0626f9fcbc193ebcd77bf",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721790385/gj4ykduyef9slzmlvabw.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06fc89fcbc193ebcd78fb",
+    "name": "Penne Arrabbiata",
+    "price": 12.44,
+    "category": "66a0626f9fcbc193ebcd77bf",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721791560/gaudnukxwqu4ufwuk23z.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a06fdc9fcbc193ebcd7901",
+    "name": "Pesto Pasta",
+    "price": 7.89,
+    "category": "66a0626f9fcbc193ebcd77bf",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721791412/rfhfhwrubggypeq68utd.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a1134bb71ecc80967d7c28",
+    "name": "California Roll",
+    "price": 10.22,
+    "category": "66a062819fcbc193ebcd77c1",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721832498/wdqbcxmspaegmoah1nsu.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a11364b71ecc80967d7c2e",
+    "name": "Spicy Tuna Roll",
+    "price": 10.99,
+    "category": "66a062819fcbc193ebcd77c1",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721832291/xeoufcinfpmfocv4usco.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a1137bb71ecc80967d7c34",
+    "name": "Dragon Roll",
+    "price": 8.99,
+    "category": "66a062819fcbc193ebcd77c1",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721832315/tba6ho7tbq8sutma6gf6.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a11392b71ecc80967d7c3a",
+    "name": "Salmon Nigiri",
+    "price": 9.99,
+    "category": "66a062819fcbc193ebcd77c1",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721832337/h9e0oanax1c1fpej6fbo.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a113b3b71ecc80967d7c40",
+    "name": "Eel Avocado Roll",
+    "price": 9.56,
+    "category": "66a062819fcbc193ebcd77c1",
+    "reviews": [],
+    "isActive": true,
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721832486/f8jwvphuvzpoomfrad6f.jpg",
+    "__v": 0
+  }
+]

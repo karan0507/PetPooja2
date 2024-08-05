@@ -1,0 +1,145 @@
+/* General Loading Container Style */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Search Bar Style */
+.search-bar {
+  border-radius: 20px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid #333;
+}
+
+/* Category Title Style */
+.category-title {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  border-bottom: 3px solid #ff5722;
+  padding-bottom: 5px;
+}
+
+/* Product Card Style */
+.product-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Product Image Style */
+.product-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Quantity Input Style */
+.quantity-input {
+  width: 80px;
+  margin-right: 10px;
+  border: 1px solid #333;
+}
+
+/* Add to Cart Button Style */
+.add-to-cart-button {
+  background-color: #ff5722;
+  border: none;
+  color: white;
+}
+
+.add-to-cart-button:hover {
+  background-color: #e64a19;
+}
+
+/* Restaurant Name and Timings Style */
+.restaurant-name {
+  font-size: 2rem;
+  color: #333;
+}
+
+.restaurant-timings {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Breadcrumb Style */
+.breadcrumb-item + .breadcrumb-item::before {
+  content: '>';
+}
+
+/* Cuisine Badge Style */
+.cuisine-badge {
+  margin-right: 10px;
+  background-color: #ff8d33;
+  color: white;
+}
+
+/* Overview Container */
+.overview-container {
+  margin-top: 20px;
+}
+
+.overview-container h2,
+.overview-container h4 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.overview-container p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+@media (max-width: 576px) {
+  .product-card {
+    margin-bottom: 20px;
+  }
+
+  .product-image {
+    height: 150px;
+  }
+
+  .category-title {
+    font-size: 1.2rem;
+  }
+
+  .search-bar {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-card {
+    margin-bottom: 20px;
+  }
+
+  .product-image {
+    height: 180px;
+  }
+
+  .category-title {
+    font-size: 1.5rem;
+  }
+
+  .search-bar {
+    font-size: 1.2rem;
+  }
+}

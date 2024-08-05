@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "669886ca51824b2746572a97",
+    "name": "Burger",
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721272009/qyd3xek6dmi7ogaylkad.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a0624d9fcbc193ebcd77bd",
+    "name": "Pizza",
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721786957/fol2rlh06n4ggvoz7vnw.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a0626f9fcbc193ebcd77bf",
+    "name": "Pasta",
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721786991/frcrrixvkfjdw1tfmnmo.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a062819fcbc193ebcd77c1",
+    "name": "Sushi",
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721787009/hpyhl6ytsnzcpnn5wrlo.jpg",
+    "__v": 0
+  },
+  {
+    "_id": "66a062a99fcbc193ebcd77cc",
+    "name": "Dessert",
+    "image": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721787049/oatbzfguqwhga47ssfqj.jpg",
+    "__v": 0
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "_id": "665cdc52e3207957d034f906",
+    "restaurantName": "PetPooja",
+    "address": "665cdc52e3207957d034f904",
+    "phone": "1231231234",
+    "registrationNumber": "123456",
+    "__v": 0
+  },
+  {
+    "_id": "6661de432715a9d7fb8e6d55",
+    "restaurantName": "Nilkanth",
+    "address": "6661de432715a9d7fb8e6d53",
+    "phone": "548-255-0000",
+    "registrationNumber": "N123456789",
+    "__v": 0
+  },
+  {
+    "_id": "668420e208b1878cee017d26",
+    "restaurantName": "SSP",
+    "address": "668420e208b1878cee017d24",
+    "phone": "647-740-0252",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66842159a150d3a202c76e69",
+    "restaurantName": "SSP",
+    "address": "66842159a150d3a202c76e67",
+    "phone": "123-456-7897",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "6684228e3764a544aba861c3",
+    "restaurantName": "SSP",
+    "address": "6684228e3764a544aba861c1",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "668423bfe255f095be73e675",
+    "restaurantName": "SSP",
+    "address": "668423bfe255f095be73e673",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66842d7500755de4726494a4",
+    "restaurantName": "SSP",
+    "address": "66842d7500755de4726494a2",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66842e8e99b01d68789d2adf",
+    "restaurantName": "SSP",
+    "address": "66842e8e99b01d68789d2add",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66842f3ec0bb7ca1ab405e00",
+    "restaurantName": "SSP",
+    "address": "66842f3dc0bb7ca1ab405dfe",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "668464d4855cc3ba02628d88",
+    "restaurantName": "SSP",
+    "address": "668464d4855cc3ba02628d86",
+    "phone": "123-456-7898",
+    "registrationNumber": "S123123123",
+    "__v": 0
+  },
+  {
+    "_id": "6684661df4adf63aa5c00bd7",
+    "restaurantName": "SSP",
+    "address": "6684661df4adf63aa5c00bd5",
+    "phone": "123-456-7898",
+    "registrationNumber": "S123123123",
+    "__v": 0
+  },
+  {
+    "_id": "6684790d14a7b6ef90ad2a08",
+    "restaurantName": "SSP",
+    "address": "6684790d14a7b6ef90ad2a06",
+    "phone": "123-456-7898",
+    "registrationNumber": "S123123123",
+    "__v": 0
+  },
+  {
+    "_id": "6688cfd0213ce30a99e729a9",
+    "restaurantName": "SSP",
+    "address": "6688cfcf213ce30a99e729a7",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "669834a51dc80e13127e8a6f",
+    "restaurantName": "Menu",
+    "address": "669834a51dc80e13127e8a6d",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "669890c94c5e5526b5a70e3a",
+    "restaurantName": "PetPooja",
+    "address": "669890c94c5e5526b5a70e38",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66993bff7225166203481f80",
+    "restaurantName": "9890342093",
+    "address": "66993bff7225166203481f7e",
+    "phone": "548-333-5695",
+    "registrationNumber": "X039403490",
+    "__v": 0
+  },
+  {
+    "_id": "66994bc3e1c0cafd37910b48",
+    "restaurantName": "PetPooja",
+    "address": "66994bc3e1c0cafd37910b46",
+    "phone": "988-877-0250",
+    "registrationNumber": "S123456789",
+    "__v": 0
+  },
+  {
+    "_id": "66a067229fcbc193ebcd77e6",
+    "restaurantName": "Pizza Khava",
+    "address": "66a067229fcbc193ebcd77e4",
+    "phone": "548-255-0000",
+    "registrationNumber": "H123123123",
+    "__v": 0
+  },
+  {
+    "_id": "66a06b799fcbc193ebcd78c0",
+    "restaurantName": "Loot Burger",
+    "address": "66a06b799fcbc193ebcd78be",
+    "phone": "548-255-0000",
+    "registrationNumber": "H123456123",
+    "__v": 0
+  },
+  {
+    "_id": "66a11321b71ecc80967d7c20",
+    "restaurantName": "Ken Sushi",
+    "address": "66a11320b71ecc80967d7c1e",
+    "phone": "548-255-3000",
+    "registrationNumber": "H159753123",
+    "__v": 0
+  }
+]

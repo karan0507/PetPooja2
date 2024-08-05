@@ -108,7 +108,7 @@ const ListCategories = () => {
               <td>{category.name}</td>
               <td>
                 <Button variant="primary" onClick={() => handleEditClick(category)} className="ml-2">Edit</Button>
-                <Button variant="danger" className="ms-2 " onClick={() => handleDeleteClick(category)} >Delete</Button>
+                <Button variant="danger" className="ms-2 " onClick={() => handleDeleteClick(category)}>Delete</Button>
               </td>
             </tr>
           ))}

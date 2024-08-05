@@ -27,6 +27,7 @@ const typeDefs = gql`
     address: Address!
     phone: String!
     registrationNumber: String!
+    name: String!
   }
 
   type Product {
@@ -37,12 +38,14 @@ const typeDefs = gql`
     reviews: [Review!]
     isActive: Boolean!
     image: String
+    merchant: Merchant
   }
 
   type Category {
     id: ID!
     name: String!
     image: String
+    productCount: Int
   }
 
   type Review {
@@ -87,6 +90,12 @@ const typeDefs = gql`
   input ProductFilterInput {
     category: ID
     searchTerm: String
+    isActive: Boolean
+  }
+
+  input PaginationInput {
+    skip: Int
+    limit: Int
   }
 
   type Query {
@@ -104,7 +113,8 @@ const typeDefs = gql`
     customerCount: Int!
     merchantMenu(merchantId: ID!): [Product!]!
     categories: [Category!]!
-    products(filter: ProductFilterInput): [Product!]!
+    products(filter: ProductFilterInput, pagination: PaginationInput): [Product!]!
+    product(id: ID!): Product
   }
 
   type Mutation {
@@ -154,7 +164,6 @@ const typeDefs = gql`
       categoryId: ID!
       image: Upload
     ): Product!
-    addCategory(name: String!, image: Upload): Category!
     updateProduct(
       productId: ID!
       name: String
@@ -164,6 +173,7 @@ const typeDefs = gql`
       image: Upload
     ): Product!
     deleteProduct(productId: ID!): Boolean!
+    addCategory(name: String!, image: Upload): Category!
     updateCategory(categoryId: ID!, name: String!, image: Upload): Category!
     deleteCategory(categoryId: ID!): Boolean!
   }

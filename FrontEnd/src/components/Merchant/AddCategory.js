@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ADD_CATEGORY = gql`
-  mutation AddCategory($name: String!, $image: Upload) {
+  mutation AddCategory($name: String!, $image: Upload!) { 
     addCategory(name: $name, image: $image) {
       id
       name
@@ -27,7 +27,7 @@ const UPDATE_CATEGORY = gql`
 const AddCategory = () => {
   const [name, setName] = useState('');
   const [image, setImage] = useState(null);
-  const [categoryId, setCategoryId] = useState(''); // Only for update
+  const [categoryId, setCategoryId] = useState('');
 
   const [addCategory] = useMutation(ADD_CATEGORY);
   const [updateCategory] = useMutation(UPDATE_CATEGORY);
@@ -39,16 +39,27 @@ const AddCategory = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!image) {
+      toast.error('Please select an image');
+      return;
+    }
+
+    const variables = categoryId
+      ? { categoryId, name, image }
+      : { name, image };
+
     try {
       if (categoryId) {
-        await updateCategory({ variables: { categoryId, name, image } });
+        await updateCategory({ variables });
         toast.success('Category updated successfully!');
       } else {
-        await addCategory({ variables: { name, image } });
+        await addCategory({ variables });
         toast.success('Category added successfully!');
       }
       setName('');
       setImage(null);
+      setCategoryId('');
     } catch (error) {
       toast.error('An error occurred while adding/updating the category.');
     }
@@ -75,6 +86,7 @@ const AddCategory = () => {
                   <Form.Label>Category Image</Form.Label>
                   <Form.Control
                     type="file"
+                    accept="image/jpeg, image/png"
                     onChange={handleFileChange}
                     required={!categoryId}
                   />

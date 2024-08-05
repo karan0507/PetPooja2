@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "666f7056013966025b171478",
+    "name": "Karan Gandhi",
+    "email": "karangandhi0705@gmail.com",
+    "subject": "testing",
+    "message": "testing 1323",
+    "createdAt": "2024-06-16T23:08:06.463Z",
+    "__v": 0
+  },
+  {
+    "_id": "666f70b3013966025b17147a",
+    "name": "Ruchit Shah",
+    "email": "rs@gmail.com",
+    "subject": "tetingq",
+    "message": "testing",
+    "createdAt": "2024-06-16T23:09:39.629Z",
+    "__v": 0
+  }
+]

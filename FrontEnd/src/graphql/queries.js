@@ -21,6 +21,10 @@ export const GET_PRODUCTS = gql`
         id
         name
       }
+      merchant {
+        id
+        name
+      }
       isActive
     }
   }

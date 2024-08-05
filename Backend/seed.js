@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Product = require('./models/Product'); // Adjust the path accordingly
 
-mongoose.connect('mongodb://localhost:27017/Pooja', {
+mongoose.connect('mongodb://localhost:27017/PetPoojaDB', {
   serverSelectionTimeoutMS: 30000 // Increase timeout to 30 seconds
 }).then(() => {
   console.log('Connected to MongoDB');

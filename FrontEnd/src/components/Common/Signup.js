@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useNavigate, Link } from "react-router-dom";
 import { Container, Form, Button, Row, Col, Card } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const SIGNUP_MUTATION = gql`
   mutation Signup(
@@ -126,19 +128,22 @@ const Signup = () => {
             city,
             province,
             zipcode,
-            restaurantName,
-            registrationNumber,
+            restaurantName: role === "Merchant" ? restaurantName : null,
+            registrationNumber: role === "Merchant" ? registrationNumber : null,
           },
         });
+        toast.success("Signup successful!");
         navigate("/login?signup=success");
       } catch (e) {
         console.error("Error during signup:", e);
+        toast.error(e.message); // Show a toast message with the error
       }
     }
   };
 
   return (
     <Container className="mt-4">
+      <ToastContainer />
       <Row className="justify-content-center">
         <Col md={6}>
           <Card className="shadow-lg">
@@ -343,13 +348,12 @@ const Signup = () => {
                       </Form.Group>
                     </>
                   )}
-                  <Button variant="primary" type="submit" className="btn-block">
-                    Sign Up
+                  <Button variant="primary" type="submit" className="btn-block" disabled={loading}>
+                    {loading ? 'Signing Up...' : 'Sign Up'}
                   </Button>
                 </Form>
               )}
               <div className="text-center mt-3">
-                {loading && <p>Loading...</p>}
                 {error && (
                   <p className="text-danger">
                     Error signing up: {error.message}
@@ -371,4 +375,5 @@ const Signup = () => {
     </Container>
   );
 };
+
 export default Signup;

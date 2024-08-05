@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
@@ -34,6 +33,7 @@ import { ToastContainer } from 'react-toastify';
 import './components/Assests/Css/Toast.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import RestaurantDetails from './components/Merchant/RestaurantDetails/RestaurantDetails';
 
 function App() {
   const { user } = useUser();
@@ -51,6 +51,7 @@ function App() {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/food" element={<FoodPage />} />
+                <Route path="/food/restaurant/:merchantId" element={<RestaurantDetails />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/signup" element={<Signup />} />

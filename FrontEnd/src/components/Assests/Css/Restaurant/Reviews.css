@@ -1,0 +1,43 @@
+/* src/components/Assests/Css/Restaurant/Reviews.css */
+.reviews-container {
+    margin-top: 20px;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .reviews-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .reviews-container .card {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reviews-container .card-title {
+    font-weight: bold;
+  }
+  
+  .reviews-container .card-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 768px) {
+    .reviews-container h2 {
+      font-size: 1.5rem;
+    }
+  
+    .reviews-container .card-title {
+      font-size: 1.2rem;
+    }
+  
+    .reviews-container .card-subtitle {
+      font-size: 0.8rem;
+    }
+  }
+  

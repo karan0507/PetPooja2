@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "66a1729eeb002cb3c0c6d81b",
+    "user": "6688c840a518e166b2d06fd7",
+    "items": [
+      "Veg Burger"
+    ],
+    "total": 10.99,
+    "status": "Out for Delivery",
+    "orderStatus": [],
+    "createdAt": "2024-07-24T21:31:10.351Z",
+    "__v": 0
+  },
+  {
+    "_id": "66a17502c13b6c9e33b5bfa7",
+    "user": "6688c840a518e166b2d06fd7",
+    "items": [
+      "Veg Burger"
+    ],
+    "total": 10.99,
+    "status": "Pending",
+    "orderStatus": [
+      "66a17502c13b6c9e33b5bfa9"
+    ],
+    "createdAt": "2024-07-24T21:41:22.283Z",
+    "__v": 1
+  },
+  {
+    "_id": "66a17571c13b6c9e33b5bfb0",
+    "user": "6688c840a518e166b2d06fd7",
+    "items": [
+      "Veg Burger"
+    ],
+    "total": 10.99,
+    "status": "Pending",
+    "orderStatus": [
+      "66a17572c13b6c9e33b5bfb2"
+    ],
+    "createdAt": "2024-07-24T21:43:13.748Z",
+    "__v": 1
+  }
+]

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, gql, useQuery } from '@apollo/client';
-import { Container, Form, Button, Spinner, Row, Col, Card,Alert  } from 'react-bootstrap';
+import { Container, Form, Button, Spinner, Row, Col, Card, Alert } from 'react-bootstrap';
 import { useUser } from '../Common/UserContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -35,12 +35,26 @@ const AddMenu = () => {
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState(null);
-  const [ setErrorMessage] = useState('');
+  const [setErrorMessage] = useState('');
   const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useQuery(GET_CATEGORIES);
   const [addProduct, { loading }] = useMutation(ADD_PRODUCT);
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.size > 10000000) { // 10MB limit
+      toast.error('Image size should be less than 10MB');
+      setImage(null);
+    } else {
+      setImage(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!image) {
+      toast.error('Please select an image');
+      return;
+    }
     try {
       await addProduct({
         variables: {
@@ -60,11 +74,6 @@ const AddMenu = () => {
       toast.error('An error occurred while adding the product.');
       setErrorMessage(error.message);
     }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
   };
 
   if (categoriesLoading) return <Spinner animation="border" />;

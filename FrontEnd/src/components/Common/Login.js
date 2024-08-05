@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Container, Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
 
 const LOGIN_MUTATION = gql`
@@ -19,7 +21,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [login] = useMutation(LOGIN_MUTATION);
+  const [login, { loading }] = useMutation(LOGIN_MUTATION);
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -43,17 +45,20 @@ const Login = () => {
       const user = result.data.login;
       setUser(user);
       localStorage.setItem("user", JSON.stringify(user));
+      toast.success("Login successful!");
       if (user.role === "Merchant") navigate(`/merchantdashboard`);
       else if (user.role === "Admin") navigate("/admin/");
       else navigate("/food");
     } catch (e) {
       setErrorMessage(e.message);
+      toast.error("Error during login: " + e.message);
       console.error("Error during login:", e.message);
     }
   };
 
   return (
     <Container className="mt-5 mb-4">
+      <ToastContainer />
       <Row className="justify-content-center">
         <Col md={6}>
           <Card className="shadow-lg">
@@ -89,8 +94,8 @@ const Login = () => {
                     required
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="btn-block mt-4">
-                  Login
+                <Button variant="primary" type="submit" className="btn-block mt-4" disabled={loading}>
+                  {loading ? 'Processing...' : 'Login'}
                 </Button>
               </Form>
               <div className="text-center mt-3">

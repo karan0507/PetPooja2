@@ -2,9 +2,9 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const { graphqlUploadExpress } = require('graphql-upload');
 const mongoose = require('mongoose');
-const cors = require('cors'); // Import cors
+const cors = require('cors');
 const typeDefs = require('./graphql/Schema');
-const resolvers = require('./graphql/resolvers');
+const resolvers = require('./graphql/resolvers/index');
 const dotenv = require('dotenv');
 const path = require('path');
 
@@ -15,7 +15,7 @@ const startServer = async () => {
 
   // Enable CORS
   app.use(cors({
-    origin: 'http://localhost:3000', // Your frontend origin
+    origin: 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   }));
@@ -28,7 +28,7 @@ const startServer = async () => {
     console.log('MongoDB connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    process.exit(1); // Exit process with failure
+    process.exit(1);
   }
 
   // Serve static files from the uploads directory
@@ -37,17 +37,12 @@ const startServer = async () => {
   // Enable file uploads
   app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
-  // Define a simple test route to ensure server is working
-  app.get('/food', (req, res) => {
-    res.send('Food endpoint is working!');
-  });
-
   const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: ({ req }) => ({
       req,
-      User: require('./models/User'), 
+      User: require('./models/User'),
     }),
   });
 

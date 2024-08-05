@@ -1,0 +1,169 @@
+[
+  {
+    "_id": "665cd882b0ec3a35ad67daef",
+    "username": "admin",
+    "password": "$2a$10$FENyljSk9urKrx0BZMefYuPDyXkZWPv.wl7BjyRXQWQSUWNNCaW7e",
+    "role": "Admin",
+    "email": "",
+    "phone": "",
+    "__v": 0
+  },
+  {
+    "_id": "665cdad9e3207957d034f8fd",
+    "username": "adminSatvir",
+    "password": "$2a$10$ehID1g4FKjeEFLGHbmWj9OqL4lJDLNQ35DwRXyEshP7w.TrBSmqd6",
+    "role": "Admin",
+    "email": "punia.satvir@gmail.com",
+    "phone": "9888770250",
+    "__v": 0
+  },
+  {
+    "_id": "6661de432715a9d7fb8e6d51",
+    "username": "hk",
+    "password": "$2a$10$NoNBUl07/tSX88d67APwDuJmwJn9Vp.Z6zUMyEmbTzhIc8pjqVbRu",
+    "role": "Merchant",
+    "email": "hpatel21@gmail.com",
+    "phone": "548-255-0000",
+    "__v": 0
+  },
+  {
+    "_id": "66719d30a97a98ac0630533f",
+    "username": "harkishan21",
+    "password": "$2a$10$I0Ea5JKVlfeSzFrJOfT8Ru3u2fFx4xOtThUdy3AkrEwcnzatwHQXG",
+    "role": "Admin",
+    "email": "hspatel1221@gmail.com",
+    "phone": "548-255-0000",
+    "__v": 0
+  },
+  {
+    "_id": "6674592b4031cc15a7c4e53c",
+    "username": "satvir",
+    "password": "$2a$10$kbWYoChZSeMRyWpzpQ/9hezB/v1UhqTiz.UmOwIkm0Wv4EHJJ..aa",
+    "role": "Customer",
+    "email": "punia.satvir@gmail.com",
+    "phone": "988-877-0250",
+    "__v": 0
+  },
+  {
+    "_id": "6688c840a518e166b2d06fd7",
+    "username": "test",
+    "password": "$2a$10$piRGesUGP9G7R0P7INUj4e4E61Zb/AdOwQbu4FFua6ENdIVT8t6oa",
+    "role": "Customer",
+    "email": "punia.satvir@gmail.com",
+    "phone": "988-877-0250",
+    "__v": 0,
+    "profilePic": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721668842/g7o6yfkrck59nverxmc8.jpg"
+  },
+  {
+    "_id": "6688cfcf213ce30a99e729a5",
+    "username": "merchanttest",
+    "password": "$2a$10$hgGYR5nJ7C9lKp/JptWok.RvH.dt5K1WRLq3rmxr4RtE8GQ61bacy",
+    "role": "Merchant",
+    "email": "punia.satvir@gmail.com",
+    "phone": "988-877-0250",
+    "__v": 0,
+    "profilePic": "/uploads/1721249442213-thumb-up-cartoon-png_246633.jpg"
+  },
+  {
+    "_id": "669834a41dc80e13127e8a6b",
+    "username": "menu",
+    "password": "$2a$10$jH9f/Xm.FAbQoFblOhXXquyvDhNhp4bta9o4GT9kDG0hnyww5IGSS",
+    "role": "Merchant",
+    "email": "punia.satvir@gmail.com",
+    "phone": "988-877-0250",
+    "__v": 0,
+    "profilePic": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721270888/cjyvpkp0lzkwg9oqqru3.jpg"
+  },
+  {
+    "_id": "669890c94c5e5526b5a70e36",
+    "username": "menutest",
+    "password": "$2a$10$wOAeILWDm5PoOp23qve/JumBTgP7EFKw5Tdfsj8PBZAZKcE/iWZRu",
+    "role": "Merchant",
+    "email": "punia.satvir@gmail.com",
+    "phone": "988-877-0250",
+    "__v": 0
+  },
+  {
+    "_id": "66993b4d7225166203481f6a",
+    "username": "karan123",
+    "password": "$2a$10$81j7FstLStOlQp6zCgfleeom35dqroPO8yZe3hkOLSRvthlyc1dau",
+    "role": "Customer",
+    "email": "kgtech0705@gmail.com",
+    "phone": "548-333-5695",
+    "__v": 0,
+    "profilePic": "https://res.cloudinary.com/dpiuhufgf/image/upload/v1721318286/z1cscivicerutgg7tevh.png"
+  },
+  {
+    "_id": "66993bff7225166203481f7c",
+    "username": "karan0705",
+    "password": "$2a$10$.rFjEPXXntZ54/vfZAR.fONCbZPQB.itkDvYM13Ark4waYmzIEj9y",
+    "role": "Merchant",
+    "email": "kgtech0705@gmail.com",
+    "phone": "548-333-5695",
+    "__v": 0
+  },
+  {
+    "_id": "66a067219fcbc193ebcd77e2",
+    "username": "harkishan11",
+    "password": "$2a$10$ElH8vHnVzYQ0amdpM/jPje/.lTNRW2gdPAhQor1UuoSI8Kh0TnPtO",
+    "role": "Merchant",
+    "email": "hspatel11@gmail.com",
+    "phone": "548-255-0000",
+    "__v": 0
+  },
+  {
+    "_id": "66a069d49fcbc193ebcd7895",
+    "username": "patel21",
+    "password": "$2a$10$HzMh7M9r2nzJQ19/pgkBu.2DL1ptMmbwfEbMZTKJJQSK62nHiPj1q",
+    "role": "Customer",
+    "email": "patel21@gmail.com",
+    "phone": "548-255-0000",
+    "__v": 0
+  },
+  {
+    "_id": "66a06b799fcbc193ebcd78bc",
+    "username": "harkishan22",
+    "password": "$2a$10$mtW0nTETT.fe7N/.ByARwuqGU7jQ8OYDg2tV1j3WxVSLNCY6DIcAW",
+    "role": "Merchant",
+    "email": "harkishan22@gmail.com",
+    "phone": "548-255-0000",
+    "__v": 0
+  },
+  {
+    "_id": "66a11320b71ecc80967d7c1c",
+    "username": "harkishan33",
+    "password": "$2a$10$0tmZzXe8EKxydJRJkC3UduYN.whkc8491wx/MdenJd0CX15/yg1la",
+    "role": "Merchant",
+    "email": "harkishan33@gmail.com",
+    "phone": "548-255-3000",
+    "__v": 0
+  },
+  {
+    "_id": "66a18f60aa166a8c17fa6d62",
+    "username": "kgtech0705",
+    "password": "$2a$10$RYLx1UnBVYxBGZolmjOLrONrmqplITvvrn2S2zQa1KJ1BUulTn30q",
+    "role": "Customer",
+    "email": "kgtech@gmail.com",
+    "phone": "548-333-5695",
+    "__v": 0
+  },
+  {
+    "_id": "66a27d16e0ac7ea273cf6c54",
+    "username": "test2",
+    "password": "$2a$10$trLf41Vku7Vluw3hhT0T1OQgeuFJFFEhadw4GEt3ED3av4g1aH80S",
+    "role": "Customer",
+    "email": "punia.satvir@gmail.com",
+    "phone": "988-877-0250",
+    "__v": 0
+  },
+  {
+    "_id": "66ad3538f0fd5c732bea86d5",
+    "username": "customer",
+    "password": "$2a$12$SyIBx8CUoqXlzIpDMsxC.uPPxMt7QqtCcE7/jehIYlUhtps5cKeTi",
+    "role": "Customer",
+    "email": "customer@gmail.com",
+    "phone": "987-654-3210",
+    "profilePic": null,
+    "__v": 0
+  }
+]
