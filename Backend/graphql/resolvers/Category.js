@@ -18,12 +18,10 @@ const categoryResolvers = {
       let imageUrl = null;
 
       if (image) {
-        const { createReadStream, mimetype } = await image;
+        const { createReadStream, mimetype, filename, encoding } = await image;
 
-        // Log the received MIME type for debugging
-        console.log(`Received file of type: ${mimetype}`);
+        console.log(`Received file of type: ${mimetype}, name: ${filename}, encoding: ${encoding}`);
 
-        // Validate image type
         if (!['image/jpeg', 'image/png'].includes(mimetype)) {
           throw new Error("Invalid image format. Only JPEG and PNG are allowed.");
         }
@@ -65,12 +63,10 @@ const categoryResolvers = {
 
       if (name) category.name = name;
       if (image) {
-        const { createReadStream, mimetype } = await image;
+        const { createReadStream, mimetype, filename, encoding } = await image;
 
-        // Log the received MIME type for debugging
-        console.log(`Received file of type: ${mimetype}`);
+        console.log(`Received file of type: ${mimetype}, name: ${filename}, encoding: ${encoding}`);
 
-        // Validate image type
         if (!['image/jpeg', 'image/png'].includes(mimetype)) {
           throw new Error("Invalid image format. Only JPEG and PNG are allowed.");
         }

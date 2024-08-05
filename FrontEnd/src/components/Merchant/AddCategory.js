@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ADD_CATEGORY = gql`
-  mutation AddCategory($name: String!, $image: Upload!) { 
+  mutation AddCategory($name: String!, $image: Upload!) {
     addCategory(name: $name, image: $image) {
       id
       name
@@ -34,21 +34,34 @@ const AddCategory = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
+    console.log('Selected file:', file); // Debugging: Log the selected file
+  
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      if (file.size > 10000000) {
+        toast.error('Image size should be less than 10MB');
+        setImage(null);
+      } else {
+        setImage(file);
+      }
+    } else {
+      toast.error('Invalid file format. Please upload a JPEG or PNG image.');
+      setImage(null);
+    }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!image) {
       toast.error('Please select an image');
       return;
     }
-
+  
     const variables = categoryId
       ? { categoryId, name, image }
       : { name, image };
-
+  
     try {
       if (categoryId) {
         await updateCategory({ variables });
@@ -61,9 +74,15 @@ const AddCategory = () => {
       setImage(null);
       setCategoryId('');
     } catch (error) {
-      toast.error('An error occurred while adding/updating the category.');
+      console.error('Error:', error.message); // Debugging: Log the error
+      if (error.message.includes('Invalid image format')) {
+        toast.error('Only JPEG and PNG formats are supported.');
+      } else {
+        toast.error('An error occurred while adding/updating the category.');
+      }
     }
   };
+  
 
   return (
     <Container className="mt-5">

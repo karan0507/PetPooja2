@@ -13,7 +13,6 @@ dotenv.config();
 const startServer = async () => {
   const app = express();
 
-  // Enable CORS
   app.use(cors({
     origin: 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -28,13 +27,13 @@ const startServer = async () => {
     console.log('MongoDB connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    process.exit(1);
+    process.exit(1); // Exit process with failure
   }
 
   // Serve static files from the uploads directory
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-  // Enable file uploads
+  // Enable file uploads with graphql-upload
   app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
   const server = new ApolloServer({
@@ -48,7 +47,6 @@ const startServer = async () => {
 
   await server.start();
 
-  // Apply Apollo GraphQL middleware and set the path to /graphql
   server.applyMiddleware({ app, path: '/graphql' });
 
   const PORT = process.env.PORT || 5000;
