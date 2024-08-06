@@ -15,7 +15,7 @@ const GET_CATEGORIES = gql`
 `;
 
 const UPDATE_CATEGORY = gql`
-  mutation UpdateCategory($categoryId: ID!, $name: String, $image: Upload) {
+  mutation UpdateCategory($categoryId: ID!, $name: String, $image: String) {
     updateCategory(categoryId: $categoryId, name: $name, image: $image) {
       id
       name
@@ -80,7 +80,21 @@ const ListCategories = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setCategoryImage(file);
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+      if (file.size > 10000000) {
+        toast.error('Image size should be less than 10MB');
+        setCategoryImage(null);
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setCategoryImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      toast.error('Invalid file format. Please upload a JPEG or PNG image.');
+      setCategoryImage(null);
+    }
   };
 
   if (loading) return <Spinner animation="border" />;

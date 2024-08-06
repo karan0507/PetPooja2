@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const { ApolloServer } = require('apollo-server-express');
 const { graphqlUploadExpress } = require('graphql-upload');
 const mongoose = require('mongoose');
@@ -12,6 +13,9 @@ dotenv.config();
 
 const startServer = async () => {
   const app = express();
+
+  app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   app.use(cors({
     origin: 'http://localhost:3000',
@@ -30,11 +34,7 @@ const startServer = async () => {
     process.exit(1); // Exit process with failure
   }
 
-  // Serve static files from the uploads directory
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-  // Enable file uploads with graphql-upload
-  app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+  app.use(graphqlUploadExpress({ maxFileSize: 10 * 1024 * 1024, maxFiles: 1 }));
 
   const server = new ApolloServer({
     typeDefs,

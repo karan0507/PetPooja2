@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ADD_PRODUCT = gql`
-  mutation AddProduct($merchantId: ID!, $name: String!, $price: Float!, $categoryId: ID!, $image: Upload) {
+  mutation AddProduct($merchantId: ID!, $name: String!, $price: Float!, $categoryId: ID!, $image: String) {
     addProduct(merchantId: $merchantId, name: $name, price: $price, categoryId: $categoryId, image: $image) {
       id
       name
@@ -31,11 +31,12 @@ const GET_CATEGORIES = gql`
 const AddMenu = () => {
   const { user } = useUser();
   const merchantId = user?.id;
+  console.log("Merchant ID from user context:", merchantId); // Debugging statement
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState(null);
-  const [setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Correctly define the state for error messages
   const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useQuery(GET_CATEGORIES);
   const [addProduct, { loading }] = useMutation(ADD_PRODUCT);
 
@@ -45,7 +46,11 @@ const AddMenu = () => {
       toast.error('Image size should be less than 10MB');
       setImage(null);
     } else {
-      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result); // base64 encoded string
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -56,6 +61,7 @@ const AddMenu = () => {
       return;
     }
     try {
+      console.log("Submitting with merchantId:", merchantId); // Debugging statement
       await addProduct({
         variables: {
           merchantId,
@@ -72,7 +78,8 @@ const AddMenu = () => {
       setImage(null);
     } catch (error) {
       toast.error('An error occurred while adding the product.');
-      setErrorMessage(error.message);
+      setErrorMessage(error.message); // Update the error message state
+      console.error('Error details:', error); // Debugging statement
     }
   };
 
@@ -133,6 +140,7 @@ const AddMenu = () => {
                   {loading ? 'Adding...' : 'Add Product'}
                 </Button>
               </Form>
+              {errorMessage && <Alert variant="danger" className="mt-3">{errorMessage}</Alert>}
             </Card.Body>
           </Card>
         </Col>

@@ -118,7 +118,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    uploadProfilePic(userId: ID!, file: Upload!): User!
+    uploadProfilePic(userId: ID!, file: String!): User!
     removeProfilePic(userId: ID!): User!
     signup(
       username: String!
@@ -162,7 +162,7 @@ const typeDefs = gql`
       name: String!
       price: Float!
       categoryId: ID!
-      image: Upload
+      image: String
     ): Product!
     updateProduct(
       productId: ID!
@@ -170,12 +170,12 @@ const typeDefs = gql`
       price: Float
       categoryId: ID
       isActive: Boolean
-      image: Upload
+      image: String
     ): Product!
     deleteProduct(productId: ID!): Boolean!
-    addCategory(name: String!, image: Upload): Category!
-    updateCategory(categoryId: ID!, name: String!, image: Upload): Category!
-    deleteCategory(categoryId: ID!): Boolean!
+    addCategory(name: String!, image: String): Category
+  updateCategory(categoryId: ID!, name: String, image: String): Category
+  deleteCategory(categoryId: ID!): Boolean
   }
 `;
 

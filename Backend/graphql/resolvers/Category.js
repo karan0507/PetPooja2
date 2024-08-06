@@ -1,9 +1,7 @@
 const Category = require("../../models/Category");
-const { GraphQLUpload } = require('graphql-upload');
 const cloudinary = require('../../config/cloudinary');
 
 const categoryResolvers = {
-  Upload: GraphQLUpload,
   Query: {
     categories: async () => {
       const categories = await Category.find({});
@@ -18,25 +16,9 @@ const categoryResolvers = {
       let imageUrl = null;
 
       if (image) {
-        const { createReadStream, mimetype, filename, encoding } = await image;
-
-        console.log(`Received file of type: ${mimetype}, name: ${filename}, encoding: ${encoding}`);
-
-        if (!['image/jpeg', 'image/png'].includes(mimetype)) {
-          throw new Error("Invalid image format. Only JPEG and PNG are allowed.");
-        }
-
         try {
-          const stream = createReadStream();
-          const uploadResult = await new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
-              if (error) {
-                console.error("Cloudinary upload error:", error);
-                reject(new Error("Cloudinary upload failed."));
-              }
-              resolve(result);
-            });
-            stream.pipe(uploadStream);
+          const uploadResult = await cloudinary.uploader.upload(image, {
+            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
           });
           imageUrl = uploadResult.secure_url;
         } catch (err) {
@@ -63,25 +45,9 @@ const categoryResolvers = {
 
       if (name) category.name = name;
       if (image) {
-        const { createReadStream, mimetype, filename, encoding } = await image;
-
-        console.log(`Received file of type: ${mimetype}, name: ${filename}, encoding: ${encoding}`);
-
-        if (!['image/jpeg', 'image/png'].includes(mimetype)) {
-          throw new Error("Invalid image format. Only JPEG and PNG are allowed.");
-        }
-
         try {
-          const stream = createReadStream();
-          const uploadResult = await new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
-              if (error) {
-                console.error("Cloudinary upload error:", error);
-                reject(new Error("Cloudinary upload failed."));
-              }
-              resolve(result);
-            });
-            stream.pipe(uploadStream);
+          const uploadResult = await cloudinary.uploader.upload(image, {
+            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
           });
           category.image = uploadResult.secure_url;
         } catch (err) {

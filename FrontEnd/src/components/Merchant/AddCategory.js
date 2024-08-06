@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ADD_CATEGORY = gql`
-  mutation AddCategory($name: String!, $image: Upload!) {
+  mutation AddCategory($name: String!, $image: String) {
     addCategory(name: $name, image: $image) {
       id
       name
@@ -15,7 +15,7 @@ const ADD_CATEGORY = gql`
 `;
 
 const UPDATE_CATEGORY = gql`
-  mutation UpdateCategory($categoryId: ID!, $name: String, $image: Upload) {
+  mutation UpdateCategory($categoryId: ID!, $name: String, $image: String) {
     updateCategory(categoryId: $categoryId, name: $name, image: $image) {
       id
       name
@@ -34,34 +34,36 @@ const AddCategory = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    console.log('Selected file:', file); // Debugging: Log the selected file
-  
+
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
       if (file.size > 10000000) {
         toast.error('Image size should be less than 10MB');
         setImage(null);
       } else {
-        setImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImage(reader.result);
+        };
+        reader.readAsDataURL(file);
       }
     } else {
       toast.error('Invalid file format. Please upload a JPEG or PNG image.');
       setImage(null);
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!image) {
       toast.error('Please select an image');
       return;
     }
-  
+
     const variables = categoryId
       ? { categoryId, name, image }
       : { name, image };
-  
+
     try {
       if (categoryId) {
         await updateCategory({ variables });
@@ -74,15 +76,10 @@ const AddCategory = () => {
       setImage(null);
       setCategoryId('');
     } catch (error) {
-      console.error('Error:', error.message); // Debugging: Log the error
-      if (error.message.includes('Invalid image format')) {
-        toast.error('Only JPEG and PNG formats are supported.');
-      } else {
-        toast.error('An error occurred while adding/updating the category.');
-      }
+      console.error('Error:', error.message);
+      toast.error('An error occurred while adding/updating the category.');
     }
   };
-  
 
   return (
     <Container className="mt-5">

@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../../models/User');
+const cloudinary = require('../../config/cloudinary');
 
 const userResolvers = {
   Query: {
@@ -99,6 +100,38 @@ const userResolvers = {
         email: deletedUser.email,
         phone: deletedUser.phone,
         profilePic: deletedUser.profilePic,
+      };
+    },
+    uploadProfilePic: async (_, { userId, file }) => {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      const uploadResult = await cloudinary.uploader.upload(file, {
+        upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
+      });
+
+      user.profilePic = uploadResult.secure_url;
+      await user.save();
+
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
+      };
+    },
+    removeProfilePic: async (_, { userId }) => {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+
+      if (user.profilePic) {
+        const publicId = user.profilePic.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(publicId);
+        user.profilePic = null;
+        await user.save();
+      }
+
+      return {
+        ...user.toObject(),
+        id: user._id.toString(),
       };
     },
   }

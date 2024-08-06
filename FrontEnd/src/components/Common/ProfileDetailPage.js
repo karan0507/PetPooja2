@@ -66,7 +66,7 @@ const GET_CUSTOMER_DETAILS = gql`
 `;
 
 const UPLOAD_PROFILE_PIC = gql`
-  mutation UploadProfilePic($userId: ID!, $file: Upload!) {
+  mutation UploadProfilePic($userId: ID!, $file: String!) {
     uploadProfilePic(userId: $userId, file: $file) {
       id
       username
@@ -97,7 +97,14 @@ const ProfileDetailPage = () => {
   const [removeProfilePic, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_PROFILE_PIC);
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+    const reader = new FileReader();
+    const file = event.target.files[0];
+
+    reader.onloadend = () => {
+      setFile(reader.result);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const handleUpload = async () => {

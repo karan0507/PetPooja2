@@ -85,21 +85,15 @@ const ProductResolvers = {
 
       let imageUrl = null;
       if (image) {
-        const { createReadStream, mimetype } = await image;
-        
-        if (!['image/jpeg', 'image/png'].includes(mimetype)) {
-          throw new Error("Invalid image format. Only JPEG and PNG are allowed.");
-        }
-
-        const stream = createReadStream();
-        const uploadResult = await new Promise((resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
-            if (error) reject(error);
-            resolve(result);
+        try {
+          const uploadResult = await cloudinary.uploader.upload(image, {
+            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
           });
-          stream.pipe(uploadStream);
-        });
-        imageUrl = uploadResult.secure_url;
+          imageUrl = uploadResult.secure_url;
+        } catch (err) {
+          console.error("File upload error:", err);
+          throw new Error("File upload failed.");
+        }
       }
 
       const newProduct = new Product({
@@ -131,21 +125,15 @@ const ProductResolvers = {
       if (typeof isActive === 'boolean') product.isActive = isActive;
 
       if (image) {
-        const { createReadStream, mimetype } = await image;
-
-        if (!['image/jpeg', 'image/png'].includes(mimetype)) {
-          throw new Error("Invalid image format. Only JPEG and PNG are allowed.");
-        }
-
-        const stream = createReadStream();
-        const uploadResult = await new Promise((resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
-            if (error) reject(error);
-            resolve(result);
+        try {
+          const uploadResult = await cloudinary.uploader.upload(image, {
+            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
           });
-          stream.pipe(uploadStream);
-        });
-        product.image = uploadResult.secure_url;
+          product.image = uploadResult.secure_url;
+        } catch (err) {
+          console.error("File upload error:", err);
+          throw new Error("File upload failed.");
+        }
       }
 
       await product.save();
