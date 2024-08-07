@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useMutation, gql, useQuery } from '@apollo/client';
+import React, { useState, useEffect } from 'react';
+import { useMutation, gql, useQuery, useLazyQuery } from '@apollo/client';
 import { Container, Form, Button, Spinner, Row, Col, Card, Alert } from 'react-bootstrap';
 import { useUser } from '../Common/UserContext';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ADD_PRODUCT = gql`
-  mutation AddProduct($merchantId: ID!, $name: String!, $price: Float!, $categoryId: ID!, $image: String) {
-    addProduct(merchantId: $merchantId, name: $name, price: $price, categoryId: $categoryId, image: $image) {
+  mutation AddProduct($userId: ID!, $name: String!, $price: Float!, $categoryId: ID!, $image: String) {
+    addProduct(userId: $userId, name: $name, price: $price, categoryId: $categoryId, image: $image) {
       id
       name
       price
@@ -28,17 +28,38 @@ const GET_CATEGORIES = gql`
   }
 `;
 
+const MERCHANT_BY_USER_ID = gql`
+  query MerchantByUserId($userId: ID!) {
+    merchantByUserId(userId: $userId) {
+      id
+    }
+  }
+`;
+
 const AddMenu = () => {
   const { user } = useUser();
-  const merchantId = user?.id;
-  console.log("Merchant ID from user context:", merchantId); // Debugging statement
+  const [merchantId, setMerchantId] = useState(null);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(''); // Correctly define the state for error messages
+  const [errorMessage, setErrorMessage] = useState('');
+
   const { data: categoriesData, loading: categoriesLoading, error: categoriesError } = useQuery(GET_CATEGORIES);
   const [addProduct, { loading }] = useMutation(ADD_PRODUCT);
+  const [getMerchantByUserId, { data: merchantData }] = useLazyQuery(MERCHANT_BY_USER_ID);
+
+  useEffect(() => {
+    if (user?.role === 'Merchant' && user?.id) {
+      getMerchantByUserId({ variables: { userId: user.id } });
+    }
+  }, [user, getMerchantByUserId]);
+
+  useEffect(() => {
+    if (merchantData) {
+      setMerchantId(merchantData.merchantByUserId.id);
+    }
+  }, [merchantData]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -61,10 +82,10 @@ const AddMenu = () => {
       return;
     }
     try {
-      console.log("Submitting with merchantId:", merchantId); // Debugging statement
+      console.log("Submitting with userId:", user.id);
       await addProduct({
         variables: {
-          merchantId,
+          userId: user.id,
           name,
           price: parseFloat(price),
           categoryId,
@@ -78,8 +99,8 @@ const AddMenu = () => {
       setImage(null);
     } catch (error) {
       toast.error('An error occurred while adding the product.');
-      setErrorMessage(error.message); // Update the error message state
-      console.error('Error details:', error); // Debugging statement
+      setErrorMessage(error.message);
+      console.error('Error details:', error);
     }
   };
 
@@ -136,7 +157,7 @@ const AddMenu = () => {
                     required
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="mt-4 w-100" disabled={loading}>
+                <Button variant="primary" type="submit" className="mt-4 w-100" disabled={loading || !merchantId}>
                   {loading ? 'Adding...' : 'Add Product'}
                 </Button>
               </Form>

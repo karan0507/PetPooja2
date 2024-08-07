@@ -11,7 +11,11 @@ const MerchantSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Restaurant',
     required: true
-  }
+  },
+  menu: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }]
 });
 
 module.exports = mongoose.model('Merchant', MerchantSchema);

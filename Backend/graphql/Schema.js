@@ -2,6 +2,7 @@ const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   scalar Upload
+  
 
   type Address {
     id: ID!
@@ -115,6 +116,7 @@ const typeDefs = gql`
     categories: [Category!]!
     products(filter: ProductFilterInput, pagination: PaginationInput): [Product!]!
     product(id: ID!): Product
+    merchantByUserId(userId: ID!): Merchant
   }
 
   type Mutation {
@@ -157,13 +159,8 @@ const typeDefs = gql`
       registrationNumber: String!
     ): Merchant!
     updateOrderStatus(id: ID!, status: String!): Order!
-    addProduct(
-      merchantId: ID!
-      name: String!
-      price: Float!
-      categoryId: ID!
-      image: String
-    ): Product!
+    addProduct(userId: ID!, name: String!, price: Float!, categoryId: ID!, image: String): Product!
+
     updateProduct(
       productId: ID!
       name: String

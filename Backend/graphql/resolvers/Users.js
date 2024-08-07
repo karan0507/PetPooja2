@@ -1,6 +1,11 @@
 const bcrypt = require('bcryptjs');
 const User = require('../../models/User');
+const Restaurant = require('../../models/Restaurant');
+const Merchant = require('../../models/Merchant');
 const cloudinary = require('../../config/cloudinary');
+const Address = require('../../models/Address');
+const ContactUsAdmin = require("../../models/ContactUsAdmin");
+
 
 const userResolvers = {
   Query: {
@@ -17,7 +22,25 @@ const userResolvers = {
         ...user.toObject(),
         id: user._id.toString(),
       };
-    }
+    },
+    merchantByUserId: async (_, { userId }) => {
+      const merchant = await Merchant.findOne({ user: userId });
+      if (!merchant) throw new Error('Merchant not found');
+      return {
+        ...merchant.toObject(),
+        id: merchant._id.toString(),
+      };
+    },  contactMessages: async () => {
+      const messages = await ContactUsAdmin.find({});
+      return messages.map((message) => ({
+        ...message.toObject(),
+        id: message._id.toString(),
+      }));
+    },
+    userCount: async () => await User.countDocuments(),
+    adminCount: async () => await User.countDocuments({ role: "Admin" }),
+    merchantCount: async () => await User.countDocuments({ role: "Merchant" }),
+    customerCount: async () => await User.countDocuments({ role: "Customer" }),
   },
   Mutation: {
     signup: async (_, { username, password, role, email, phone, street, city, province, zipcode, restaurantName, registrationNumber }) => {
@@ -38,6 +61,33 @@ const userResolvers = {
         });
 
         await newUser.save();
+
+        if (role === 'Merchant') {
+          const newAddress = new Address({
+            street,
+            city,
+            province,
+            zipcode,
+          });
+          await newAddress.save();
+
+          const newRestaurant = new Restaurant({
+            restaurantName,
+            address: newAddress._id,
+            phone,
+            registrationNumber,
+          });
+
+          await newRestaurant.save();
+
+          const newMerchant = new Merchant({
+            user: newUser._id,
+            restaurant: newRestaurant._id,
+            menu:[],
+          });
+
+          await newMerchant.save();
+        }
 
         return {
           id: newUser._id.toString(),
@@ -132,6 +182,14 @@ const userResolvers = {
       return {
         ...user.toObject(),
         id: user._id.toString(),
+      };
+    },
+    submitContactForm: async (_, { name, email, subject, message }) => {
+      const newContact = new ContactUsAdmin({ name, email, subject, message });
+      const result = await newContact.save();
+      return {
+        ...result.toObject(),
+        id: result._id.toString(),
       };
     },
   }

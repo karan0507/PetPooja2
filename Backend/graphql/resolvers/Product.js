@@ -1,10 +1,9 @@
 const Product = require('../../models/Product');
 const Category = require('../../models/Category');
 const Merchant = require('../../models/Merchant');
-const Restaurant = require('../../models/Restaurant');
 const { GraphQLUpload } = require('graphql-upload');
 const cloudinary = require('../../config/cloudinary');
-const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
 
 const ProductResolvers = {
   Upload: GraphQLUpload,
@@ -14,7 +13,7 @@ const ProductResolvers = {
       const query = {};
       if (filter) {
         if (filter.category) {
-          query.category = new ObjectId(filter.category);
+          query.category = new mongoose.Types.ObjectId(filter.category);
         }
         if (filter.searchTerm) {
           query.name = { $regex: filter.searchTerm, $options: 'i' };
@@ -49,9 +48,21 @@ const ProductResolvers = {
         };
       });
     },
+    merchantMenu: async (_, { merchantId }) => {
+      console.log({merchantId})
+      const userObjectId = new mongoose.Types.ObjectId(merchantId);
+      console.log("Converted User ID to ObjectId:", userObjectId);
+      const merchant = await Merchant.findOne({ user: userObjectId });
+      console.log({merchant})
+      const menu = await Product.find({ merchant });
 
+      console.log("Menu fetched from database:", menu); // Adjust as necessary
+      if (!menu) return []; // Return an empty array if no products are found
+      return menu;
+    },
+  
     product: async (_, { id }) => {
-      const product = await Product.findById(new ObjectId(id))
+      const product = await Product.findById(new mongoose.Types.ObjectId(id))
         .populate('category')
         .populate({
           path: 'merchant',
@@ -76,18 +87,26 @@ const ProductResolvers = {
   },
 
   Mutation: {
-    addProduct: async (_, { merchantId, name, price, categoryId, image }) => {
-      const merchant = await Merchant.findById(new ObjectId(merchantId));
+    addProduct: async (_, { userId, name, price, categoryId, image }) => {
+      console.log("User ID received:", userId);
+
+      const userObjectId = new mongoose.Types.ObjectId(userId);
+      console.log("Converted User ID to ObjectId:", userObjectId);
+
+      const merchant = await Merchant.findOne({ user: userObjectId });
+      console.log("Merchant found:", merchant);
+
       if (!merchant) throw new Error('Merchant not found');
 
-      const category = await Category.findById(new ObjectId(categoryId));
+      const categoryObjectId = new mongoose.Types.ObjectId(categoryId);
+      const category = await Category.findById(categoryObjectId);
       if (!category) throw new Error('Category not found');
 
       let imageUrl = null;
       if (image) {
         try {
           const uploadResult = await cloudinary.uploader.upload(image, {
-            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
+            upload_preset: 'bdox1lbn'
           });
           imageUrl = uploadResult.secure_url;
         } catch (err) {
@@ -99,13 +118,14 @@ const ProductResolvers = {
       const newProduct = new Product({
         name,
         price,
-        category: new ObjectId(categoryId),
+        category: categoryObjectId,
         image: imageUrl,
         isActive: true,
-        merchant: new ObjectId(merchantId),
+        merchant: merchant._id,
       });
       await newProduct.save();
 
+      merchant.menu = merchant.menu || []; // Ensure menu is an array
       merchant.menu.push(newProduct._id);
       await merchant.save();
 
@@ -116,18 +136,18 @@ const ProductResolvers = {
     },
 
     updateProduct: async (_, { productId, name, price, categoryId, isActive, image }) => {
-      const product = await Product.findById(new ObjectId(productId));
+      const product = await Product.findById(new mongoose.Types.ObjectId(productId));
       if (!product) throw new Error('Product not found');
 
       if (name) product.name = name;
       if (price) product.price = price;
-      if (categoryId) product.category = new ObjectId(categoryId);
+      if (categoryId) product.category = new mongoose.Types.ObjectId(categoryId);
       if (typeof isActive === 'boolean') product.isActive = isActive;
 
       if (image) {
         try {
           const uploadResult = await cloudinary.uploader.upload(image, {
-            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
+            upload_preset: 'bdox1lbn'
           });
           product.image = uploadResult.secure_url;
         } catch (err) {
@@ -144,7 +164,7 @@ const ProductResolvers = {
     },
 
     deleteProduct: async (_, { productId }) => {
-      const product = await Product.findByIdAndDelete(new ObjectId(productId));
+      const product = await Product.findByIdAndDelete(new mongoose.Types.ObjectId(productId));
       if (!product) throw new Error('Product not found');
 
       if (product.image) {

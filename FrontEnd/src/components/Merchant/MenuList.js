@@ -139,6 +139,10 @@ const MenuList = () => {
   if (loading || categoriesLoading) return <Spinner animation="border" />;
   if (error || categoriesError) return <Alert variant="danger">{error ? error.message : categoriesError.message}</Alert>;
 
+  if (!data || !data.merchantMenu) {
+    return <Alert variant="warning">No products found for this merchant.</Alert>;
+  }
+
   return (
     <Container className="mt-5 p-5">
       <h2>Menu List</h2>
@@ -155,24 +159,30 @@ const MenuList = () => {
           </tr>
         </thead>
         <tbody>
-          {data.merchantMenu.map((product, index) => (
-            <tr key={product.id}>
-              <td>{index + 1}</td>
-              <td>
-                {product.image && (
-                  <img src={product.image} alt={product.name} width="50" />
-                )}
-              </td>
-              <td>{product.name}</td>
-              <td>{product.category.name}</td>
-              <td>${product.price.toFixed(2)}</td>
-              <td>{product.isActive ? "Yes" : "No"}</td>
-              <td>
-                <Button variant="primary" onClick={() => handleEditClick(product)}>Edit</Button>
-                <Button variant="danger" className="ms-2 " onClick={() => handleDeleteClick(product)}>Delete</Button>
-              </td>
+          {data.merchantMenu.length > 0 ? (
+            data.merchantMenu.map((product, index) => (
+              <tr key={product.id}>
+                <td>{index + 1}</td>
+                <td>
+                  {product.image && (
+                    <img src={product.image} alt={product.name} width="50" />
+                  )}
+                </td>
+                <td>{product.name}</td>
+                <td>{product.category.name}</td>
+                <td>${product.price.toFixed(2)}</td>
+                <td>{product.isActive ? "Yes" : "No"}</td>
+                <td>
+                  <Button variant="primary" onClick={() => handleEditClick(product)}>Edit</Button>
+                  <Button variant="danger" className="ms-2" onClick={() => handleDeleteClick(product)}>Delete</Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7">No products available</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
 

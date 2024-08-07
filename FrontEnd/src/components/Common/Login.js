@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, gql, useApolloClient } from "@apollo/client";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Container, Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
@@ -17,11 +17,20 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
+const GET_MERCHANT_ID = gql`
+  query GetMerchantId($userId: ID!) {
+    merchantByUserId(userId: $userId) {
+      id
+    }
+  }
+`;
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [login, { loading }] = useMutation(LOGIN_MUTATION);
+  const [login, { loading: loginLoading }] = useMutation(LOGIN_MUTATION);
+  const client = useApolloClient();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -41,10 +50,24 @@ const Login = () => {
     }
 
     try {
-      const result = await login({ variables: { username, password } });
-      const user = result.data.login;
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
+      const { data } = await login({ variables: { username, password } });
+      const user = data.login;
+
+      if (user.role === "Merchant") {
+        // Fetch the merchant ID
+        const { data: merchantData } = await client.query({
+          query: GET_MERCHANT_ID,
+          variables: { userId: user.id },
+        });
+
+        const merchantId = merchantData.merchantByUserId.id;
+        setUser({ ...user, merchantId });
+        localStorage.setItem("user", JSON.stringify({ ...user, merchantId }));
+      } else {
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+
       toast.success("Login successful!");
       if (user.role === "Merchant") navigate(`/merchantdashboard`);
       else if (user.role === "Admin") navigate("/admin/");
@@ -94,8 +117,8 @@ const Login = () => {
                     required
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit" className="btn-block mt-4" disabled={loading}>
-                  {loading ? 'Processing...' : 'Login'}
+                <Button variant="primary" type="submit" className="btn-block mt-4" disabled={loginLoading}>
+                  {loginLoading ? 'Processing...' : 'Login'}
                 </Button>
               </Form>
               <div className="text-center mt-3">
