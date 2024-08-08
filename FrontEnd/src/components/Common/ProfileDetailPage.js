@@ -20,19 +20,21 @@ const GET_PROFILE_DETAILS = gql`
   }
 `;
 
-const GET_MERCHANT_DETAILS = gql`
-  query GetMerchantDetails($userId: ID!) {
-    merchant(userId: $userId) {
+const GET_MERCHANT_BY_USER_ID = gql`
+  query GetMerchantByUserId($userId: ID!) {
+    merchantByUserId(userId: $userId) {
       id
-      restaurantName
-      address {
-        street
-        city
-        province
-        zipcode
+      restaurant {
+        restaurantName
+        address {
+          street
+          city
+          province
+          zipcode
+        }
+        phone
+        registrationNumber
       }
-      phone
-      registrationNumber
       user {
         id
         username
@@ -91,7 +93,7 @@ const ProfileDetailPage = () => {
   const [showFileInput, setShowFileInput] = useState(false);
 
   const { loading: userLoading, data: userData, refetch: refetchUserData } = useQuery(GET_PROFILE_DETAILS, { variables: { userId } });
-  const { loading: merchantLoading, data: merchantData, refetch: refetchMerchantData } = useQuery(GET_MERCHANT_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Merchant' });
+  const { loading: merchantLoading, data: merchantData, refetch: refetchMerchantData } = useQuery(GET_MERCHANT_BY_USER_ID, { variables: { userId }, skip: !userData || userData.user.role !== 'Merchant' });
   const { loading: customerLoading, data: customerData, refetch: refetchCustomerData } = useQuery(GET_CUSTOMER_DETAILS, { variables: { userId }, skip: !userData || userData.user.role !== 'Customer' });
   const [uploadProfilePic, { loading: uploadLoading, error: uploadError }] = useMutation(UPLOAD_PROFILE_PIC);
   const [removeProfilePic, { loading: removeLoading, error: removeError }] = useMutation(REMOVE_PROFILE_PIC);
@@ -168,7 +170,7 @@ const ProfileDetailPage = () => {
   }
 
   const user = userData.user;
-  const merchant = user.role === 'Merchant' ? merchantData?.merchant : null;
+  const merchant = user.role === 'Merchant' ? merchantData?.merchantByUserId : null;
   const customer = user.role === 'Customer' ? customerData?.customer : null;
 
   return (
@@ -192,7 +194,7 @@ const ProfileDetailPage = () => {
                   <Button className="me-2" onClick={handleChangeImageClick}>
                     Change Image
                   </Button>
-                  <Button variant="danger"  onClick={handleRemove} disabled={removeLoading}>
+                  <Button variant="danger" onClick={handleRemove} disabled={removeLoading}>
                     {removeLoading ? 'Removing...' : 'Remove Image'}
                   </Button>
                 </div>
@@ -210,9 +212,10 @@ const ProfileDetailPage = () => {
               <p><strong>Phone:</strong> {user.phone}</p>
               {merchant && (
                 <>
-                  <p><strong>Restaurant Name:</strong> {merchant.restaurantName}</p>
-                  <p><strong>Address:</strong> {merchant.address.street}, {merchant.address.city}, {merchant.address.province}, {merchant.address.zipcode}</p>
-                  <p><strong>Registration Number:</strong> {merchant.registrationNumber}</p>
+                  <p><strong>Restaurant Name:</strong> {merchant.restaurant.restaurantName}</p>
+                  <p><strong>Address:</strong> {merchant.restaurant.address.street}, {merchant.restaurant.address.city}, {merchant.restaurant.address.province}, {merchant.restaurant.address.zipcode}</p>
+                  <p><strong>Phone:</strong> {merchant.restaurant.phone}</p>
+                  <p><strong>Registration Number:</strong> {merchant.restaurant.registrationNumber}</p>
                 </>
               )}
               {customer && (

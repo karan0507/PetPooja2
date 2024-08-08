@@ -1,11 +1,11 @@
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 const User = require('../../models/User');
 const Restaurant = require('../../models/Restaurant');
 const Merchant = require('../../models/Merchant');
 const cloudinary = require('../../config/cloudinary');
 const Address = require('../../models/Address');
 const ContactUsAdmin = require("../../models/ContactUsAdmin");
-
 
 const userResolvers = {
   Query: {
@@ -24,13 +24,21 @@ const userResolvers = {
       };
     },
     merchantByUserId: async (_, { userId }) => {
-      const merchant = await Merchant.findOne({ user: userId });
+      const objectId = new mongoose.Types.ObjectId(userId); // Correct instantiation
+      const merchant = await Merchant.findOne({ user: objectId }).populate({
+        path: 'restaurant',
+        populate: {
+          path: 'address',
+          model: 'Address'
+        }
+      }).populate('user');
       if (!merchant) throw new Error('Merchant not found');
       return {
         ...merchant.toObject(),
         id: merchant._id.toString(),
       };
-    },  contactMessages: async () => {
+    },
+    contactMessages: async () => {
       const messages = await ContactUsAdmin.find({});
       return messages.map((message) => ({
         ...message.toObject(),
@@ -83,7 +91,7 @@ const userResolvers = {
           const newMerchant = new Merchant({
             user: newUser._id,
             restaurant: newRestaurant._id,
-            menu:[],
+            menu: [],
           });
 
           await newMerchant.save();

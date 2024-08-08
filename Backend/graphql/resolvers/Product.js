@@ -211,9 +211,16 @@ const ProductResolvers = {
 
     deleteProduct: async (_, { productId }) => {
       console.log("deleteProduct mutation called with productId:", productId);
-      const product = await Product.findByIdAndDelete(new mongoose.Types.ObjectId(productId));
-      console.log("Product deleted:", product);
+      const product = await Product.findById(new mongoose.Types.ObjectId(productId));
+      console.log("Product found:", product);
       if (!product) throw new Error('Product not found');
+
+      // Remove product ID from merchant's menu
+      await Merchant.updateOne(
+        { _id: product.merchant },
+        { $pull: { menu: product._id } }
+      );
+      console.log("Product removed from merchant's menu");
 
       if (product.image) {
         const publicId = product.image.split('/').pop().split('.')[0];
@@ -221,10 +228,11 @@ const ProductResolvers = {
         console.log("Image deleted from cloudinary:", publicId);
       }
 
+      await product.deleteOne();
+
       return true;
     },
   },
-
   Product: {
     category: async (product) => {
       console.log("Resolving category for product:", product);

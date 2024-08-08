@@ -5,7 +5,7 @@ import '../Assests/Css/ContactPage.css';
 const SUBMIT_CONTACT_FORM = gql`
   mutation SubmitContactForm($name: String!, $email: String!, $subject: String!, $message: String!) {
     submitContactForm(name: $name, email: $email, subject: $subject, message: $message) {
-      _id
+      id
       name
       email
       subject
@@ -24,7 +24,7 @@ const ContactPage = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [submitContactForm] = useMutation(SUBMIT_CONTACT_FORM);
+  const [submitContactForm, { data, loading, error }] = useMutation(SUBMIT_CONTACT_FORM);
 
   const handleChange = (e) => {
     setFormData({
@@ -51,8 +51,7 @@ const ContactPage = () => {
     const formErrors = validate();
     if (Object.keys(formErrors).length === 0) {
       try {
-        const { data } = await submitContactForm({ variables: { ...formData } });
-        console.log('Form submitted:', data.submitContactForm);
+        await submitContactForm({ variables: { ...formData } });
         setFormData({
           name: '',
           email: '',
@@ -119,8 +118,12 @@ const ContactPage = () => {
             {errors.message && <span className="error">{errors.message}</span>}
           </div>
           <div className="button-container">
-            <button type="submit" className="btn subm">Submit</button>
+            <button type="submit" className="btn subm" disabled={loading}>
+              {loading ? 'Submitting...' : 'Submit'}
+            </button>
           </div>
+          {data && <p className="success-message">Message submitted successfully!</p>}
+          {error && <p className="error-message">{errors.message}</p>}
         </form>
       </section>
       <section className="contact-info">
