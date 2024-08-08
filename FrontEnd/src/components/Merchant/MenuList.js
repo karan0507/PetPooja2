@@ -31,8 +31,24 @@ const GET_CATEGORIES = gql`
   }
 `;
 
+const ADD_PRODUCT = gql`
+  mutation AddProduct($userId: ID!, $name: String!, $price: Float!, $categoryId: ID!, $image: String) {
+    addProduct(userId: $userId, name: $name, price: $price, categoryId: $categoryId, image: $image) {
+      id
+      name
+      price
+      category {
+        id
+        name
+      }
+      isActive
+      image
+    }
+  }
+`;
+
 const UPDATE_PRODUCT = gql`
-  mutation UpdateProduct($productId: ID!, $name: String, $price: Float, $categoryId: ID, $isActive: Boolean, $image: Upload) {
+  mutation UpdateProduct($productId: ID!, $name: String, $price: Float, $categoryId: ID, $isActive: Boolean, $image: String) {
     updateProduct(productId: $productId, name: $name, price: $price, categoryId: $categoryId, isActive: $isActive, image: $image) {
       id
       name
@@ -76,12 +92,24 @@ const MenuList = () => {
     image: null,
   });
 
+  const [addProduct] = useMutation(ADD_PRODUCT, {
+    onCompleted: () => {
+      refetch();
+      toast.success('Product added successfully!');
+      navigate('/merchantdashboard/menu-list');
+    },
+    onError: (error) => {
+      console.error("Error adding product:", error);
+      toast.error('Error adding product.');
+    }
+  });
+
   const [updateProduct] = useMutation(UPDATE_PRODUCT, {
     onCompleted: () => {
       setShowEditModal(false);
       refetch();
       toast.success('Product updated successfully!');
-      navigate('/menu-list');
+      navigate('/merchantdashboard/menu-list');
     },
     onError: (error) => {
       console.error("Error updating product:", error);
@@ -135,6 +163,7 @@ const MenuList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting update with details:", productDetails);
 
     try {
       await updateProduct({
@@ -149,13 +178,18 @@ const MenuList = () => {
       });
     } catch (error) {
       console.error("Error updating product:", error);
+      console.log("Product Details at error:", productDetails);
       toast.error('Error updating product.');
     }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setProductDetails({ ...productDetails, image: file });
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setProductDetails({ ...productDetails, image: reader.result });
+    };
   };
 
   if (loading || categoriesLoading) return <Spinner animation="border" />;

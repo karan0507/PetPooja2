@@ -49,12 +49,12 @@ const ProductResolvers = {
       });
     },
     merchantMenu: async (_, { merchantId }) => {
-      console.log({ merchantId });
+      console.log("merchantMenu query called with merchantId:", merchantId);
       const userObjectId = new mongoose.Types.ObjectId(merchantId);
       console.log("Converted User ID to ObjectId:", userObjectId);
 
       const merchant = await Merchant.findOne({ user: userObjectId });
-      console.log({ merchant });
+      console.log("Merchant found:", merchant);
 
       if (!merchant) {
         throw new Error('Merchant not found');
@@ -86,6 +86,7 @@ const ProductResolvers = {
       }));
     },
     product: async (_, { id }) => {
+      console.log("product query called with id:", id);
       const product = await Product.findById(new mongoose.Types.ObjectId(id))
         .populate('category')
         .populate({
@@ -112,12 +113,17 @@ const ProductResolvers = {
 
   Mutation: {
     addProduct: async (_, { userId, name, price, categoryId, image }) => {
+      console.log("addProduct mutation called with:", { userId, name, price, categoryId, image });
       const userObjectId = new mongoose.Types.ObjectId(userId);
       const merchant = await Merchant.findOne({ user: userObjectId });
+      console.log("Merchant found:", merchant);
+
       if (!merchant) throw new Error('Merchant not found');
 
       const categoryObjectId = new mongoose.Types.ObjectId(categoryId);
       const category = await Category.findById(categoryObjectId);
+      console.log("Category found:", category);
+
       if (!category) throw new Error('Category not found');
 
       let imageUrl = null;
@@ -127,6 +133,7 @@ const ProductResolvers = {
             upload_preset: 'bdox1lbn'
           });
           imageUrl = uploadResult.secure_url;
+          console.log("Image uploaded successfully:", imageUrl);
         } catch (err) {
           console.error("File upload error:", err);
           throw new Error("File upload failed.");
@@ -155,42 +162,63 @@ const ProductResolvers = {
     },
 
     updateProduct: async (_, { productId, name, price, categoryId, isActive, image }) => {
-      const product = await Product.findById(new mongoose.Types.ObjectId(productId));
-      if (!product) throw new Error('Product not found');
+      console.log("updateProduct mutation called with:", { productId, name, price, categoryId, isActive, image });
+      try {
+        const product = await Product.findById(new mongoose.Types.ObjectId(productId)).populate('category').populate('merchant');
+        console.log("Product found:", product);
+        if (!product) throw new Error('Product not found');
 
-      if (name) product.name = name;
-      if (price) product.price = price;
-      if (categoryId) product.category = new mongoose.Types.ObjectId(categoryId);
-      if (typeof isActive === 'boolean') product.isActive = isActive;
-
-      if (image) {
-        try {
-          const uploadResult = await cloudinary.uploader.upload(image, {
-            upload_preset: 'bdox1lbn'
-          });
-          product.image = uploadResult.secure_url;
-        } catch (err) {
-          console.error("File upload error:", err);
-          throw new Error("File upload failed.");
+        if (name) product.name = name;
+        if (price) product.price = price;
+        if (categoryId) {
+          const category = await Category.findById(new mongoose.Types.ObjectId(categoryId));
+          console.log("Category found:", category);
+          if (!category) throw new Error('Category not found');
+          product.category = category._id;
         }
-      }
+        if (typeof isActive === 'boolean') product.isActive = isActive;
 
-      await product.save();
-      return {
-        ...product.toObject(),
-        id: product._id.toString(),
-        category: product.category ? { ...product.category.toObject(), id: product.category._id.toString() } : null,
-        merchant: product.merchant ? { ...product.merchant.toObject(), id: product.merchant._id.toString() } : null,
-      };
+        if (image) {
+          try {
+            const uploadResult = await cloudinary.uploader.upload(image, {
+              upload_preset: 'bdox1lbn'
+            });
+            product.image = uploadResult.secure_url;
+            console.log("Image uploaded successfully:", product.image);
+          } catch (err) {
+            console.error("File upload error:", err);
+            throw new Error("File upload failed.");
+          }
+        }
+
+        await product.save();
+        console.log("Product updated successfully:", product);
+
+        const category = await Category.findById(product.category);
+        const merchant = await Merchant.findById(product.merchant);
+
+        return {
+          ...product.toObject(),
+          id: product._id.toString(),
+          category: category ? { ...category.toObject(), id: category._id.toString() } : null,
+          merchant: merchant ? { ...merchant.toObject(), id: merchant._id.toString() } : null,
+        };
+      } catch (err) {
+        console.error("Error updating product:", err);
+        throw err;
+      }
     },
 
     deleteProduct: async (_, { productId }) => {
+      console.log("deleteProduct mutation called with productId:", productId);
       const product = await Product.findByIdAndDelete(new mongoose.Types.ObjectId(productId));
+      console.log("Product deleted:", product);
       if (!product) throw new Error('Product not found');
 
       if (product.image) {
         const publicId = product.image.split('/').pop().split('.')[0];
         await cloudinary.uploader.destroy(publicId);
+        console.log("Image deleted from cloudinary:", publicId);
       }
 
       return true;
@@ -199,6 +227,7 @@ const ProductResolvers = {
 
   Product: {
     category: async (product) => {
+      console.log("Resolving category for product:", product);
       const category = await Category.findById(product.category);
       if (!category) return null;
       return {
@@ -207,6 +236,7 @@ const ProductResolvers = {
       };
     },
     merchant: async (product) => {
+      console.log("Resolving merchant for product:", product);
       const merchant = await Merchant.findById(product.merchant).populate('restaurant');
       if (!merchant) return null;
       return {
