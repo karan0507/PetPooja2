@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { Container, Table, Spinner, Alert, Button, Form, Modal } from 'react-bootstrap';
 import { useUser } from '../Common/UserContext';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -55,6 +56,7 @@ const DELETE_PRODUCT = gql`
 const MenuList = () => {
   const { user } = useUser();
   const merchantId = user?.id;
+  const navigate = useNavigate();
 
   const { loading, error, data, refetch } = useQuery(GET_MERCHANT_MENU, {
     variables: { merchantId },
@@ -74,8 +76,30 @@ const MenuList = () => {
     image: null,
   });
 
-  const [updateProduct] = useMutation(UPDATE_PRODUCT);
-  const [deleteProduct] = useMutation(DELETE_PRODUCT);
+  const [updateProduct] = useMutation(UPDATE_PRODUCT, {
+    onCompleted: () => {
+      setShowEditModal(false);
+      refetch();
+      toast.success('Product updated successfully!');
+      navigate('/menu-list');
+    },
+    onError: (error) => {
+      console.error("Error updating product:", error);
+      toast.error('Error updating product.');
+    }
+  });
+
+  const [deleteProduct] = useMutation(DELETE_PRODUCT, {
+    onCompleted: () => {
+      setShowDeleteModal(false);
+      refetch();
+      toast.success('Product deleted successfully!');
+    },
+    onError: (error) => {
+      console.error("Error deleting product:", error);
+      toast.error('Error deleting product.');
+    }
+  });
 
   useEffect(() => {
     console.log("Merchant ID in MenuList component:", merchantId);
@@ -103,9 +127,6 @@ const MenuList = () => {
       await deleteProduct({
         variables: { productId: selectedProduct.id },
       });
-      setShowDeleteModal(false);
-      refetch();
-      toast.success('Product deleted successfully!');
     } catch (error) {
       console.error("Error deleting product:", error);
       toast.error('Error deleting product.');
@@ -119,12 +140,13 @@ const MenuList = () => {
       await updateProduct({
         variables: {
           productId: selectedProduct.id,
-          ...productDetails,
+          name: productDetails.name,
+          price: productDetails.price,
+          categoryId: productDetails.categoryId,
+          isActive: productDetails.isActive,
+          image: productDetails.image,
         },
       });
-      setShowEditModal(false);
-      refetch();
-      toast.success('Product updated successfully!');
     } catch (error) {
       console.error("Error updating product:", error);
       toast.error('Error updating product.');

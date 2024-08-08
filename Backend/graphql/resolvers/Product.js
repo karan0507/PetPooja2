@@ -49,18 +49,42 @@ const ProductResolvers = {
       });
     },
     merchantMenu: async (_, { merchantId }) => {
-      console.log({merchantId})
+      console.log({ merchantId });
       const userObjectId = new mongoose.Types.ObjectId(merchantId);
       console.log("Converted User ID to ObjectId:", userObjectId);
-      const merchant = await Merchant.findOne({ user: userObjectId });
-      console.log({merchant})
-      const menu = await Product.find({ merchant });
 
-      console.log("Menu fetched from database:", menu); // Adjust as necessary
-      if (!menu) return []; // Return an empty array if no products are found
-      return menu;
+      const merchant = await Merchant.findOne({ user: userObjectId });
+      console.log({ merchant });
+
+      if (!merchant) {
+        throw new Error('Merchant not found');
+      }
+
+      const products = await Product.find({ merchant: merchant._id })
+        .populate('category')
+        .populate({
+          path: 'merchant',
+          populate: {
+            path: 'restaurant',
+            model: 'Restaurant'
+          }
+        });
+
+      console.log("Products fetched from database:", products);
+
+      return products.map(product => ({
+        ...product.toObject(),
+        id: product._id.toString(),
+        category: product.category ? {
+          ...product.category.toObject(),
+          id: product.category._id.toString(),
+        } : null,
+        merchant: product.merchant ? {
+          ...product.merchant.toObject(),
+          id: product.merchant._id.toString(),
+        } : null,
+      }));
     },
-  
     product: async (_, { id }) => {
       const product = await Product.findById(new mongoose.Types.ObjectId(id))
         .populate('category')
@@ -88,14 +112,8 @@ const ProductResolvers = {
 
   Mutation: {
     addProduct: async (_, { userId, name, price, categoryId, image }) => {
-      console.log("User ID received:", userId);
-
       const userObjectId = new mongoose.Types.ObjectId(userId);
-      console.log("Converted User ID to ObjectId:", userObjectId);
-
       const merchant = await Merchant.findOne({ user: userObjectId });
-      console.log("Merchant found:", merchant);
-
       if (!merchant) throw new Error('Merchant not found');
 
       const categoryObjectId = new mongoose.Types.ObjectId(categoryId);
@@ -125,13 +143,14 @@ const ProductResolvers = {
       });
       await newProduct.save();
 
-      merchant.menu = merchant.menu || []; // Ensure menu is an array
       merchant.menu.push(newProduct._id);
       await merchant.save();
 
       return {
         ...newProduct.toObject(),
         id: newProduct._id.toString(),
+        category: category ? { ...category.toObject(), id: category._id.toString() } : null,
+        merchant: merchant ? { ...merchant.toObject(), id: merchant._id.toString() } : null,
       };
     },
 
@@ -160,6 +179,8 @@ const ProductResolvers = {
       return {
         ...product.toObject(),
         id: product._id.toString(),
+        category: product.category ? { ...product.category.toObject(), id: product.category._id.toString() } : null,
+        merchant: product.merchant ? { ...product.merchant.toObject(), id: product.merchant._id.toString() } : null,
       };
     },
 
