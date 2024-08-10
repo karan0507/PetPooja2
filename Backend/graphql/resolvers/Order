@@ -1,0 +1,79 @@
+const Order = require('../../models/Order');
+const Address = require('../../models/Address');
+const Product = require('../../models/Product');
+const Merchant = require('../../models/Merchant');
+
+const OrderResolvers = {
+  Mutation: {
+    createOrder: async (_, { customerId, products, totalAmount, shippingAddress, paymentMethod }) => {
+      try {
+        // Step 1: Find or create the shipping address
+        let address = await Address.findOne({
+          street: shippingAddress.street,
+          city: shippingAddress.city,
+          province: shippingAddress.province,
+          zipcode: shippingAddress.zipcode
+        });
+
+        if (!address) {
+          address = new Address({
+            street: shippingAddress.street,
+            city: shippingAddress.city,
+            province: shippingAddress.province,
+            zipcode: shippingAddress.zipcode
+          });
+          await address.save();
+        }
+
+        // Step 2: Prepare the order products
+        const orderProducts = await Promise.all(products.map(async (productInput) => {
+          const product = await Product.findById(productInput.productId).populate('merchant');
+          if (!product) {
+            throw new Error(`Product with ID ${productInput.productId} not found`);
+          }
+
+          const merchant = await Merchant.findById(product.merchant._id).populate('restaurant');
+
+          return {
+            productId: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: productInput.quantity,
+            merchantId: merchant._id,
+            restaurantName: merchant.restaurant.restaurantName,
+            restaurantAddress: {
+              street: merchant.restaurant.address.street,
+              city: merchant.restaurant.address.city,
+              province: merchant.restaurant.address.province,
+              zipcode: merchant.restaurant.address.zipcode
+            }
+          };
+        }));
+
+        // Step 3: Create the new order
+        const newOrder = new Order({
+          customerId,
+          products: orderProducts,
+          totalAmount,
+          status: 'Pending',
+          shippingAddress: address._id,
+          paymentMethod,
+          createdAt: new Date()
+        });
+
+        // Step 4: Save and return the new order
+        const savedOrder = await newOrder.save();
+        const populatedOrder = await Order.findById(savedOrder._id)
+          .populate('shippingAddress')
+          .populate('products.productId');
+
+        return populatedOrder;
+      } catch (error) {
+        console.error('Error creating order:', error);
+        throw new Error('Failed to create order');
+      }
+    }
+  }
+};
+
+module.exports = OrderResolvers;

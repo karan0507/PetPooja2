@@ -4,10 +4,10 @@ const { ApolloServer } = require('apollo-server-express');
 const { graphqlUploadExpress } = require('graphql-upload');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const typeDefs = require('./graphql/Schema');
-const resolvers = require('./graphql/resolvers/index');
 const dotenv = require('dotenv');
 const path = require('path');
+
+const cartRoutes = require('./graphql/resolvers/CartRoutes'); // Import cartRoutes
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ const startServer = async () => {
   const app = express();
 
   app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   app.use(cors({
     origin: 'http://localhost:3000',
@@ -36,9 +36,12 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   app.use(graphqlUploadExpress({ maxFileSize: 10 * 1024 * 1024, maxFiles: 1 }));
 
+  // Use cart routes
+  app.use('/api/cart', cartRoutes);
+
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    typeDefs: require('./graphql/Schema'), // Adjust the path as necessary
+    resolvers: require('./graphql/resolvers/index'), // Adjust the path as necessary
     context: ({ req }) => ({
       req,
       User: require('./models/User'),

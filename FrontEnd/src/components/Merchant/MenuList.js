@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const GET_MERCHANT_MENU = gql`
-  query GetMerchantMenu($merchantId: ID!) {
+   query GetMerchantMenu($merchantId: ID!) {
     merchantMenu(merchantId: $merchantId) {
       id
       name

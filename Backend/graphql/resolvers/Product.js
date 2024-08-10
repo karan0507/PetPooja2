@@ -24,6 +24,7 @@ const ProductResolvers = {
       }
 
       const products = await Product.find(query)
+      
         .populate('category')
         .populate({
           path: 'merchant',
@@ -84,6 +85,59 @@ const ProductResolvers = {
           id: product.merchant._id.toString(),
         } : null,
       }));
+    },
+    merchantMenuList: async (_, { merchantId }) => {
+  console.log("merchantMenu query called with merchantId:", merchantId);
+  
+  // Convert merchantId string to MongoDB ObjectId
+  const merchantObjectId = new mongoose.Types.ObjectId(merchantId);
+  console.log("Converted merchant ID to ObjectId:", merchantObjectId);
+
+  // Find the merchant by its _id (merchantObjectId) and populate the restaurant field
+  const merchant = await Merchant.findById(merchantObjectId).populate('restaurant');
+  console.log("Merchant found:", merchant);
+
+  if (!merchant) {
+    throw new Error('Merchant not found');
+  }
+
+  // Fetch products associated with this merchant
+  const products = await Product.find({ merchant: merchant._id }).populate('category');
+  console.log("Products fetched from database:", products);
+
+  return products.map(product => ({
+    ...product.toObject(),
+    id: product._id.toString(),
+    category: product.category ? {
+      ...product.category.toObject(),
+      id: product.category._id.toString(),
+    } : null,
+    merchant: {
+      ...merchant.toObject(),
+      id: merchant._id.toString(),
+      restaurant: {
+        restaurantName: merchant.restaurant.restaurantName
+      }
+    }
+  }));
+},
+   
+    merchants: async () => {
+      try {
+        const merchants = await Merchant.find().populate('user').populate('restaurant');
+        console.log("Fetched merchants:", merchants);  // Log the fetched merchants
+        if (!merchants) {
+          throw new Error("No merchants found");
+        }
+        return merchants.map(merchant => ({
+          ...merchant.toObject(),
+          id: merchant._id.toString(),
+          restaurantName: merchant.restaurant.restaurantName  // Populate restaurantName from Restaurant model
+        }));
+      } catch (error) {
+        console.error("Error fetching merchants:", error);
+        throw new Error("Error fetching merchants");
+      }
     },
     product: async (_, { id }) => {
       console.log("product query called with id:", id);
