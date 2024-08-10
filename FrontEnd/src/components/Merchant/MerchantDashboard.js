@@ -25,7 +25,7 @@ const MerchantDashboard = () => {
             <LinkContainer to="/merchantdashboard/category-list">
               <Nav.Link>Category List</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/merchantdashboard/manage-order-status">
+            <LinkContainer to="/merchantdashboard/manage-order">
               <Nav.Link>Manage Order Status</Nav.Link>
             </LinkContainer>
           </Nav>

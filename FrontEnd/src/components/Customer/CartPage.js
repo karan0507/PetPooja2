@@ -7,12 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../Assests/Css/Cart.css';
 
 const CartPage = () => {
-  const { cartItems, updateQuantity, removeFromCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
   const navigate = useNavigate();
-
-  const handleQuantityChange = (productId, quantity) => {
-    updateQuantity(productId, parseInt(quantity));
-  };
 
   const handleRemove = (productId) => {
     removeFromCart(productId);
@@ -25,6 +21,10 @@ const CartPage = () => {
       draggable: true,
       progress: undefined,
     });
+  };
+
+  const handleQuantityChange = (productId, value) => {
+    updateQuantity(productId, parseInt(value));
   };
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);

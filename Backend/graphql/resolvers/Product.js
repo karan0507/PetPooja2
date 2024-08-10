@@ -4,6 +4,8 @@ const Merchant = require('../../models/Merchant');
 const { GraphQLUpload } = require('graphql-upload');
 const cloudinary = require('../../config/cloudinary');
 const mongoose = require('mongoose');
+const Order = require('../../models/Order');
+
 
 const ProductResolvers = {
   Upload: GraphQLUpload,
@@ -24,6 +26,7 @@ const ProductResolvers = {
       }
 
       const products = await Product.find(query)
+      
         .populate('category')
         .populate({
           path: 'merchant',
@@ -85,6 +88,59 @@ const ProductResolvers = {
         } : null,
       }));
     },
+    merchantMenuList: async (_, { merchantId }) => {
+  console.log("merchantMenu query called with merchantId:", merchantId);
+  
+  // Convert merchantId string to MongoDB ObjectId
+  const merchantObjectId = new mongoose.Types.ObjectId(merchantId);
+  console.log("Converted merchant ID to ObjectId:", merchantObjectId);
+
+  // Find the merchant by its _id (merchantObjectId) and populate the restaurant field
+  const merchant = await Merchant.findById(merchantObjectId).populate('restaurant');
+  console.log("Merchant found:", merchant);
+
+  if (!merchant) {
+    throw new Error('Merchant not found');
+  }
+
+  // Fetch products associated with this merchant
+  const products = await Product.find({ merchant: merchant._id }).populate('category');
+  console.log("Products fetched from database:", products);
+
+  return products.map(product => ({
+    ...product.toObject(),
+    id: product._id.toString(),
+    category: product.category ? {
+      ...product.category.toObject(),
+      id: product.category._id.toString(),
+    } : null,
+    merchant: {
+      ...merchant.toObject(),
+      id: merchant._id.toString(),
+      restaurant: {
+        restaurantName: merchant.restaurant.restaurantName
+      }
+    }
+  }));
+},
+   
+    merchants: async () => {
+      try {
+        const merchants = await Merchant.find().populate('user').populate('restaurant');
+        console.log("Fetched merchants:", merchants);  // Log the fetched merchants
+        if (!merchants) {
+          throw new Error("No merchants found");
+        }
+        return merchants.map(merchant => ({
+          ...merchant.toObject(),
+          id: merchant._id.toString(),
+          restaurantName: merchant.restaurant.restaurantName  // Populate restaurantName from Restaurant model
+        }));
+      } catch (error) {
+        console.error("Error fetching merchants:", error);
+        throw new Error("Error fetching merchants");
+      }
+    },
     product: async (_, { id }) => {
       console.log("product query called with id:", id);
       const product = await Product.findById(new mongoose.Types.ObjectId(id))
@@ -109,6 +165,34 @@ const ProductResolvers = {
         merchant: merchant ? { ...merchant.toObject(), id: merchant._id.toString() } : null,
       };
     },
+   
+    getOrdersByMerchant: async (_, { merchantId }) => {
+      try {
+        console.log("Fetching orders for merchant ID:", merchantId);
+        const merchant = await Merchant.findOne({ user: merchantId }).populate('orders');
+        if (!merchant) {
+          console.error("Merchant not found:", merchantId);
+          return [];  // Return an empty array if the merchant is not found
+        }
+
+        const orders = merchant.orders || [];
+        console.log("Orders found:", orders);
+
+        // Ensure orders is always an array
+        return orders.map(order => ({
+          ...order.toObject(),
+          id: order._id.toString(),
+          products: order.products.map(product => ({
+            ...product.toObject(),
+            productId: product.productId.toString(),
+          })),
+        }));
+      } catch (error) {
+        console.error("Error fetching orders for merchant:", error);
+        throw new Error('Failed to fetch orders for merchant');
+      }
+    },
+  
   },
 
   Mutation: {

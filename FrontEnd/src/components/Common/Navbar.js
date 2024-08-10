@@ -45,6 +45,9 @@ const NavigationBar = () => {
               <Nav.Link as={Link} to="/cart">
                 Cart
               </Nav.Link>
+              <Nav.Link as={Link} to="/order-history">
+                Order
+              </Nav.Link>
               </>
             )}
             {user && user.role === "Admin" && (

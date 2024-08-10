@@ -97,6 +97,7 @@ const AddMenu = () => {
       setPrice('');
       setCategoryId('');
       setImage(null);
+      window.location.replace("/merchantdashboard/menu-list");
     } catch (error) {
       toast.error('An error occurred while adding the product.');
       setErrorMessage(error.message);

@@ -28,4 +28,5 @@ export const GET_PRODUCTS = gql`
       isActive
     }
   }
+  
 `;

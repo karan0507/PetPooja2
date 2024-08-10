@@ -2,10 +2,16 @@ const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   scalar Upload
-  
 
   type Address {
     id: ID!
+    street: String!
+    city: String!
+    province: String!
+    zipcode: String!
+  }
+
+  input AddressInput {
     street: String!
     city: String!
     province: String!
@@ -30,6 +36,7 @@ const typeDefs = gql`
     registrationNumber: String!
     name: String!
   }
+
 
   type Product {
     id: ID!
@@ -61,13 +68,32 @@ const typeDefs = gql`
     address: Address!
   }
 
+  type OrderProduct {
+  productId: ID!
+  name: String!
+  price: Float!
+  quantity: Int!
+  merchantId: ID!
+  
+}
+
   type Order {
     id: ID!
-    user: User!
-    items: [String!]!
-    total: Float!
+    customerId: ID!
+    products: [OrderProduct!]!
+    totalAmount: Float!
     status: String!
+    shippingAddress: Address!
+    paymentMethod: String!
     createdAt: String!
+  }
+
+  input OrderProductInput {
+    productId: ID!
+    name: String!
+    price: Float!
+    quantity: Int!
+    merchantId: ID!
   }
 
   type User {
@@ -113,13 +139,20 @@ const typeDefs = gql`
     merchantCount: Int!
     customerCount: Int!
     merchantMenu(merchantId: ID!): [Product!]!
+    merchantMenuList(merchantId: ID!): [Product!]!
+    getOrdersByMerchant(merchantId: ID!): [Order!]!
+    
+    getMerchantOrders(merchantId: ID!): [Order!]!
     categories: [Category!]!
     products(filter: ProductFilterInput, pagination: PaginationInput): [Product!]!
     product(id: ID!): Product
     merchantByUserId(userId: ID!): Merchant
+    getOrderHistory(customerId: ID!): [Order!]!
+    getOrderById(orderId: ID!): Order!
   }
 
   type Mutation {
+    updateOrderStatusByMerchant(orderId: ID!, status: String!): Order!
     uploadProfilePic(userId: ID!, file: String!): User!
     removeProfilePic(userId: ID!): User!
     signup(
@@ -158,7 +191,7 @@ const typeDefs = gql`
       phone: String!
       registrationNumber: String!
     ): Merchant!
-    updateOrderStatus(id: ID!, status: String!): Order!
+    
     addProduct(userId: ID!, name: String!, price: Float!, categoryId: ID!, image: String): Product!
 
     updateProduct(
@@ -171,8 +204,10 @@ const typeDefs = gql`
     ): Product!
     deleteProduct(productId: ID!): Boolean!
     addCategory(name: String!, image: String): Category
-  updateCategory(categoryId: ID!, name: String, image: String): Category
-  deleteCategory(categoryId: ID!): Boolean
+    updateCategory(categoryId: ID!, name: String, image: String): Category
+    deleteCategory(categoryId: ID!): Boolean
+    createOrder(customerId: ID!, products: [OrderProductInput!]!, totalAmount: Float!, shippingAddress: AddressInput!, paymentMethod: String!): Order!
+    updateOrderStatus(orderId: ID!, status: String!): Order!
   }
 `;
 
