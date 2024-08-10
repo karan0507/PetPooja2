@@ -37,7 +37,7 @@ import { ToastContainer } from 'react-toastify';
 // import './components/Assets/Css/Toast.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
-
+import TrackOrder from './components/Customer/TrackOrder'; 
 function App() {
   const { user } = useUser();
 
@@ -61,6 +61,7 @@ function App() {
                 <Route path="/profile/:userId" element={<ProfileDetailPage />} />
                 <Route path="/order-history" element={<OrderHistory />} />
                 <Route path="/order/:orderId" element={<OrderDetails />} /> {/* <-- This is the missing route */}
+                <Route path="/track-order/:orderId" element={<TrackOrder />} />
 
                 {/* Merchant Dashboard Routes */}
                 <Route path="/merchantdashboard" element={<MerchantDashboard />}>
