@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useUser } from '../Common/UserContext';
-import { Container, Card, Button, Spinner, Alert } from 'react-bootstrap';
+import { Container, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const GET_ORDER_HISTORY = gql`
@@ -15,7 +15,6 @@ const GET_ORDER_HISTORY = gql`
         name
         price
         quantity
-        restaurantName
       }
     }
   }
@@ -28,8 +27,8 @@ const OrderHistory = () => {
   });
   const navigate = useNavigate();
 
-  if (loading) return <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>;
-  if (error) return <Alert variant="danger">{error.message}</Alert>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <Container>
@@ -40,14 +39,8 @@ const OrderHistory = () => {
             <Card.Title>Order ID: {order.id}</Card.Title>
             <Card.Text>Status: {order.status}</Card.Text>
             <Card.Text>Total Amount: ${order.totalAmount}</Card.Text>
-            <Card.Text>Date: {new Date(order.createdAt).toLocaleDateString()}</Card.Text>
             <Card.Text>
-              Restaurants:
-              <ul>
-                {order.products.map((product, index) => (
-                  <li key={index}>{product.restaurantName}</li>
-                ))}
-              </ul>
+              Date: {new Date(parseInt(order.createdAt)).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
             </Card.Text>
             <Button onClick={() => navigate(`/order/${order.id}`)}>View Details</Button>
           </Card.Body>

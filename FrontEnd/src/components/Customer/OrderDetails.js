@@ -1,7 +1,7 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
-import { Container, Card, ListGroup, Spinner, Alert } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { Container, Card, ListGroup } from 'react-bootstrap';
 
 const GET_ORDER_BY_ID = gql`
   query GetOrderById($orderId: ID!) {
@@ -10,25 +10,18 @@ const GET_ORDER_BY_ID = gql`
       status
       totalAmount
       createdAt
+      products {
+        name
+        price
+        quantity
+      }
       shippingAddress {
         street
         city
         province
         zipcode
       }
-      products {
-        productId
-        name
-        price
-        quantity
-        restaurantName
-        restaurantAddress {
-          street
-          city
-          province
-          zipcode
-        }
-      }
+      paymentMethod
     }
   }
 `;
@@ -36,37 +29,35 @@ const GET_ORDER_BY_ID = gql`
 const OrderDetails = () => {
   const { orderId } = useParams();
   const { loading, error, data } = useQuery(GET_ORDER_BY_ID, {
-    variables: { orderId },
+    variables: { orderId }
   });
 
-  if (loading) return <Spinner animation="border" />;
-  if (error) return <Alert variant="danger">{error.message}</Alert>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
-  const { status, totalAmount, createdAt, shippingAddress, products } = data.getOrderById;
+  const order = data.getOrderById;
 
   return (
-    <Container className="mt-5">
+    <Container>
+      <h2>Order Details</h2>
       <Card>
-        <Card.Header>Order Details</Card.Header>
         <Card.Body>
-          <Card.Title>Order ID: {orderId}</Card.Title>
-          <Card.Text>Status: {status}</Card.Text>
-          <Card.Text>Total Amount: ${totalAmount}</Card.Text>
-          <Card.Text>Order Date: {new Date(createdAt).toLocaleDateString()}</Card.Text>
-          <Card.Text>
-            Shipping Address: {shippingAddress.street}, {shippingAddress.city}, {shippingAddress.province}, {shippingAddress.zipcode}
-          </Card.Text>
-          <ListGroup>
-            {products.map(product => (
-              <ListGroup.Item key={product.productId}>
-                <strong>{product.name}</strong>
-                <p>Quantity: {product.quantity}</p>
-                <p>Price: ${product.price}</p>
-                <p>Restaurant: {product.restaurantName}</p>
-                <p>Address: {product.restaurantAddress.street}, {product.restaurantAddress.city}, {product.restaurantAddress.province}, {product.restaurantAddress.zipcode}</p>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
+          <Card.Title>Order ID: {order.id}</Card.Title>
+          <Card.Text>Status: {order.status}</Card.Text>
+          <Card.Text>Total Amount: ${order.totalAmount}</Card.Text>
+          <Card.Text>Date: {new Date(order.createdAt).toLocaleDateString()}</Card.Text>
+          <Card.Text>Payment Method: {order.paymentMethod}</Card.Text>
+        </Card.Body>
+        <ListGroup variant="flush">
+          {order.products.map((product, index) => (
+            <ListGroup.Item key={index}>
+              <strong>{product.name}</strong> - ${product.price} x {product.quantity}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+        <Card.Body>
+          <Card.Text>Shipping Address:</Card.Text>
+          <Card.Text>{order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.province}, {order.shippingAddress.zipcode}</Card.Text>
         </Card.Body>
       </Card>
     </Container>

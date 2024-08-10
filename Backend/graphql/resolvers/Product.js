@@ -4,6 +4,8 @@ const Merchant = require('../../models/Merchant');
 const { GraphQLUpload } = require('graphql-upload');
 const cloudinary = require('../../config/cloudinary');
 const mongoose = require('mongoose');
+const Order = require('../../models/Order');
+
 
 const ProductResolvers = {
   Upload: GraphQLUpload,
@@ -163,6 +165,34 @@ const ProductResolvers = {
         merchant: merchant ? { ...merchant.toObject(), id: merchant._id.toString() } : null,
       };
     },
+   
+    getOrdersByMerchant: async (_, { merchantId }) => {
+      try {
+        console.log("Fetching orders for merchant ID:", merchantId);
+        const merchant = await Merchant.findOne({ user: merchantId }).populate('orders');
+        if (!merchant) {
+          console.error("Merchant not found:", merchantId);
+          return [];  // Return an empty array if the merchant is not found
+        }
+
+        const orders = merchant.orders || [];
+        console.log("Orders found:", orders);
+
+        // Ensure orders is always an array
+        return orders.map(order => ({
+          ...order.toObject(),
+          id: order._id.toString(),
+          products: order.products.map(product => ({
+            ...product.toObject(),
+            productId: product.productId.toString(),
+          })),
+        }));
+      } catch (error) {
+        console.error("Error fetching orders for merchant:", error);
+        throw new Error('Failed to fetch orders for merchant');
+      }
+    },
+  
   },
 
   Mutation: {

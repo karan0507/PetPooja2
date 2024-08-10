@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useCart } from '../Common/CartContext';
-import { useUser } from '../Common/UserContext'; // Assuming you have a UserContext to get the logged-in user's details
-import { Container, Form, Button, Alert } from 'react-bootstrap';
+import { useUser } from '../Common/UserContext';
+import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const CREATE_ORDER = gql`
@@ -17,7 +17,7 @@ const CREATE_ORDER = gql`
 const Checkout = () => {
   const { cartItems, clearCart } = useCart();
   const { user } = useUser();
-  const [createOrder] = useMutation(CREATE_ORDER);
+  const [createOrder, { loading }] = useMutation(CREATE_ORDER);
   const [shippingAddress, setShippingAddress] = useState({
     street: '',
     city: '',
@@ -36,17 +36,12 @@ const Checkout = () => {
         price: item.price,
         quantity: item.quantity,
         merchantId: item.merchant.id,
-        restaurantName: item.merchant.restaurant.restaurantName,
-        restaurantAddress: {
-          street: item.merchant.restaurant.address.street,
-          city: item.merchant.restaurant.address.city,
-          province: item.merchant.restaurant.address.province,
-          zipcode: item.merchant.restaurant.address.zipcode,
-        },
       }));
-  
+
+      console.log("Products being sent:", products);
+
       const totalAmount = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  
+
       const response = await createOrder({
         variables: {
           customerId: user.id,
@@ -56,14 +51,16 @@ const Checkout = () => {
           paymentMethod
         }
       });
-  
+
+      console.log("Order response:", response);
+
       clearCart(); // Clear the cart after successful order placement
       navigate(`/order/${response.data.createOrder.id}`); // Redirect to order details page
     } catch (err) {
+      console.error("Error placing order:", err);
       setError(err.message);
     }
   };
-  
 
   return (
     <Container>
@@ -123,8 +120,12 @@ const Checkout = () => {
           </Form.Control>
         </Form.Group>
 
-        <Button variant="primary" onClick={handlePlaceOrder}>
-          Place Order
+        <Button 
+          variant="primary" 
+          onClick={handlePlaceOrder} 
+          disabled={loading}
+        >
+          {loading ? <Spinner animation="border" size="sm" /> : 'Place Order'}
         </Button>
       </Form>
     </Container>

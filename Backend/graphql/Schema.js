@@ -74,8 +74,7 @@ const typeDefs = gql`
   price: Float!
   quantity: Int!
   merchantId: ID!
-  restaurantName: String!
-  restaurantAddress: Address!
+  
 }
 
   type Order {
@@ -141,7 +140,9 @@ const typeDefs = gql`
     customerCount: Int!
     merchantMenu(merchantId: ID!): [Product!]!
     merchantMenuList(merchantId: ID!): [Product!]!
-
+    getOrdersByMerchant(merchantId: ID!): [Order!]!
+    
+    getMerchantOrders(merchantId: ID!): [Order!]!
     categories: [Category!]!
     products(filter: ProductFilterInput, pagination: PaginationInput): [Product!]!
     product(id: ID!): Product
@@ -151,6 +152,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    updateOrderStatusByMerchant(orderId: ID!, status: String!): Order!
     uploadProfilePic(userId: ID!, file: String!): User!
     removeProfilePic(userId: ID!): User!
     signup(

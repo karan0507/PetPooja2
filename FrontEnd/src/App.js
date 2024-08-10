@@ -25,6 +25,7 @@ import MenuList from './components/Merchant/MenuList';
 import AddCategory from './components/Merchant/AddCategory';
 import ListCategories from './components/Merchant/CategorList';
 import ManageOrderStatus from './components/Merchant/ManageOrderStatus';
+import MerchantOrderDetails from './components/Merchant/MerchantOrderDetails';
 import DashboardHome from './components/Merchant/DashboardHome';
 import MerchantDashboard from './components/Merchant/MerchantDashboard';
 import OrderHistory from './components/Customer/OrderHistory'; // Import Order History
@@ -67,7 +68,9 @@ function App() {
                   <Route path="add-category" element={<AddCategory />} />
                   <Route path="add-menu" element={<AddMenu />} />
                   <Route path="menu-list" element={<MenuList />} />
-                  <Route path="manage-order-status" element={<ManageOrderStatus />} />
+                  <Route path="manage-order" element={<ManageOrderStatus />} />
+                  <Route path="/merchantdashboard/manage-order-status/:orderId" element={<MerchantOrderDetails />} />
+
                   <Route path="category-list" element={<ListCategories />} />
                 </Route>
                 

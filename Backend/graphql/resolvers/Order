@@ -1,79 +1,88 @@
 const Order = require('../../models/Order');
-const Address = require('../../models/Address');
-const Product = require('../../models/Product');
 const Merchant = require('../../models/Merchant');
 
 const OrderResolvers = {
+  Query: {
+    getOrderHistory: async (_, { customerId }) => {
+      try {
+        const orders = await Order.find({ customerId }).sort({ createdAt: -1 });
+        console.log("Fetched Orders:", orders); // Log the fetched orders to the console
+        return orders;
+      } catch (error) {
+        console.error("Error fetching order history:", error);
+        throw new Error("Failed to fetch order history");
+      }
+    },
+    getOrderById: async (_, { orderId }) => {
+      try {
+        const order = await Order.findById(orderId).populate('products.productId').populate('shippingAddress');
+        console.log("Fetched Order by ID:", order);
+        return order;
+      } catch (error) {
+        console.error("Error fetching order by ID:", error);
+        throw new Error("Failed to fetch order by ID");
+      }
+    },
+  },
   Mutation: {
     createOrder: async (_, { customerId, products, totalAmount, shippingAddress, paymentMethod }) => {
       try {
-        // Step 1: Find or create the shipping address
-        let address = await Address.findOne({
-          street: shippingAddress.street,
-          city: shippingAddress.city,
-          province: shippingAddress.province,
-          zipcode: shippingAddress.zipcode
-        });
-
-        if (!address) {
-          address = new Address({
-            street: shippingAddress.street,
-            city: shippingAddress.city,
-            province: shippingAddress.province,
-            zipcode: shippingAddress.zipcode
-          });
-          await address.save();
-        }
-
-        // Step 2: Prepare the order products
-        const orderProducts = await Promise.all(products.map(async (productInput) => {
-          const product = await Product.findById(productInput.productId).populate('merchant');
-          if (!product) {
-            throw new Error(`Product with ID ${productInput.productId} not found`);
-          }
-
-          const merchant = await Merchant.findById(product.merchant._id).populate('restaurant');
-
-          return {
-            productId: product._id,
-            name: product.name,
-            price: product.price,
-            quantity: productInput.quantity,
-            merchantId: merchant._id,
-            restaurantName: merchant.restaurant.restaurantName,
-            restaurantAddress: {
-              street: merchant.restaurant.address.street,
-              city: merchant.restaurant.address.city,
-              province: merchant.restaurant.address.province,
-              zipcode: merchant.restaurant.address.zipcode
-            }
-          };
-        }));
-
-        // Step 3: Create the new order
+        // Step 1: Create the new order
         const newOrder = new Order({
           customerId,
-          products: orderProducts,
+          products,
           totalAmount,
-          status: 'Pending',
-          shippingAddress: address._id,
+          shippingAddress,
           paymentMethod,
-          createdAt: new Date()
         });
+        await newOrder.save();
 
-        // Step 4: Save and return the new order
-        const savedOrder = await newOrder.save();
-        const populatedOrder = await Order.findById(savedOrder._id)
-          .populate('shippingAddress')
-          .populate('products.productId');
+        // Step 2: Update the corresponding merchants
+        const merchantIds = [...new Set(products.map(product => product.merchantId.toString()))];
+        for (const merchantId of merchantIds) {
+          await Merchant.findByIdAndUpdate(merchantId, {
+            $push: { orders: newOrder._id }
+          });
+        }
 
-        return populatedOrder;
+        return newOrder;
       } catch (error) {
         console.error('Error creating order:', error);
         throw new Error('Failed to create order');
       }
+    },
+  
+    updateOrderStatus: async (_, { orderId, status }) => {
+      try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+          throw new Error('Order not found');
+        }
+        order.status = status;
+        await order.save();
+        console.log("Order status updated successfully:", order);
+        return order;
+      } catch (error) {
+        console.error('Error updating order status:', error);
+        throw new Error('Failed to update order status');
+      }
+    },
+    updateOrderStatusByMerchant: async (_, { orderId, status }) => {
+      try {
+        console.log("Updating order status:", orderId, status);
+        const updatedOrder = await Order.findByIdAndUpdate(
+          orderId,
+          { status },
+          { new: true }
+        ).populate('products.productId').populate('shippingAddress');
+        
+        console.log("Updated order:", updatedOrder);
+        return updatedOrder;
+      } catch (error) {
+        console.error('Error updating order status:', error);
+        throw new Error('Failed to update order status');
+      }
     }
   }
 };
-
 module.exports = OrderResolvers;

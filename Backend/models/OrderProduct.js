@@ -15,13 +15,7 @@ const orderProductSchema = new Schema({
     ref: 'Merchant',
     required: true
   },
-  restaurantName: { type: String, required: true },
-  restaurantAddress: {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    province: { type: String, required: true },
-    zipcode: { type: String, required: true }
-  }
+ 
 });
 
 module.exports = orderProductSchema;
