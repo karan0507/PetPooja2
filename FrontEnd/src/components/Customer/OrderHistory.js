@@ -43,6 +43,9 @@ const OrderHistory = () => {
               Date: {new Date(parseInt(order.createdAt)).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
             </Card.Text>
             <Button onClick={() => navigate(`/order/${order.id}`)}>View Details</Button>
+            {order.status === 'Out for Delivery' && (
+              <Button variant="success" onClick={() => navigate(`/track-order/${order.id}`)}>Track Order</Button>
+            )}
           </Card.Body>
         </Card>
       ))}
