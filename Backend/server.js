@@ -85,7 +85,7 @@ const startServer = async () => {
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3000' || 'https://petpooja2.onrender.com',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
   }));
