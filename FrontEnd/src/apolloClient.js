@@ -12,9 +12,7 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
 const getBackendUrl = () => {
-  // Check if the app is running in production or locally
   const isLocalhost = window.location.hostname === "localhost";
-
   if (isLocalhost) {
     return 'http://localhost:5000/graphql';
   } else {
