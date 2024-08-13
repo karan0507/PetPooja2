@@ -1,110 +1,66 @@
-/* FoodPage.css */
-
-body {
-  background-color: #f0f0f0;
-}
-
-.search-bar {
-  border-radius: 20px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid #333;
-}
-
-.category-title {
-  font-family: 'Arial', sans-serif;
-  color: #333;
+.restaurant-section {
+  background-color: #f0f0f0; /* Change background color for this section */
+  padding: 20px 0;
   margin-bottom: 20px;
-  text-transform: uppercase;
-  border-bottom: 3px solid #ff5722;
-  padding-bottom: 5px;
 }
 
-.product-card {
-  transition: transform 0.2s, box-shadow 0.2s;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.product-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.product-image {
-  height: 200px;
-  object-fit: cover;
-}
-
-.quantity-input {
-  width: 80px;
-  margin-right: 10px;
-  border: 1px solid #333;
-}
-
-.add-to-cart-button {
-  background-color: #ff5722;
-  border: none;
+.filter-button.active {
+  background-color: #28a745; /* Green background for active veg filter */
   color: white;
 }
 
-.add-to-cart-button:hover {
-  background-color: #e64a19;
+.category-carousel .carousel-control-prev,
+.category-carousel .carousel-control-next {
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 35px; /* Increased size */
+  height: 35px; /* Increased size */
+  border-radius: 50%;
 }
 
-.restaurant-name {
-  font-size: 2rem;
+.category-carousel .carousel-control-prev-icon,
+.category-carousel .carousel-control-next-icon {
+  filter: invert(100%);
+}
+
+.category-item {
+  flex: 1;
+  max-width: 150px; /* Increased max-width */
+  margin: 0 auto;
+}
+
+.category-image {
+  width: 100px; /* Increased width */
+  height: 100px; /* Increased height */
+  border-radius: 50%;
+  margin-bottom: 10px;
+  object-fit: cover;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1); /* Slightly increased shadow */
+}
+
+.category-item p {
+  font-size: 16px; /* Slightly increased font size */
+  color: #555;
+  margin: 0;
+}
+
+/* Top Brands Section */
+.restaurant-card {
+  border: none;
+  background: none;
+}
+
+.restaurant-image {
+  width: 100px; /* Increased width */
+  height: 100px; /* Increased height */
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1); /* Slightly increased shadow */
+}
+
+.restaurant-card p {
+  font-size: 16px; /* Slightly increased font size */
+  font-weight: 500;
   color: #333;
-}
-
-.restaurant-timings {
-  font-size: 1.2rem;
-  color: #666;
-}
-
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-@media (max-width: 576px) {
-  .product-card {
-    margin-bottom: 20px;
-  }
-
-  .product-image {
-    height: 150px;
-  }
-
-  .category-title {
-    font-size: 1.2rem;
-  }
-
-  .search-bar {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .product-card {
-    margin-bottom: 20px;
-  }
-
-  .product-image {
-    height: 180px;
-  }
-
-  .category-title {
-    font-size: 1.5rem;
-  }
-
-  .search-bar {
-    font-size: 1.2rem;
-  }
+  margin: 0;
 }

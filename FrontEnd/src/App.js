@@ -38,6 +38,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import TrackOrder from './components/Customer/TrackOrder'; 
+import FoodPage from './components/Customer/FoodPage';
 function App() {
   const { user } = useUser();
 
@@ -52,7 +53,7 @@ function App() {
                 <Route exact path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/food" element={<MerchantList />} />
+                <Route path="/food" element={<FoodPage />} />
                 <Route path="/food/restaurant/:merchantId" element={<RestaurantDetails />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
