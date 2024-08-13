@@ -85,10 +85,10 @@ const startServer = async () => {
   app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   app.use(cors({
-    origin: 'http://localhost:3000' || 'https://petpooja2.onrender.com',
+    origin: ['http://localhost:3000', 'https://petpooja-a55e5.web.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
-  }));
+  }));  
 
   try {
     await mongoose.connect(process.env.MONGO_URI, {

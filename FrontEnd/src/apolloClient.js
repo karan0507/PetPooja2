@@ -11,8 +11,8 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
 const client = new ApolloClient({
-  link: new HttpLink({ 
-    uri: process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000/graphql' 
+  link: new HttpLink({
+    uri: process.env.REACT_APP_BACKEND_URL || 'https://petpooja2.onrender.com/graphql',
   }),
   cache: new InMemoryCache(),
 });
