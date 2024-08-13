@@ -60,7 +60,6 @@
 
 // startServer();
 
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ApolloServer } = require('apollo-server-express');
@@ -70,15 +69,16 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 
-const cartRoutes = require('./graphql/resolvers/CartRoutes'); // Import cartRoutes
+const cartRoutes = require('./graphql/resolvers/CartRoutes');
 
 dotenv.config();
 
 const startServer = async () => {
   const app = express();
 
-  // Apply graphqlUploadExpress middleware first
+  // Apply graphqlUploadExpress middleware
   app.use(graphqlUploadExpress({ maxFileSize: 10 * 1024 * 1024, maxFiles: 1 }));
+
 
   // Other middlewares
   app.use(bodyParser.json({ limit: '10mb' }));
@@ -88,7 +88,7 @@ const startServer = async () => {
     origin: ['http://localhost:3000', 'https://petpooja-a55e5.web.app'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
-  }));  
+  }));
 
   try {
     await mongoose.connect(process.env.MONGO_URI, {
@@ -105,8 +105,8 @@ const startServer = async () => {
   app.use('/api/cart', cartRoutes);
 
   const server = new ApolloServer({
-    typeDefs: require('./graphql/Schema'), // Adjust the path as necessary
-    resolvers: require('./graphql/resolvers/index'), // Adjust the path as necessary
+    typeDefs: require('./graphql/Schema'),
+    resolvers: require('./graphql/resolvers/index'),
     context: ({ req }) => ({
       req,
       User: require('./models/User'),
