@@ -61,8 +61,9 @@ const Login = () => {
     try {
         const { data } = await login({ variables: { username, password } });
         const user = data.login.user;
-        const redirectUrl = data.login.redirectUrl;
 
+        // Set the redirect URL based on user role
+        let redirectUrl = "/"; // Default redirect to home
         if (user.role === "Merchant") {
             const { data: merchantData } = await client.query({
                 query: GET_MERCHANT_ID,
@@ -72,9 +73,13 @@ const Login = () => {
             const merchantId = merchantData.merchantByUserId.id;
             setUser({ ...user, merchantId });
             localStorage.setItem("user", JSON.stringify({ ...user, merchantId }));
+            redirectUrl = `/merchant/${merchantId}/dashboard`; // Customize redirect for merchants
+        } else if (user.role === "Admin") {
+            redirectUrl = "/admin/dashboard"; // Customize redirect for admins
         } else {
             setUser(user);
             localStorage.setItem("user", JSON.stringify(user));
+            redirectUrl = "/"; // Customize redirect for customers
         }
 
         toast.success("Login successful!"); // Show a success message

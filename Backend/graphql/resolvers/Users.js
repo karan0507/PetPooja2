@@ -1,5 +1,4 @@
 const User = require('../../models/User');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UserInputError } = require('apollo-server-express');
 const { validateRegisterInput, validateLoginInput } = require('../../utils/validators');
@@ -31,27 +30,24 @@ const userResolvers = {
             if (!valid) {
                 throw new UserInputError('Validation errors', { errors });
             }
-
+        
             try {
                 // Check if the username already exists
                 const existingUser = await User.findOne({ username });
                 if (existingUser) {
                     throw new UserInputError('Username is already taken. Please choose a different one.');
                 }
-
+        
                 // Check if the email already exists
                 const existingEmail = await User.findOne({ email });
                 if (existingEmail) {
                     throw new UserInputError('Email is already registered. Please use a different one.');
                 }
-
-                // Hash the password before storing
-                const hashedPassword = await bcrypt.hash(password, 12);
-
+        
                 const userFields = {
                     username,
                     email,
-                    password: hashedPassword,  // Store hashed password
+                    password,  // Store plain text password (NOT recommended)
                     role,
                     phone,
                     street,
@@ -59,22 +55,22 @@ const userResolvers = {
                     province,
                     zipcode,
                 };
-
+        
                 if (role === 'Merchant') {
                     userFields.restaurantName = restaurantName;
                     userFields.registrationNumber = registrationNumber;
                 }
-
+        
                 const newUser = new User(userFields);
                 await newUser.save();
-
+        
                 // Generate JWT Token
                 const token = jwt.sign(
                     { userId: newUser.id, email: newUser.email, role: newUser.role },
                     process.env.JWT_SECRET,
                     { expiresIn: '1h' }
                 );
-
+        
                 return { token, user: newUser };  // Return token and user data
             } catch (error) {
                 if (error.code === 11000) {
@@ -86,56 +82,56 @@ const userResolvers = {
                 }
             }
         },
-
+        
         login: async (_, { username, password }) => {
             const { valid, errors } = validateLoginInput(username, password);
             if (!valid) {
+                console.log('Validation failed:', errors);
                 throw new UserInputError('Validation errors', { errors });
             }
-
+        
             try {
+                console.log('Received username:', username);
+                console.log('Received password:', password);
+        
                 const user = await User.findOne({ username });
                 if (!user) {
+                    console.log('User not found with username:', username);
                     throw new UserInputError('User not found, Please SignUp', {
                         errors: {
-                            username: 'No user found with this username'
-                        }
+                            username: 'No user found with this username',
+                        },
                     });
                 }
-
-                // Log the passwords for debugging
-                console.log('Plain text password:', password);
-                console.log('Hashed password from DB:', user.password);
-
-                const isPasswordValid = await bcrypt.compare(password, user.password); // Compare passwords
-                console.log('Is password valid:', isPasswordValid);
-
-                if (!isPasswordValid) {
+        
+                if (user.password !== password) {
+                    console.log('Invalid password provided for username:', username);
                     throw new UserInputError('Invalid password', {
                         errors: {
-                            password: 'Incorrect password'
-                        }
+                            password: 'Incorrect password',
+                        },
                     });
                 }
-
-                // Generate JWT Token
+        
+                // If password is valid, generate JWT token
                 const token = jwt.sign(
                     { userId: user.id, email: user.email, role: user.role },
                     process.env.JWT_SECRET,
                     { expiresIn: '1h' }
                 );
-
+        
+                console.log('Login successful for user:', username);
                 return { token, user };
             } catch (error) {
+                console.error('Error during login process:', error);
                 if (error instanceof UserInputError) {
                     throw error;
                 } else {
-                    console.error('Error during login:', error);
                     throw new Error('An unexpected error occurred during login');
                 }
             }
-        }
-    }
+        },
+    }        
 };
 
 module.exports = userResolvers;
