@@ -1,206 +1,141 @@
-const bcrypt = require('bcryptjs');
-const mongoose = require('mongoose');
 const User = require('../../models/User');
-const Restaurant = require('../../models/Restaurant');
-const Merchant = require('../../models/Merchant');
-const cloudinary = require('../../config/cloudinary');
-const Address = require('../../models/Address');
-const ContactUsAdmin = require("../../models/ContactUsAdmin");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { UserInputError } = require('apollo-server-express');
+const { validateRegisterInput, validateLoginInput } = require('../../utils/validators');
 
 const userResolvers = {
-  Query: {
-    users: async () => {
-      const users = await User.find({});
-      return users.map(user => ({
-        ...user.toObject(),
-        id: user._id.toString(),
-      }));
-    },
-    user: async (_, { id }) => {
-      const user = await User.findById(id);
-      return {
-        ...user.toObject(),
-        id: user._id.toString(),
-      };
-    },
-    merchantByUserId: async (_, { userId }) => {
-      const objectId = new mongoose.Types.ObjectId(userId); // Correct instantiation
-      const merchant = await Merchant.findOne({ user: objectId }).populate({
-        path: 'restaurant',
-        populate: {
-          path: 'address',
-          model: 'Address'
+    Query: {
+        users: async () => {
+            try {
+                return await User.find();
+            } catch (error) {
+                throw new Error('Error fetching users');
+            }
+        },
+        user: async (_, { id }) => {
+            try {
+                const user = await User.findById(id);
+                if (!user) {
+                    throw new UserInputError('User not found');
+                }
+                return user;
+            } catch (error) {
+                throw new Error('Error fetching user');
+            }
         }
-      }).populate('user');
-      if (!merchant) throw new Error('Merchant not found');
-      return {
-        ...merchant.toObject(),
-        id: merchant._id.toString(),
-      };
     },
-    contactMessages: async () => {
-      const messages = await ContactUsAdmin.find({});
-      return messages.map((message) => ({
-        ...message.toObject(),
-        id: message._id.toString(),
-      }));
-    },
-    userCount: async () => await User.countDocuments(),
-    adminCount: async () => await User.countDocuments({ role: "Admin" }),
-    merchantCount: async () => await User.countDocuments({ role: "Merchant" }),
-    customerCount: async () => await User.countDocuments({ role: "Customer" }),
-  },
-  Mutation: {
-    signup: async (_, { username, password, role, email, phone, street, city, province, zipcode, restaurantName, registrationNumber }) => {
-      try {
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-          throw new Error('Username already exists');
+    Mutation: {
+        signup: async (_, { username, email, password, role, phone, street, city, province, zipcode, restaurantName, registrationNumber }) => {
+            const { valid, errors } = validateRegisterInput(username, email, password);
+            if (!valid) {
+                throw new UserInputError('Validation errors', { errors });
+            }
+
+            try {
+                // Check if the username already exists
+                const existingUser = await User.findOne({ username });
+                if (existingUser) {
+                    throw new UserInputError('Username is already taken. Please choose a different one.');
+                }
+
+                // Check if the email already exists
+                const existingEmail = await User.findOne({ email });
+                if (existingEmail) {
+                    throw new UserInputError('Email is already registered. Please use a different one.');
+                }
+
+                // Hash the password before storing
+                const hashedPassword = await bcrypt.hash(password, 12);
+
+                const userFields = {
+                    username,
+                    email,
+                    password: hashedPassword,  // Store hashed password
+                    role,
+                    phone,
+                    street,
+                    city,
+                    province,
+                    zipcode,
+                };
+
+                if (role === 'Merchant') {
+                    userFields.restaurantName = restaurantName;
+                    userFields.registrationNumber = registrationNumber;
+                }
+
+                const newUser = new User(userFields);
+                await newUser.save();
+
+                // Generate JWT Token
+                const token = jwt.sign(
+                    { userId: newUser.id, email: newUser.email, role: newUser.role },
+                    process.env.JWT_SECRET,
+                    { expiresIn: '1h' }
+                );
+
+                return { token, user: newUser };  // Return token and user data
+            } catch (error) {
+                if (error.code === 11000) {
+                    // Handle duplicate key error
+                    throw new UserInputError('Username or Email is already taken. Please choose a different one.');
+                } else {
+                    console.error('Error during user registration:', error);
+                    throw new Error('Error registering user');
+                }
+            }
+        },
+
+        login: async (_, { username, password }) => {
+            const { valid, errors } = validateLoginInput(username, password);
+            if (!valid) {
+                throw new UserInputError('Validation errors', { errors });
+            }
+
+            try {
+                const user = await User.findOne({ username });
+                if (!user) {
+                    throw new UserInputError('User not found, Please SignUp', {
+                        errors: {
+                            username: 'No user found with this username'
+                        }
+                    });
+                }
+
+                // Log the passwords for debugging
+                console.log('Plain text password:', password);
+                console.log('Hashed password from DB:', user.password);
+
+                const isPasswordValid = await bcrypt.compare(password, user.password); // Compare passwords
+                console.log('Is password valid:', isPasswordValid);
+
+                if (!isPasswordValid) {
+                    throw new UserInputError('Invalid password', {
+                        errors: {
+                            password: 'Incorrect password'
+                        }
+                    });
+                }
+
+                // Generate JWT Token
+                const token = jwt.sign(
+                    { userId: user.id, email: user.email, role: user.role },
+                    process.env.JWT_SECRET,
+                    { expiresIn: '1h' }
+                );
+
+                return { token, user };
+            } catch (error) {
+                if (error instanceof UserInputError) {
+                    throw error;
+                } else {
+                    console.error('Error during login:', error);
+                    throw new Error('An unexpected error occurred during login');
+                }
+            }
         }
-
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const newUser = new User({
-          username,
-          password: hashedPassword,
-          role,
-          email,
-          phone,
-          profilePic: null,
-        });
-
-        await newUser.save();
-
-        if (role === 'Merchant') {
-          const newAddress = new Address({
-            street,
-            city,
-            province,
-            zipcode,
-          });
-          await newAddress.save();
-
-          const newRestaurant = new Restaurant({
-            restaurantName,
-            address: newAddress._id,
-            phone,
-            registrationNumber,
-          });
-
-          await newRestaurant.save();
-
-          const newMerchant = new Merchant({
-            user: newUser._id,
-            restaurant: newRestaurant._id,
-            menu: [],
-          });
-
-          await newMerchant.save();
-        }
-
-        return {
-          id: newUser._id.toString(),
-          username: newUser.username,
-          role: newUser.role,
-          email: newUser.email,
-          phone: newUser.phone,
-          profilePic: newUser.profilePic,
-        };
-      } catch (error) {
-        if (error.code === 11000) {
-          throw new Error('Username already exists');
-        }
-        throw new Error(error.message);
-      }
-    },
-    login: async (_, { username, password }) => {
-      const user = await User.findOne({ username });
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      const isValidPassword = await bcrypt.compare(password, user.password);
-      if (!isValidPassword) {
-        throw new Error('Incorrect password');
-      }
-
-      return {
-        id: user._id.toString(),
-        username: user.username,
-        role: user.role,
-        email: user.email,
-        phone: user.phone,
-        profilePic: user.profilePic || null,
-      };
-    },
-    updatePassword: async (_, { id, newPassword }) => {
-      const hashedPassword = await bcrypt.hash(newPassword, 12);
-      const updatedUser = await User.findByIdAndUpdate(
-        id,
-        { password: hashedPassword },
-        { new: true }
-      );
-
-      return {
-        id: updatedUser._id.toString(),
-        username: updatedUser.username,
-        role: updatedUser.role,
-        email: updatedUser.email,
-        phone: updatedUser.phone,
-        profilePic: updatedUser.profilePic,
-      };
-    },
-    deleteUser: async (_, { id }) => {
-      const deletedUser = await User.findByIdAndDelete(id);
-      return {
-        id: deletedUser._id.toString(),
-        username: deletedUser.username,
-        role: deletedUser.role,
-        email: deletedUser.email,
-        phone: deletedUser.phone,
-        profilePic: deletedUser.profilePic,
-      };
-    },
-    uploadProfilePic: async (_, { userId, file }) => {
-      const user = await User.findById(userId);
-      if (!user) throw new Error('User not found');
-
-      const uploadResult = await cloudinary.uploader.upload(file, {
-        upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
-      });
-
-      user.profilePic = uploadResult.secure_url;
-      await user.save();
-
-      return {
-        ...user.toObject(),
-        id: user._id.toString(),
-      };
-    },
-    removeProfilePic: async (_, { userId }) => {
-      const user = await User.findById(userId);
-      if (!user) throw new Error('User not found');
-
-      if (user.profilePic) {
-        const publicId = user.profilePic.split('/').pop().split('.')[0];
-        await cloudinary.uploader.destroy(publicId);
-        user.profilePic = null;
-        await user.save();
-      }
-
-      return {
-        ...user.toObject(),
-        id: user._id.toString(),
-      };
-    },
-    submitContactForm: async (_, { name, email, subject, message }) => {
-      const newContact = new ContactUsAdmin({ name, email, subject, message });
-      const result = await newContact.save();
-      return {
-        ...result.toObject(),
-        id: result._id.toString(),
-      };
-    },
-  }
+    }
 };
 
 module.exports = userResolvers;

@@ -4,11 +4,16 @@ const cloudinary = require('../../config/cloudinary');
 const categoryResolvers = {
   Query: {
     categories: async () => {
-      const categories = await Category.find({});
-      return categories.map(category => ({
-        ...category.toObject(),
-        id: category._id.toString(),
-      }));
+      try {
+        const categories = await Category.find({});
+        return categories.map(category => ({
+          ...category.toObject(),
+          id: category._id.toString(),
+        }));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        throw new Error("Failed to fetch categories");
+      }
     },
   },
   Mutation: {
@@ -18,7 +23,7 @@ const categoryResolvers = {
       if (image) {
         try {
           const uploadResult = await cloudinary.uploader.upload(image, {
-            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
+            upload_preset: 'bdox1lbn'
           });
           imageUrl = uploadResult.secure_url;
         } catch (err) {
@@ -31,42 +36,57 @@ const categoryResolvers = {
         name,
         image: imageUrl
       });
-      await newCategory.save();
 
-      return {
-        ...newCategory.toObject(),
-        id: newCategory._id.toString(),
-      };
+      try {
+        await newCategory.save();
+        return {
+          ...newCategory.toObject(),
+          id: newCategory._id.toString(),
+        };
+      } catch (error) {
+        console.error("Error saving category:", error);
+        throw new Error("Failed to save category");
+      }
     },
 
     updateCategory: async (_, { categoryId, name, image }) => {
-      const category = await Category.findById(categoryId);
-      if (!category) throw new Error('Category not found');
+      try {
+        const category = await Category.findById(categoryId);
+        if (!category) throw new Error('Category not found');
 
-      if (name) category.name = name;
-      if (image) {
-        try {
-          const uploadResult = await cloudinary.uploader.upload(image, {
-            upload_preset: 'bdox1lbn' // Your Cloudinary upload preset
-          });
-          category.image = uploadResult.secure_url;
-        } catch (err) {
-          console.error("File upload error:", err);
-          throw new Error("File upload failed.");
+        if (name) category.name = name;
+        if (image) {
+          try {
+            const uploadResult = await cloudinary.uploader.upload(image, {
+              upload_preset: 'bdox1lbn'
+            });
+            category.image = uploadResult.secure_url;
+          } catch (err) {
+            console.error("File upload error:", err);
+            throw new Error("File upload failed.");
+          }
         }
-      }
 
-      await category.save();
-      return {
-        ...category.toObject(),
-        id: category._id.toString(),
-      };
+        await category.save();
+        return {
+          ...category.toObject(),
+          id: category._id.toString(),
+        };
+      } catch (error) {
+        console.error("Error updating category:", error);
+        throw new Error("Failed to update category");
+      }
     },
 
     deleteCategory: async (_, { categoryId }) => {
-      const category = await Category.findByIdAndDelete(categoryId);
-      if (!category) throw new Error('Category not found');
-      return true;
+      try {
+        const category = await Category.findByIdAndDelete(categoryId);
+        if (!category) throw new Error('Category not found');
+        return true;
+      } catch (error) {
+        console.error("Error deleting category:", error);
+        throw new Error("Failed to delete category");
+      }
     },
   }
 };
