@@ -5,7 +5,7 @@ import client from './apolloClient';
 import HomePage from './components/Common/HomePage';
 import AboutPage from './components/Common/AboutPage';
 import ContactPage from './components/Common/ContactPage';
-import MerchantList from './components/Customer/MerchantList';
+// import MerchantList from './components/Customer/MerchantList';
 import RestaurantDetails from './components/Customer/RestaurantDetails';
 import CartPage from './components/Customer/CartPage';
 import CheckoutPage from './components/Customer/CheckoutPage';
@@ -28,19 +28,19 @@ import ManageOrderStatus from './components/Merchant/ManageOrderStatus';
 import MerchantOrderDetails from './components/Merchant/MerchantOrderDetails';
 import DashboardHome from './components/Merchant/DashboardHome';
 import MerchantDashboard from './components/Merchant/MerchantDashboard';
-import OrderHistory from './components/Customer/OrderHistory'; // Import Order History
+import OrderHistory from './components/Customer/OrderHistory';
 import OrderDetails from './components/Customer/OrderDetails';
-import { useUser } from './components/Common/UserContext';
+// import { useUser } from './components/Common/UserContext';
 import { ProductProvider } from './components/Common/ProductContext';
 import { CartProvider } from './components/Common/CartContext';
 import { ToastContainer } from 'react-toastify';
-// import './components/Assets/Css/Toast.css';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import TrackOrder from './components/Customer/TrackOrder'; 
 import FoodPage from './components/Customer/FoodPage';
+
 function App() {
-  const { user } = useUser();
+  // const { user } = useUser();
 
   return (
     <ApolloProvider client={client}>
@@ -61,7 +61,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile/:userId" element={<ProfileDetailPage />} />
                 <Route path="/order-history" element={<OrderHistory />} />
-                <Route path="/order/:orderId" element={<OrderDetails />} /> {/* <-- This is the missing route */}
+                <Route path="/order/:orderId" element={<OrderDetails />} />
                 <Route path="/track-order/:orderId" element={<TrackOrder />} />
 
                 {/* Merchant Dashboard Routes */}
@@ -72,7 +72,6 @@ function App() {
                   <Route path="menu-list" element={<MenuList />} />
                   <Route path="manage-order" element={<ManageOrderStatus />} />
                   <Route path="/merchantdashboard/manage-order-status/:orderId" element={<MerchantOrderDetails />} />
-
                   <Route path="category-list" element={<ListCategories />} />
                 </Route>
                 
@@ -88,7 +87,7 @@ function App() {
             </div>
             <Footer />
           </Router>
-          <ToastContainer />
+          <ToastContainer autoClose={5000} />
         </CartProvider>
       </ProductProvider>
     </ApolloProvider>

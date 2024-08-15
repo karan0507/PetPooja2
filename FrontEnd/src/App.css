@@ -5,7 +5,9 @@ body {
   font-family: 'Arial', sans-serif;
 }
 
-
+.content{
+  min-height: 100vh;
+}
 
 .form-signup, .form-login {
   background: #ffffff;

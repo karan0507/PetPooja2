@@ -521,38 +521,75 @@
 // export default FoodPage;
 
 
-import React, { useState, useEffect } from 'react';
-import { useProducts } from '../Common/ProductContext';
+import React, { useState } from 'react';
+import { useQuery, gql } from '@apollo/client';
 import { Container, Row, Col, Button, Spinner, Carousel, Dropdown, FormControl } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import '../Assests/Css/FoodPage.css';
 
-const FoodPage = () => {
-  const { categories, products, loading, error } = useProducts();
-  const navigate = useNavigate();
+const GET_TOP_BRANDS = gql`
+  query GetTopBrands {
+    topBrands {
+      id
+      restaurantName
+      photo
+      user {
+        username
+      }
+    }
+  }
+`;
 
+const GET_CATEGORIES_AND_PRODUCTS = gql`
+  query GetCategoriesAndProducts($filter: ProductFilterInput) {
+    categories {
+      id
+      name
+      image
+    }
+    products(filter: $filter) {
+      id
+      name
+      price
+      image
+      isActive
+      category {
+        id
+        name
+      }
+      merchant {
+        id
+        restaurantName
+        user {
+          username
+        }
+      }
+    }
+  }
+`;
+
+const FoodPage = () => {
+  const navigate = useNavigate();
   const [pureVeg, setPureVeg] = useState(false);
   const [cuisine, setCuisine] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Extract restaurants from products
-  const getRestaurantsFromProducts = (products) => {
-    const allRestaurants = products
-      .filter((p) => !pureVeg || p.isActive) // Filter by Pure Veg if the filter is active
-      .map((p) => ({
-        id: p.merchant.id,
-        name: p.merchant.name,
-        logo: p.image, // Assuming the product image is used as a logo if the merchant's logo is missing
-      }))
-      .filter((restaurant, index, self) => self.findIndex(r => r.id === restaurant.id) === index); // Ensure uniqueness
+  const { loading: loadingBrands, error: errorBrands, data: dataBrands } = useQuery(GET_TOP_BRANDS);
+  const { loading: loadingCategories, error: errorCategories, data: dataCategories } = useQuery(GET_CATEGORIES_AND_PRODUCTS, {
+    variables: {
+      filter: {
+        searchTerm,
+        isActive: true,
+        category: cuisine ? dataCategories?.categories.find(cat => cat.name === cuisine)?.id : undefined,
+      },
+    },
+  });
 
-    // Randomly select 5 restaurants from the available list
-    const shuffledRestaurants = allRestaurants.sort(() => 0.5 - Math.random());
-    return shuffledRestaurants.slice(0, 5);
-  };
+  const topBrands = dataBrands?.topBrands || [];
+  const categories = dataCategories?.categories || [];
+  const products = dataCategories?.products || [];
 
-  const topRestaurants = getRestaurantsFromProducts(products);
-
-  if (loading) {
+  if (loadingBrands || loadingCategories) {
     return (
       <div className="loading-container">
         <Spinner animation="border" role="status">
@@ -562,42 +599,26 @@ const FoodPage = () => {
     );
   }
 
-  if (error) {
-    return <p>Error: {error.message}</p>;
+  if (errorBrands || errorCategories) {
+    return <p>Error: {errorBrands?.message || errorCategories?.message}</p>;
   }
 
-  // Calculate the number of carousel items needed for categories
-  const chunkedCategories = [];
-  for (let i = 0; i < categories.length; i += 5) {
-    chunkedCategories.push(categories.slice(i, i + 5));
-  }
-
-  // Calculate the number of carousel items needed for top restaurants
-  const chunkedRestaurants = [];
-  for (let i = 0; i < topRestaurants.length; i += 5) {
-    chunkedRestaurants.push(topRestaurants.slice(i, i + 5));
-  }
-
-  // Handle category click
-  const handleCategoryClick = (categoryId) => {
-    navigate(`/food?category=${categoryId}`);
-  };
-
-  // Toggle Pure Veg Filter
   const toggleVegFilter = () => {
     setPureVeg(!pureVeg);
     const newUrl = cuisine ? `/food?cuisine=${cuisine}&pureVeg=${!pureVeg}` : `/food?pureVeg=${!pureVeg}`;
     navigate(newUrl);
   };
 
-  // Handle Cuisine Select
   const handleCuisineSelect = (selectedCuisine) => {
     setCuisine(selectedCuisine);
     const newUrl = pureVeg ? `/food?cuisine=${selectedCuisine}&pureVeg=${pureVeg}` : `/food?cuisine=${selectedCuisine}`;
     navigate(newUrl);
   };
 
-  // Custom toggle for Dropdown
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     <Button
       variant="outline-secondary"
@@ -621,6 +642,8 @@ const FoodPage = () => {
             type="text"
             className="search-bar"
             placeholder="Search for products, categories, or merchants..."
+            value={searchTerm}
+            onChange={handleSearch}
           />
         </Col>
       </Row>
@@ -645,35 +668,25 @@ const FoodPage = () => {
                 onChange={(e) => setCuisine(e.target.value)}
                 value={cuisine}
               />
-              {categories
-                .filter((cat) => cat.name.toLowerCase().includes(cuisine.toLowerCase()))
-                .map((cat) => (
-                  <Dropdown.Item key={cat.id} eventKey={cat.name}>
-                    {cat.name}
-                  </Dropdown.Item>
-                ))}
+              {categories.map(cat => (
+                <Dropdown.Item key={cat.id} eventKey={cat.name}>
+                  {cat.name}
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
         </Col>
       </Row>
 
-      {/* Inspiration for Your First Order Carousel */}
       <h4 className="category-title">Inspiration for Your First Order</h4>
       <Carousel className="category-carousel">
-        {chunkedCategories.map((categoryGroup, index) => (
-          <Carousel.Item key={index}>
+        {categories.map(category => (
+          <Carousel.Item key={category.id}>
             <div className="d-flex justify-content-between">
-              {categoryGroup.map((cat) => (
-                <div
-                  key={cat.id}
-                  className="text-center category-item"
-                  onClick={() => handleCategoryClick(cat.id)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <img src={cat.image} alt={cat.name} className="rounded-circle category-image" />
-                  <p>{cat.name}</p>
-                </div>
-              ))}
+              <div className="text-center category-item">
+                <img src={category.image} alt={category.name} className="rounded-circle category-image" />
+                <p>{category.name}</p>
+              </div>
             </div>
           </Carousel.Item>
         ))}
@@ -682,26 +695,39 @@ const FoodPage = () => {
       <div className="restaurant-section">
         <h4 className="category-title">Top Brands for You</h4>
         <Carousel className="category-carousel">
-          {chunkedRestaurants.map((restaurantGroup, index) => (
+          {topBrands.map((brand, index) => (
             <Carousel.Item key={index}>
               <div className="d-flex justify-content-between">
-                {restaurantGroup.map((merchant) => (
-                  <div key={merchant.id} className="text-center category-item">
-                    <img
-                      src={merchant.logo}
-                      alt={merchant.name}
-                      className="rounded-circle restaurant-image"
-                    />
-                    <p>{merchant.name}</p>
-                  </div>
-                ))}
+                <div key={brand.id} className="text-center category-item">
+                  {brand.photo ? (
+                    <img src={brand.photo} alt={brand.restaurantName} className="rounded-circle restaurant-image" />
+                  ) : (
+                    <div className="no-photo-placeholder">No Image</div>
+                  )}
+                  <p>{brand.restaurantName || "Unnamed Restaurant"}</p>
+                </div>
               </div>
             </Carousel.Item>
           ))}
         </Carousel>
       </div>
+
+      <h4 className="category-title">Products</h4>
+      <Row>
+        {products.map(product => (
+          <Col key={product.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+            <div className="product-item">
+              <img src={product.image} alt={product.name} className="product-image" />
+              <h5>{product.name}</h5>
+              <p>${product.price.toFixed(2)}</p>
+              <p>Merchant: {product.merchant.restaurantName || "Unnamed Merchant"}</p>
+            </div>
+          </Col>
+        ))}
+      </Row>
     </Container>
   );
 };
 
 export default FoodPage;
+

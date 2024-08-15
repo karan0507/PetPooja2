@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation, gql, useApolloClient } from "@apollo/client";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Container, Form, Button, Row, Col, Card, Alert } from "react-bootstrap";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "./UserContext";
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
-      id
-      username
-      role
-      profilePic
+      token
+      user {
+        id
+        username
+        role
+        profilePic
+      }
     }
   }
 `;
@@ -37,51 +40,54 @@ const Login = () => {
   const signupSuccess = queryParams.get("signup") === "success";
   const { setUser } = useUser();
 
+  useEffect(() => {
+    if (signupSuccess) {
+      toast.success("Signup successful! Please log in.");
+    }
+  }, [signupSuccess]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username) {
-      setErrorMessage("Username is required");
-      return;
+        setErrorMessage("Username is required");
+        return;
     }
     if (!password) {
-      setErrorMessage("Password is required");
-      return;
+        setErrorMessage("Password is required");
+        return;
     }
 
     try {
-      const { data } = await login({ variables: { username, password } });
-      const user = data.login;
+        const { data } = await login({ variables: { username, password } });
+        const user = data.login.user;
+        const redirectUrl = data.login.redirectUrl;
 
-      if (user.role === "Merchant") {
-        // Fetch the merchant ID
-        const { data: merchantData } = await client.query({
-          query: GET_MERCHANT_ID,
-          variables: { userId: user.id },
-        });
+        if (user.role === "Merchant") {
+            const { data: merchantData } = await client.query({
+                query: GET_MERCHANT_ID,
+                variables: { userId: user.id },
+            });
 
-        const merchantId = merchantData.merchantByUserId.id;
-        setUser({ ...user, merchantId });
-        localStorage.setItem("user", JSON.stringify({ ...user, merchantId }));
-      } else {
-        setUser(user);
-        localStorage.setItem("user", JSON.stringify(user));
-      }
+            const merchantId = merchantData.merchantByUserId.id;
+            setUser({ ...user, merchantId });
+            localStorage.setItem("user", JSON.stringify({ ...user, merchantId }));
+        } else {
+            setUser(user);
+            localStorage.setItem("user", JSON.stringify(user));
+        }
 
-      toast.success("Login successful!");
-      if (user.role === "Merchant") navigate(`/merchantdashboard`);
-      else if (user.role === "Admin") navigate("/admin/");
-      else navigate("/food");
+        toast.success("Login successful!"); // Show a success message
+        navigate(redirectUrl); // Redirect to the respective dashboard
     } catch (e) {
-      setErrorMessage(e.message);
-      toast.error("Error during login: " + e.message);
-      console.error("Error during login:", e.message);
+        setErrorMessage(e.message);
+        toast.error("Error during login: " + e.message);
+        console.error("Error during login:", e.message);
     }
   };
 
   return (
     <Container className="mt-5 mb-4">
-      <ToastContainer />
       <Row className="justify-content-center">
         <Col md={6}>
           <Card className="shadow-lg">

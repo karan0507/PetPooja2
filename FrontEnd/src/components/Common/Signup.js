@@ -10,7 +10,7 @@ const SIGNUP_MUTATION = gql`
     $username: String!
     $password: String!
     $role: String!
-    $email: String
+    $email: String!
     $phone: String
     $street: String
     $city: String
@@ -32,9 +32,12 @@ const SIGNUP_MUTATION = gql`
       restaurantName: $restaurantName
       registrationNumber: $registrationNumber
     ) {
-      id
-      username
-      role
+      token
+      user {
+        id
+        username
+        role
+      }
     }
   }
 `;
@@ -117,21 +120,24 @@ const Signup = () => {
     e.preventDefault();
     if (validateStep2()) {
       try {
-        await signup({
-          variables: {
-            username,
-            password,
-            role,
-            email,
-            phone,
-            street,
-            city,
-            province,
-            zipcode,
-            restaurantName: role === "Merchant" ? restaurantName : null,
-            registrationNumber: role === "Merchant" ? registrationNumber : null,
-          },
-        });
+        const variables = {
+          username,
+          password,
+          role,
+          email,
+          phone,
+          street,
+          city,
+          province,
+          zipcode,
+        };
+
+        if (role === "Merchant") {
+          variables.restaurantName = restaurantName;
+          variables.registrationNumber = registrationNumber;
+        }
+
+        await signup({ variables });
         toast.success("Signup successful!");
         navigate("/login?signup=success");
       } catch (e) {
@@ -361,8 +367,8 @@ const Signup = () => {
                 )}
                 {data && (
                   <p className="text-success">
-                    Sign up successful: {data.signup.username}
-                  </p>
+                    Sign up successful: {data.signup.user.username}
+                  </p>  // <-- Updated to reflect new structure
                 )}
                 <p>
                   Already have an account? <Link to="/login">Login</Link>
